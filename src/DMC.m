@@ -1,12 +1,17 @@
 % TODO create a DMC class
 function DMC()
-    load('../test/MIMO3x4StepResponses.mat', 'stepResponses');
+    %load('../test/MIMO3x4StepResponses.mat', 'stepResponses');
+    addpath('../test');
+    
+    %% DMC parmameters
     D = 100; % Dynamic horizon
     N = 10; % Prediction horizon
-    Nu = 3; % Moving horizon
+    Nu = 2; % Moving horizon
     lambda = 1; % Control weight
     mi = [1, 2, 3]; % Enables choosing which output is more important
-    obj = controlObject(3, 4, stepResponses); % Create control object
+    
+    st = 0.1; % Sampling time
+    obj = get3x2Obj(st);
     Sp = getSp(obj, D);
     Mp = getMp(obj, Sp, N, D);
     M = getM(obj, Sp, N, Nu);
@@ -23,7 +28,7 @@ function Sp = getSp(obj, D)
     for p=1:D % Step response moment
         for i=1:obj.nu
             for j=1:obj.ny
-                sp(j,i) = obj.stepResponse{i}(p,j);
+                sp(j,i) = obj.stepResponses{i}(p,j);
             end
         end
         Sp{p, 1} = sp;
@@ -38,7 +43,7 @@ function Mp = getMp(obj, Sp, N, D)
     for i=1:N
         for j=1:D-1
             Mp((i - 1)*obj.ny + 1:i*obj.ny, (j - 1)*obj.nu + 1:j*obj.nu) = ...
-            Sp{ min(D, i+j), 1} - Sp{j, 1};
+                Sp{ min(D, i+j), 1} - Sp{j, 1};
         end
     end
 end
@@ -50,7 +55,8 @@ function M = getM(obj, Sp, N, Nu)
     M = zeros(obj.ny*N, obj.nu*Nu);
     for j=1:Nu
         for i=j:N
-            M((i - 1)*obj.ny + 1:i*obj.ny, (j - 1)*obj.nu + 1:j*obj.nu) = Sp{i-j+1, 1};
+            M((i - 1)*obj.ny + 1:i*obj.ny, (j - 1)*obj.nu + 1:j*obj.nu) =...
+                Sp{i-j+1, 1};
         end
     end
 end
