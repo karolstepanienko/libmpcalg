@@ -100,7 +100,6 @@ classdef MIMOObj
             else % If running in MATLAB
                 obj.Gz = getGz(obj);
                 obj.numDen = getNumDen(obj);
-                obj.numDen
                 numDen = obj.numDen;
                 save('model.mat', 'numDen');
             end

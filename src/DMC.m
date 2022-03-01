@@ -5,16 +5,24 @@ function DMC()
     
     %% DMC parmameters
     D = 100; % Dynamic horizon
-    N = 10; % Prediction horizon
+    N = 5; % Prediction horizon
     Nu = 2; % Moving horizon
-    lambda = 1; % Control weight
-    mi = [1, 2, 3]; % Enables choosing which output is more important
-    
+
+    %% Object
     st = 0.1; % Sampling time
     obj = get3x2Obj(st);
+    
+    %% DMC parameters
+    % Enables choosing which output is more important
+    % Here all are equally important
+    mi = ones(obj.ny, 1); 
+    lambda = ones(obj.nu, 1); % Control weight
+    
     Sp = getSp(obj, D);
     Mp = getMp(obj, Sp, N, D);
     M = getM(obj, Sp, N, Nu);
+    Xi = getXi(obj, mi, N);
+    Lambda = getLambdaMatrix(obj, lambda, Nu);
 end
 
 %% getSp
@@ -58,5 +66,25 @@ function M = getM(obj, Sp, N, Nu)
             M((i - 1)*obj.ny + 1:i*obj.ny, (j - 1)*obj.nu + 1:j*obj.nu) =...
                 Sp{i-j+1, 1};
         end
+    end
+end
+
+%% getXi
+% Creates Xi matrix used by DMC algorithm
+function Xi = getXi(obj, mi, N)
+    Xi = zeros(obj.ny*N);
+    for i=1:N
+        Xi((i - 1)*obj.ny + 1:i*obj.ny, (i - 1)*obj.ny + 1:i*obj.ny) = ...
+            diag(mi); % square ny x ny matrix
+    end
+end
+
+%% getLambdaMatrix
+% Creates Lambda matrix used by DMC algorithm
+function Lambda = getLambdaMatrix(obj, lambda, Nu)
+    Lambda = zeros(obj.nu*Nu);
+    for i=1:Nu
+        Lambda((i - 1)*obj.nu + 1:i*obj.nu, (i - 1)*obj.nu + 1:i*obj.nu) = ...
+            diag(lambda); % square ny x ny matrix
     end
 end
