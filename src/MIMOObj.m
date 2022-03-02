@@ -45,6 +45,29 @@ classdef MIMOObj
                 stepResponses{i, 1} = obj.getStepResponse(i, kk);
             end
         end
+
+        %% getOutput
+        % Calculate output of a MIMO object
+        % @param    numDen    numerators and denominators for every 
+        %                     transmittance (every combination of input
+        %                     and output)
+        % @return   y         vector of output values
+        function y = getOutput(obj, UU, YY, k)
+            [uCell, yCell] = obj.getObjectData(UU, YY, k);
+            y = zeros(obj.ny, 1); % output values
+
+            for i=1:obj.ny % for every output
+                for j=1:obj.nu % for every input
+                    num = obj.numDen{i,j}{1};
+                    den = obj.numDen{i,j}{2};
+                    % Numerator changes in every input and output
+                    % combination
+                    y(i,1) = y(i,1) + num*uCell{j, 1};
+                end
+                % Denominator is the same across one output
+                y(i, 1) = y(i,1) - den*yCell{i, 1};
+            end    
+        end
     end
     
     methods (Access = private)
@@ -61,6 +84,14 @@ classdef MIMOObj
             % so step response will start at k = 2
             UU(:, choosenU) = ones(kk, 1);
 
+            for k=1:kk
+                YY(k, :) = obj.getOutput(UU, YY, k);
+            end
+        end
+        
+        %% getRanges
+        % Returns k ranges for input and output in difference equation
+        function [ukmin, ukmax, ykmin, ykmax] = getRanges(obj)
             % Numerator length, DenominatorLen = NumeratorLen - 1
             numLen = length(obj.numDen{1, 1}{1,1});
 
@@ -69,15 +100,6 @@ classdef MIMOObj
             ukmax = numLen - 1;
             ykmin = 1;
             ykmax = ukmax;
-
-            for k=1:kk
-                [uCell, yCell] = obj.getObjectData(UU, YY, k, ukmin,...
-                                                    ukmax, ykmin, ykmax);
-                y = obj.getOutput(uCell, yCell, obj.numDen);
-                for i=1:obj.ny
-                    YY(k, i) = y(i);
-                end
-            end
         end
         
         %% getModel
@@ -134,8 +156,8 @@ classdef MIMOObj
         %% getobjectdata
         % Returns values of inputs and outputs used in differential
         % equations
-        function [uCell, yCell] = getObjectData(obj, UU, YY, k, ukmin,...
-                                                ukmax, ykmin, ykmax)
+        function [uCell, yCell] = getObjectData(obj, UU, YY, k)
+            [ukmin, ukmax, ykmin, ykmax] = getRanges(obj);
             % Determines how many u values the object requires
             nuk = ukmax - ukmin + 1;
             % Determines how many y values the object requires
@@ -179,28 +201,6 @@ classdef MIMOObj
                     end
                 end
             end
-        end
-
-        %% getOutput
-        % Calculate output of a MIMO object
-        % @param    numDen    numerators and denominators for every 
-        %                     transmittance (every combination of input
-        %                     and output)
-        % @return   y         vector of output values
-        function y = getOutput(obj, uCell, yCell, numDen)
-            y = zeros(obj.ny, 1); % output values
-
-            for i=1:obj.ny % for every output
-                for j=1:obj.nu % for every input
-                    num = numDen{i,j}{1};
-                    den = numDen{i,j}{2};
-                    % Numerator changes in every input and output
-                    % combination
-                    y(i,1) = y(i,1) + num*uCell{j, 1};
-                end
-                % Denominator is the same across one output
-                y(i, 1) = y(i,1) - den*yCell{i, 1};
-            end    
         end
     end
 end

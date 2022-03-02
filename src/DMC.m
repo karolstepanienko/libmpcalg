@@ -9,7 +9,7 @@ classdef DMC
         stepResponses % Control object step response(s)
         ny % Number of outputs
         nu % Number of inputs
-        UU_k % Current control value
+        U_k % Current control value
     end
 
     properties (Access = private)
@@ -33,13 +33,29 @@ classdef DMC
             obj.lambda = lambda;
             obj = obj.runPreloop();
         end
-        
-        function obj = run(obj, Y_k, Yzad_k)
-            YYzad_k = obj.getYYzad_k(Yzad_k);
-            YY_k = obj.getYY_k(Y_k);
-            obj.dUU_k = obj.K * (YYzad_k - (YY_k + obj.Mp * obj.dUUp_k));
+
+        %% calculateControl
+        % Calculates new, current object control values
+        % Should be run in a loop
+        % @param Y_k        horizontal vector of current output values
+        % @param Yzad_k     horizontal vector of target trajectory values
+        function obj = calculateControl(obj, Y_k, Yzad_k)
+            YY_k = obj.getYY_k(Y_k');
+            YYzad_k = obj.getYYzad_k(Yzad_k');
+    
             
+            % Get YY_0
+            YY_0 = YY_k + obj.Mp * obj.dUUp_k;
+            % Get new control change value
+            obj.dUU_k = obj.K * (YYzad_k - YY_0);
             
+            % Shift dUUp values
+            obj.dUUp_k = [obj.dUU_k(1:obj.nu);...
+                obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
+
+            % Get new control value
+            % Here U_k = U_k_1 and is updated
+            obj.U_k = obj.U_k + obj.dUU_k(1:obj.nu, 1);
         end
         
         %% Getters
@@ -55,6 +71,12 @@ classdef DMC
                 ny = size(obj.stepResponses, 2);
             end
         end
+        
+        %% getU_k
+        % Returns horizontal vector of new control values
+        function U_k = getU_k(obj)
+            U_k = obj.U_k';
+        end
     end
 
     methods (Access=private)
@@ -69,6 +91,7 @@ classdef DMC
             obj.K = obj.getK();
             obj.dUU_k = obj.initdUU_k();
             obj.dUUp_k = obj.initdUUp_k();
+            obj.U_k = obj.initU_k();
         end
         
         %% getSp
@@ -176,7 +199,8 @@ classdef DMC
         end
         
         %% getUU_k
-        function UU_k = getUU_k(obj)
+        function U_k = initU_k(obj)
+            U_k = zeros(obj.nu, 1);
         end
     
     end

@@ -9,6 +9,7 @@ for i=1:obj.nu
     hold on
     for j=1:obj.ny
         plot(stepResponses{i, 1}(:,j));
+        title(join(['In: ', num2str(i)]));
     end
     hold off
 end
