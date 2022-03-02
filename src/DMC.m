@@ -1,90 +1,210 @@
-% TODO create a DMC class
-function DMC()
-    %load('../test/MIMO3x4StepResponses.mat', 'stepResponses');
-    addpath('../test');
-    
-    %% DMC parmameters
-    D = 100; % Dynamic horizon
-    N = 5; % Prediction horizon
-    Nu = 2; % Moving horizon
+classdef DMC
+    properties
+        %% DMC parmameters
+        D % Dynamic horizon
+        N % Prediction horizon
+        Nu % Moving horizon
+        mi % Output importance
+        lambda % Input importance
+        stepResponses % Control object step response(s)
+        ny % Number of outputs
+        nu % Number of inputs
+        UU_k % Current control value
+    end
 
-    %% Object
-    st = 0.1; % Sampling time
-    obj = get3x2Obj(st);
-    
-    %% DMC parameters
-    % Enables choosing which output is more important
-    % Here all are equally important
-    mi = ones(obj.ny, 1); 
-    lambda = ones(obj.nu, 1); % Control weight
-    
-    Sp = getSp(obj, D);
-    Mp = getMp(obj, Sp, N, D);
-    M = getM(obj, Sp, N, Nu);
-    Xi = getXi(obj, mi, N);
-    Lambda = getLambdaMatrix(obj, lambda, Nu);
-end
+    properties (Access = private)
+        Sp % Sp - cell of step response matrixes in p moment
+        Mp % Mp matrix used by DMC algorithm
+        M  % M matrix used by DMC algorithm
+        Xi % Xi matrix used by DMC algorithm
+        Lambda % Lambda matrix used by DMC algorithm
+        K % K matrix used by DMC algorithm
+        dUU_k % Vector containing control values
+        dUUp_k % DUUp vector containing past control value changes
+    end
 
-%% getSp
-% Creates Sp matix from step response data
-% in cell format
-function Sp = getSp(obj, D)    
-    % Variable initialisation
-    Sp = cell(D, 1);
-    sp = zeros(obj.ny, obj.nu); % Step response matrix in moment p
-
-    for p=1:D % Step response moment
-        for i=1:obj.nu
-            for j=1:obj.ny
-                sp(j,i) = obj.stepResponses{i}(p,j);
+    methods
+        function obj = DMC(D, N, Nu, stepResponses, mi, lambda)
+            obj.D = D;
+            obj.N = N;
+            obj.Nu = Nu;
+            obj.stepResponses = stepResponses;
+            obj.mi = mi;
+            obj.lambda = lambda;
+            obj = obj.runPreloop();
+        end
+        
+        function obj = run(obj, Y_k, Yzad_k)
+            YYzad_k = obj.getYYzad_k(Yzad_k);
+            YY_k = obj.getYY_k(Y_k);
+            obj.dUU_k = obj.K * (YYzad_k - (YY_k + obj.Mp * obj.dUUp_k));
+            
+            
+        end
+        
+        %% Getters
+        function nu = get.nu(obj)
+            nu = size(obj.stepResponses, 1);
+        end
+        
+        function ny = get.ny(obj)
+            if obj.nu > 1 % For object with multiple inputs
+                % Get ncolumns for first input
+                ny = size(obj.stepResponses{1,1}, 2);
+            else % For object with single input
+                ny = size(obj.stepResponses, 2);
             end
         end
-        Sp{p, 1} = sp;
     end
-end
 
-%% getMp
-% Creates Mp matrix used by DMC algorithm
-function Mp = getMp(obj, Sp, N, D)
-    % Variable initialisation
-    Mp = zeros(obj.ny*N, obj.nu*(D - 1));
-    for i=1:N
-        for j=1:D-1
-            Mp((i - 1)*obj.ny + 1:i*obj.ny, (j - 1)*obj.nu + 1:j*obj.nu) = ...
-                Sp{ min(D, i+j), 1} - Sp{j, 1};
+    methods (Access=private)
+        %% runPreloop
+        % Prepares necessary matrices
+        function obj = runPreloop(obj)
+            obj.Sp = obj.getSp();
+            obj.Mp = obj.getMp();
+            obj.M = obj.getM();
+            obj.Xi = obj.getXi();
+            obj.Lambda = obj.getLambda();
+            obj.K = obj.getK();
+            obj.dUU_k = obj.initdUU_k();
+            obj.dUUp_k = obj.initdUUp_k();
         end
-    end
-end
+        
+        %% getSp
+        % Creates Sp matix from step response data in cell format
+        function Sp = getSp(obj)
+            % Variable initialisation
+            Sp = cell(obj.D, 1);
+            sp = zeros(obj.ny, obj.nu); % Step response matrix in moment p
 
-%% getM
-% Creates M matrix used by DMC algorithm
-function M = getM(obj, Sp, N, Nu)
-    % Variable initialisation
-    M = zeros(obj.ny*N, obj.nu*Nu);
-    for j=1:Nu
-        for i=j:N
-            M((i - 1)*obj.ny + 1:i*obj.ny, (j - 1)*obj.nu + 1:j*obj.nu) =...
-                Sp{i-j+1, 1};
+            for p=1:obj.D % Step response moment
+                for i=1:obj.nu
+                    for j=1:obj.ny
+                        sp(j,i) = obj.stepResponses{i}(p,j);
+                    end
+                end
+                Sp{p, 1} = sp;
+            end
         end
+        
+        %% getMp
+        % Creates Mp matrix used by DMC algorithm
+        function Mp = getMp(obj)
+            % Variable initialisation
+            Mp = zeros(obj.ny*obj.N, obj.nu*(obj.D - 1));
+            for i=1:obj.N
+                for j=1:obj.D-1
+                    Mp((i - 1)*obj.ny + 1:i*obj.ny,...
+                        (j - 1)*obj.nu + 1:j*obj.nu) = ...
+                        obj.Sp{ min(obj.D, i+j), 1} - obj.Sp{j, 1};
+                end
+            end
+        end
+        
+        %% getM
+        % Creates M matrix used by DMC algorithm
+        function M = getM(obj)
+            % Variable initialisation
+            M = zeros(obj.ny*obj.N, obj.nu*obj.Nu);
+            for j=1:obj.Nu
+                for i=j:obj.N
+                    M((i - 1)*obj.ny + 1:i*obj.ny,...
+                        (j - 1)*obj.nu + 1:j*obj.nu) = obj.Sp{i-j+1, 1};
+                end
+            end
+        end
+        %% getXi
+        % Creates Xi matrix used by DMC algorithm
+        function Xi = getXi(obj)
+            Xi = zeros(obj.ny*obj.N);
+            for i=1:obj.N
+                Xi((i - 1)*obj.ny + 1:i*obj.ny,...
+                    (i - 1)*obj.ny + 1:i*obj.ny) = ...
+                    diag(obj.mi); % square ny x ny matrix
+            end
+        end
+
+        %% getLambdaMatrix
+        % Creates Lambda matrix used by DMC algorithm
+        function Lambda = getLambda(obj)
+            Lambda = zeros(obj.nu*obj.Nu);
+            for i=1:obj.Nu
+                Lambda((i - 1)*obj.nu + 1:i*obj.nu,...
+                    (i - 1)*obj.nu + 1:i*obj.nu) = ...
+                    diag(obj.lambda); % square ny x ny matrix
+            end
+        end
+
+        %% getKMatrix
+        % Creates K matrix used by DMC algorithm
+        function K = getK(obj)
+            K =...
+            (obj.M' * obj.Xi * obj.M + obj.Lambda)^(-1) * obj.M' * obj.Xi;
+        end
+
+        %% getYYzad_k
+        function YYzad_k = getYYzad_k(obj, Yzad_k)
+            % Check if vector has improper number of elements
+            if size(Yzad_k, 1) ~= obj.ny || size(Yzad_k, 2) ~= 1
+                ME = getImproperVectorSizeException(Yzad_k);
+                throw(ME);
+            else
+                YYzad_k = stackVector(Yzad_k, obj.N);
+            end
+        end
+        
+        %% getYY_k
+        function YY_k = getYY_k(obj, Y_k)
+            % Check if vector has improper number of elements
+            if size(Y_k, 1) ~= obj.ny || size(Y_k, 2) ~= 1
+                ME = getImproperVectorSizeException(Y_k);
+                throw(ME);
+            else
+                YY_k = stackVector(Y_k, obj.N);
+            end
+        end
+        
+        %% initdUUp
+        function dUUp_k = initdUUp_k(obj)
+            dUUp_k = zeros(obj.nu*(obj.D - 1), 1);
+        end
+        
+        %% initdUU
+        function dUU_k = initdUU_k(obj)
+            dUU_k = zeros(obj.nu*obj.Nu, 1);
+        end
+        
+        %% getUU_k
+        function UU_k = getUU_k(obj)
+        end
+    
     end
 end
 
-%% getXi
-% Creates Xi matrix used by DMC algorithm
-function Xi = getXi(obj, mi, N)
-    Xi = zeros(obj.ny*N);
-    for i=1:N
-        Xi((i - 1)*obj.ny + 1:i*obj.ny, (i - 1)*obj.ny + 1:i*obj.ny) = ...
-            diag(mi); % square ny x ny matrix
+%% stackVector
+% Returns vertical vector containing n V vectors stacked on top of
+% each other
+% @param V must be a vertical vector
+function newVec = stackVector(V, n)
+    newVec = zeros(n * length(V), 1);
+    for i=1:n
+        newVec((i-1)*length(V) + 1:i*length(V), 1) = V;
     end
 end
 
-%% getLambdaMatrix
-% Creates Lambda matrix used by DMC algorithm
-function Lambda = getLambdaMatrix(obj, lambda, Nu)
-    Lambda = zeros(obj.nu*Nu);
-    for i=1:Nu
-        Lambda((i - 1)*obj.nu + 1:i*obj.nu, (i - 1)*obj.nu + 1:i*obj.nu) = ...
-            diag(lambda); % square ny x ny matrix
-    end
+%% getImproperVectorSizeException
+function ME = getImproperVectorSizeException(V)
+    ME = MException('MyComponent:improperVectorSize',...
+    'Vector %s has improper size.', mat2str(V));
 end
+
+
+
+
+
+
+
+
+
+

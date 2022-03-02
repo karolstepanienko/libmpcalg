@@ -1,8 +1,7 @@
-
-
+addpath('../test');
 st = 0.1; % Sampling time
-obj = MIMOObj(A, B, C, D, st);
-stepResponses = obj.getStepResponses();
+obj = get3x2Obj(st);
+stepResponses = obj.getStepResponses(100);
 
 %% Plotting
 for i=1:obj.nu

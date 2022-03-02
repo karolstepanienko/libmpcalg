@@ -9,7 +9,6 @@ classdef MIMOObj
         st; % Sampling time
         ny; % Number of outputs
         nu; % Number of inputs
-        stepResponses; % Collection of all step responses
     end
     
     properties (Access = private)
@@ -29,7 +28,6 @@ classdef MIMOObj
             obj.st = st;
             obj.u = Utilities();
             obj = getModel(obj);
-            obj.stepResponses = obj.getStepResponses();
         end
     
         %% Getters
@@ -41,10 +39,10 @@ classdef MIMOObj
         end
         
         %% getStepResponses
-        function stepResponses = getStepResponses(obj)
+        function stepResponses = getStepResponses(obj, kk)
             stepResponses = cell(obj.nu, 1);
             for i=1:obj.nu % for every input
-                stepResponses{i, 1} = obj.getStepResponse(i);
+                stepResponses{i, 1} = obj.getStepResponse(i, kk);
             end
         end
     end
@@ -52,10 +50,9 @@ classdef MIMOObj
     methods (Access = private)
         %% getStepResponse
         % Returns output response for a step on a given input
-        function YY = getStepResponse(obj, choosenU)
+        function YY = getStepResponse(obj, choosenU, kk)
             [obj.ny, obj.nu] = size(obj.numDen);
             %% Variable initialisation
-            kk = 100;
             YY = zeros(kk, obj.ny);
             UU = zeros(kk, obj.nu);
 

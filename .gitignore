@@ -2,5 +2,8 @@
 saveStepResponsesMIMO3x4/
 diferentialEqObj/
 
+# Work-in-progress files
+test.m
+
 # MATLAB specific files
 *.asv
