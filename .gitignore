@@ -6,3 +6,4 @@ test.m
 
 # MATLAB specific files
 *.asv
+model.mat

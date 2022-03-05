@@ -16,7 +16,5 @@ For precise instructions about using specific algorithms see the list below.
 ## Author:
 Karol Stepanienko
 
----
-
 ## Navigation
 - [lang-PL](./doc/README-PL.md)
