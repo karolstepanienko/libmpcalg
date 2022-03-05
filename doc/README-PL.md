@@ -12,12 +12,10 @@ obiekty regulatorów predykcyjnych. Dokładniejsze instrukcje dostępne dla
 poszczególnych algorytmów w poniższej liście.
 
 ## Algorytmy
- - [DMC](./doc/PL/DMC.md)
+ - [DMC](./PL/DMC.md)
 
 ## Autor:
 Karol Stepanienko
-
----
 
 ## Nawigacja
 - [lang-EN](../README.md)
