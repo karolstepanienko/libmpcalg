@@ -202,7 +202,7 @@ classdef MIMOObj
         % Due to lack of implementation in octave of c2d method, this can
         % be run only in MATLAB
         function obj = getDiscreteTransmittance(obj)
-            I = eye(size(obj.C, 1));
+            I = eye(size(obj.A, 1));
             syms s; % Create symbolic variable
             if obj.D ~= 0
                 symEq = obj.C*((s*I - obj.A)^-1)*obj.B + obj.D;

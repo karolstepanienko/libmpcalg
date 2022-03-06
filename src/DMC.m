@@ -188,7 +188,7 @@ classdef DMC
         % Creates K matrix used by DMC algorithm
         function K = getK(obj)
             K =...
-            (obj.M' * obj.Xi * obj.M + obj.Lambda)^(-1) * obj.M' * obj.Xi;
+            (obj.M' * obj.Xi * obj.M + obj.Lambda) \ (obj.M' * obj.Xi);
         end
 
         %% getYYzad_k
