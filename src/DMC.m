@@ -38,10 +38,10 @@ classdef DMC
                 stepResponses
                 mi (:,1) double
                 lambda (:,1) double
-                uMin (1,1) double = -1;
-                uMax (1,1) double = 1;
+                uMin (1,1) double = -1
+                uMax (1,1) double = 1
                 duMin (1,1) double = -0.1
-                duMax (1,1) double = 0.1;
+                duMax (1,1) double = 0.1
             end
             obj.D = D;
             obj.N = N;
@@ -93,7 +93,7 @@ classdef DMC
                 % Get ncolumns for first input
                 ny = size(obj.stepResponses{1,1}, 2);
             else % For object with single input
-                ny = size(obj.stepResponses, 2);
+                ny = size(obj.stepResponses{1,1}, 2);
             end
         end
         

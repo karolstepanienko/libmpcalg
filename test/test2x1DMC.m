@@ -1,4 +1,4 @@
-function test2x2DMC()
+function test2x1DMC()
     addpath('../obj');
     addpath('../plot');
     addpath('../src');
@@ -6,17 +6,19 @@ function test2x2DMC()
     ypp = 0;
     upp = 0;
     st = 0.1; % Sampling time
-    controlObj = get2x2(st);
+    controlObj = get2x1(st);
     controlObj.getGz()
+
+    
     %% DMC parameters
     D = 100; % Dynamic horizon
     N = D; % Prediction horizon
     Nu = D; % Moving horizon
-    mi = [1, 1];
-    lambda = [1, 1];
-    uMin = -20;
+    mi = [1 1];
+    lambda = 1;
+    uMin = -2;
     uMax = -uMin;
-    duMin = -0.5;
+    duMin = -0.1;
     duMax = -duMin;
     
     % Get D elements of object step response
@@ -35,7 +37,7 @@ function test2x2DMC()
     for k=1:kk
         YY(k, :) = controlObj.getOutput(YY, UU, ypp, upp, k);
         reg = reg.calculateControl(YY(k,:), Yzad(k,:));
-        UU(k, :) = reg.getControl();
+        UU(k, 1) = reg.getControl();
     end
     plotYYseparate(YY, Yzad, st);
     plotUUseparate(UU, st);
@@ -43,7 +45,7 @@ end
 
 function Yzad = getTrajectory(kk, ny)
     Yzad = zeros(kk, ny);
-    for i=201:400; Yzad(i, :) = [0.2 0]; end
-    for i=401:600; Yzad(i, :) = [0 0]; end
-    for i=601:800; Yzad(i, :) = [0 0.5]; end
+    for i=201:400; Yzad(i, :) = [0.8 0.1]; end
+    for i=401:600; Yzad(i, :) = [-1.2 -0.15]; end
+    for i=601:800; Yzad(i, :) = [1.6 0.2]; end
 end
