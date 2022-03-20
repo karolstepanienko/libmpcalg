@@ -1,5 +1,5 @@
 function test1x1StepResponse()
-    st = 0.1; % Sampling time
-    kk = 100; % Simulation length
-    testStepResponse(@get1x1, st, kk); % ny x nu
+    simTime = 10;
+    fileName = '1x1.mat'; % File with object data
+    testStepResponse(fileName, simTime);
 end

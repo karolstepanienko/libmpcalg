@@ -6,7 +6,7 @@ classdef DMC
         Nu % Moving horizon
         stepResponses % Control object step response(s)
         mi % Output importance
-        lambda % Input importance
+        lambda % Control weight
         ny % Number of outputs
         nu % Number of inputs
         U_k % Current control value
@@ -28,21 +28,21 @@ classdef DMC
     end
 
     methods
-        function obj = DMC(D, N, Nu, stepResponses, mi, lambda, ...
+        function obj = DMC(D, N, Nu, stepResponses, mi, lambda,...
                 uMin, uMax, duMin, duMax)
-            arguments
-                % enforce integers
-                D (1,1) double
-                N (1,1) double
-                Nu (1,1) double
-                stepResponses
-                mi (:,1) double
-                lambda (:,1) double
-                uMin (1,1) double = -1
-                uMax (1,1) double = 1
-                duMin (1,1) double = -0.1
-                duMax (1,1) double = 0.1
-            end
+            % OCTAVE treats argument checking as parse error
+            % arguments
+            %     D (1,1) int8
+            %     N (1,1) int8
+            %     Nu (1,1) int8
+            %     stepResponses
+            %     mi (:,1) double
+            %     lambda (:,1) double
+            %     uMin (1,1) double = -1
+            %     uMax (1,1) double = 1
+            %     duMin (1,1) double = -0.1
+            %     duMax (1,1) double = 0.1
+            % end
             obj.D = D;
             obj.N = N;
             obj.Nu = Nu;

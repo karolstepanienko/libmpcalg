@@ -2,7 +2,7 @@
 dev/
 
 # Work-in-progress files
-test.m
+testy.m
 
 # MATLAB specific files
 *.asv

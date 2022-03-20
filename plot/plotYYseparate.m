@@ -1,32 +1,35 @@
 %% plot_y_separate
 % Plots y vectors on one figure. Every output signal gets it's own graph.
 % Graphs are alligned horizontally.
-function plotYYseparate(YY, YY_zad, st)
+function yFig = plotYYseparate(YY, YY_zad, st)
     %% Get simulation length (length of vectors in matrix)
     % and number of output vectors
-    [K, num_y] = size(YY);
+    [K, ny] = size(YY);
     
     %% Time range for plot
     x_t = 0:st:(K - 1)*st;
     
     %% Defining plot settings
-    line_width = 1;
+    line_width = 1.5;
     legend_location = 'northeast';
-    axes_list = zeros(num_y, 1);
+    axesList = zeros(1, ny);
 
     %% Plotting output
-    figure;
-    for i=1:num_y
-        axes_list(i, 1) = subplot(num_y,1,i);
+    yFig = figure;
+    for i=1:ny
+        axesList(1, i) = subplot(ny, 1, i);
         hold on
             stairs(x_t, YY(:,i), 'LineWidth', line_width);
-            stairs(x_t, YY_zad(:,i), '--', 'LineWidth', line_width, 'Color', '#D95319');
+            stairs(x_t, YY_zad(:,i), '--', 'LineWidth', line_width,...
+                'Color', [0.8500 0.3250 0.0980]);
         hold off
         xlabel('t[s]');
         ylabel('y');
-        legend(join(['y_', num2str(i)]), 'Y^{zad}', 'location', legend_location,...
+        legend(['y_', num2str(i)], 'Y^{zad}', 'location', legend_location,...
             'Orientation', 'horizontal')
     end
     %% Enforcing the same limits
-    linkaxes(axes_list);
+    if ny > 1
+        linkaxes(axesList);
+    end
 end

@@ -1,12 +1,13 @@
 function test1x1DMC()
-    addpath('../obj');
-    addpath('../plot');
-    addpath('../src');
     %% Object
+    % Setting sampling time -> ../../obj/get2x2.m
     ypp = 0;
     upp = 0;
-    st = 0.1; % Sampling time
-    controlObj = get1x1(st);
+    fileName = '1x1.mat';
+    u = Utilities();
+    filePath = u.getObjBinFilePath(fileName);
+    load(filePath);
+
     %% DMC parameters
     D = 50; % Dynamic horizon
     N = D; % Prediction horizon
@@ -19,27 +20,25 @@ function test1x1DMC()
     duMax = -duMin;
     
     % Get D elements of object step response
-    stepResponses = controlObj.getStepResponses(D);
+    stepResponses = getStepResponses(ny, nu, numDen, D+1);
     
     %% Variable initialisation
     kk = 1000; % Simulation length
-    Y = zeros(kk, controlObj.ny);
-    U = zeros(kk, controlObj.nu);
+    Y = zeros(kk, ny);
+    U = zeros(kk, nu);
     % Trajectory
-    Yzad = getTrajectory(kk, controlObj.ny);
+    Yzad = getTrajectory(kk, ny);
     % Regulator
     reg = DMC(D, N, Nu, stepResponses, mi, lambda,...
         uMin, uMax, duMin, duMax);
 
     for k=1:kk
-        Y(k, 1) = controlObj.getOutput(Y, U, ypp, upp, k);
+        Y(k, 1) = getObjectOutput(ny, nu, numDen, Y, U, ypp, upp, k);
         reg = reg.calculateControl(Y(k,1), Yzad(k,1));
         U(k, 1) = reg.getControl();
     end
-    
     plotYYseparate(Y, Yzad, st);
-    figure;
-    plot(U);
+    plotUUseparate(U, st);
 end
 
 function Yzad = getTrajectory(kk, ny)

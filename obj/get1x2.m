@@ -1,11 +1,27 @@
 %% get1x2
 % Returns object with one output and two inputs
+% y x u
 function obj = get1x2(st)
-    % y x u
-    %% Stable
-    A = [-1/2 0; 0 -1];
-    B = [1 0; 0 1];
-    C = [1.5/2 1/2];
-    D = 0;
-    obj = MIMOObj(A, B, C, D, st);
+    arguments
+        st (1,1) {mustBeNumeric} = 0.1
+    end
+    %% Single inertial object
+    %               2                       3
+    % (y1, u1): ----------,   (y1, u2): ----------
+    %            1.5s + 1                2.5s + 1
+    %
+    
+    cNum = {
+    %  u1 u2
+        2 3 % y1
+    };
+
+    cDen = {
+        %  u1     u2
+        [1.5 1] [2.5 1] % y1
+    };
+
+    Gs = tf(cNum, cDen);
+    obj = MIMOObj(Gs, st);
+    obj.save('1x2.mat');
 end

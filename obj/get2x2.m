@@ -1,37 +1,33 @@
+%% get2x2
+% Returns stable object with two outputs and two inputs
+% y x u
 function obj = get2x2(st)
-    % Unstable
-    % y x u
-%     A = [-4/3 0 ; -5/4 0]; % ny x nx    
-%     B = [-2/3 0; 0 -4/5]; % ny x nu
-%     C = [1 -0.5; 0.4 0.1]; % ny x nx
-%     D = [-0.1 -0.2; 0.3 -0.4]; % ny x nu
-    %% Twin oscilation
-%     A = [-5 0 0 0 0 0 0;
-%         0 -2 -5 0 0 0 0;
-%         0 1 0 0 0 0 0;
-%         0 0 0 -1.5 -2.5 0 0 ;
-%         0 0 0 1 0 0 0;
-%         0 0 0 0 0 -1 -10;
-%         0 0 0 0 0 1 0;];
-%     B = [15 0;
-%         2 0;
-%         0 0;
-%         0 10;
-%         0 0;
-%         0 3;
-%         0 0];
-%     C = [1 0 0 0 0 0 -1;
-%         0 0 -1 0 1 0 0];
-%     D = [1 0;
-%         0 1];
-
-    A = [-0.9 0 0 0;
-        0 -0.8 0 0;
-        0 0 -0.5 0;
-        0 0 0 -0.6];
-    B = [0.1 0; 0 0.21; 0.3 0; 0 0.4];
-    C = [1 0.5 0 0; 0 0 0.6 1];
-    D = 0;
-    obj = MIMOObj(A, B, C, D, st);
-    obj.getGz();
+    arguments
+        st (1,1) {mustBeNumeric} = 0.1
+    end
+    %% Single intertial object
+    %               1                       2
+    % (y1, u1): ----------,   (y1, u2): ----------
+    %            0.1s + 1                0.2s + 1
+    %               3                       4
+    % (y2, u1): ----------,   (y2, u2): ----------
+    %            0.3s + 1                0.4s + 1
+    %
+    
+    cNum = {
+    %  u1 u2
+        1 2; % y1
+        3 4  % y2
+    };
+    
+    cDen = {
+        %  u1     u2
+        [0.1 1] [0.2 1]; % y1
+        [0.3 1] [0.4 1]  % y2
+    };
+    
+    Gs = tf(cNum, cDen);
+    obj = MIMOObj(Gs, st);
+    step(Gs)
+    obj.save('2x2.mat');
 end
