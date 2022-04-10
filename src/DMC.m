@@ -1,4 +1,4 @@
-classdef DMC
+classdef DMC < MPC
     properties
         %% DMC parmameters
         D % Dynamic horizon
@@ -16,13 +16,7 @@ classdef DMC
         duMax % Maximal control change value
     end
 
-    properties (Access = private)
-        Sp % Sp - cell of step response matrixes in p moment
-        Mp % Mp matrix used by DMC algorithm
-        M  % M matrix used by DMC algorithm
-        Xi % Xi matrix used by DMC algorithm
-        Lambda % Lambda matrix used by DMC algorithm
-        K % K matrix used by DMC algorithm
+    properties (Access=private)
         dUU_k % Vector containing control values
         dUUp_k % DUUp vector containing past control value changes
     end
@@ -54,7 +48,8 @@ classdef DMC
             obj.duMin = duMin;
             obj.duMax = duMax;
             
-            obj = obj.runPreloop();
+            obj = obj.initMPC();
+            obj = obj.initDMC();
         end
 
         %% calculateControl
@@ -105,90 +100,12 @@ classdef DMC
     end
 
     methods (Access=private)
-        %% runPreloop
-        % Prepares necessary matrices
-        function obj = runPreloop(obj)
-            obj.Sp = obj.getSp();
-            obj.Mp = obj.getMp();
-            obj.M = obj.getM();
-            obj.Xi = obj.getXi();
-            obj.Lambda = obj.getLambda();
-            obj.K = obj.getK();
+        %% initDMC
+        % Prepares neccessary vectors used by DMC algorithms
+        function obj = initDMC(obj)
             obj.dUU_k = obj.initdUU_k();
             obj.dUUp_k = obj.initdUUp_k();
             obj.U_k = obj.initU_k();
-        end
-        
-        %% getSp
-        % Creates Sp matix from step response data in cell format
-        function Sp = getSp(obj)
-            % Variable initialisation
-            Sp = cell(obj.D, 1);
-            sp = zeros(obj.ny, obj.nu); % Step response matrix in moment p
-
-            for p=1:obj.D % Step response moment
-                for i=1:obj.nu
-                    for j=1:obj.ny
-                        sp(j,i) = obj.stepResponses{i}(p,j);
-                    end
-                end
-                Sp{p, 1} = sp;
-            end
-        end
-        
-        %% getMp
-        % Creates Mp matrix used by DMC algorithm
-        function Mp = getMp(obj)
-            % Variable initialisation
-            Mp = zeros(obj.ny*obj.N, obj.nu*(obj.D - 1));
-            for i=1:obj.N
-                for j=1:obj.D-1
-                    Mp((i - 1)*obj.ny + 1:i*obj.ny,...
-                        (j - 1)*obj.nu + 1:j*obj.nu) = ...
-                        obj.Sp{ min(obj.D, i+j), 1} - obj.Sp{j, 1};
-                end
-            end
-        end
-        
-        %% getM
-        % Creates M matrix used by DMC algorithm
-        function M = getM(obj)
-            % Variable initialisation
-            M = zeros(obj.ny*obj.N, obj.nu*obj.Nu);
-            for j=1:obj.Nu
-                for i=j:obj.N
-                    M((i - 1)*obj.ny + 1:i*obj.ny,...
-                        (j - 1)*obj.nu + 1:j*obj.nu) = obj.Sp{i-j+1, 1};
-                end
-            end
-        end
-        %% getXi
-        % Creates Xi matrix used by DMC algorithm
-        function Xi = getXi(obj)
-            Xi = zeros(obj.ny*obj.N);
-            for i=1:obj.N
-                Xi((i - 1)*obj.ny + 1:i*obj.ny,...
-                    (i - 1)*obj.ny + 1:i*obj.ny) = ...
-                    diag(obj.mi); % square ny x ny matrix
-            end
-        end
-
-        %% getLambdaMatrix
-        % Creates Lambda matrix used by DMC algorithm
-        function Lambda = getLambda(obj)
-            Lambda = zeros(obj.nu*obj.Nu);
-            for i=1:obj.Nu
-                Lambda((i - 1)*obj.nu + 1:i*obj.nu,...
-                    (i - 1)*obj.nu + 1:i*obj.nu) = ...
-                    diag(obj.lambda); % square ny x ny matrix
-            end
-        end
-
-        %% getKMatrix
-        % Creates K matrix used by DMC algorithm
-        function K = getK(obj)
-            K =...
-            (obj.M' * obj.Xi * obj.M + obj.Lambda) \ (obj.M' * obj.Xi);
         end
 
         %% getYYzad_k
@@ -198,7 +115,7 @@ classdef DMC
                 ME = getImproperVectorSizeException(Yzad_k);
                 throw(ME);
             else
-                YYzad_k = stackVector(Yzad_k, obj.N);
+                YYzad_k = Utilities.stackVector(Yzad_k, obj.N);
             end
         end
         
@@ -209,7 +126,7 @@ classdef DMC
                 ME = getImproperVectorSizeException(Y_k);
                 throw(ME);
             else
-                YY_k = stackVector(Y_k, obj.N);
+                YY_k = Utilities.stackVector(Y_k, obj.N);
             end
         end
         
@@ -252,29 +169,10 @@ classdef DMC
     end
 end
 
-%% stackVector
-% Returns vertical vector containing n V vectors stacked on top of
-% each other
-% @param V must be a vertical vector
-function newVec = stackVector(V, n)
-    newVec = zeros(n * length(V), 1);
-    for i=1:n
-        newVec((i-1)*length(V) + 1:i*length(V), 1) = V;
-    end
-end
+
 
 %% getImproperVectorSizeException
 function ME = getImproperVectorSizeException(V)
     ME = MException('MyComponent:improperVectorSize',...
     'Vector %s has improper size.', mat2str(V));
 end
-
-
-
-
-
-
-
-
-
-

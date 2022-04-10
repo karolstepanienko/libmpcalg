@@ -32,7 +32,18 @@ classdef Utilities
                 end
             end
         end
-        
+
+        %% stackVector
+        % Returns vertical vector containing n V vectors stacked on top of
+        % each other
+        % @param V must be a vertical vector
+        function newVec = stackVector(V, n)
+            newVec = zeros(n * length(V), 1);
+            for i=1:n
+                newVec((i-1)*length(V) + 1:i*length(V), 1) = V;
+            end
+        end
+
         %% addAllPaths
         % Adds all paths used by library
         % Platform independent
