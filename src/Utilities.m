@@ -80,7 +80,7 @@ classdef Utilities
         function sortedAxesList = sortAxesList(iy, nu, kk, YstepResponses, axesList)
             maxSRValues = zeros(1, nu);
             for iu=1:nu
-                maxSRValues(1, iu) = max(YstepResponses(:, iu));
+                maxSRValues(1, iu) = max(abs(YstepResponses(:, iu)));
             end
             [~, sortIdx] = sort(maxSRValues, 2, 'descend');
             % Using sorting index to sort another array accordingly

@@ -1,8 +1,7 @@
 function test2x2DMC()
     %% Object
     % Setting sampling time -> ../../obj/get2x2.m
-    fileName = '2x2.mat';
-    load(Utilities.getObjBinFilePath(fileName));
+    load(Utilities.getObjBinFilePath('2x2.mat'));
     ypp = 0;
     upp = 0;
 
@@ -14,7 +13,7 @@ function test2x2DMC()
     Yzad = getTrajectory(kk, ny);
 
     %% Test loop
-    testDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk);
+    testSingleDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk);
 end
 
 function Yzad = getTrajectory(kk, ny)

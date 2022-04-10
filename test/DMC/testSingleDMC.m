@@ -1,4 +1,4 @@
-function testDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk)
+function testSingleDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk)
     %% DMC parameters
     D = 100; % Dynamic horizon
     N = D; % Prediction horizon
@@ -7,7 +7,7 @@ function testDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk)
     lambda = ones(1, nu); % Control weight
     uMin = -10;
     uMax = -uMin;
-    duMin = -0.1;
+    duMin = -0.5;
     duMax = -duMin;
 
     % Get D elements of object step response
