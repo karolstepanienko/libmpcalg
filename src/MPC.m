@@ -1,14 +1,37 @@
 classdef MPC
-    properties (Access=protected)
+    properties
+        %% MPC parmameters
+        D % Dynamic horizon
+        N % Prediction horizon
+        Nu % Moving horizon
+        stepResponses % Control object step response(s)
+        mi % Output importance
+        lambda % Control weight
+
+        U_k % Current control value
+        uMin % Minimal control value
+        uMax % Maximal control value
+        duMin % Minimal control change value
+        duMax % Maximal control change value
+    end
+
+    properties (Access = protected, Constant)
+        v = Validation();
+    end
+
+    properties (Access = protected)
         Sp % Sp - cell of step response matrixes in p moment
         Mp % Mp matrix used by DMC algorithm
         M  % M matrix used by DMC algorithm
         Xi % Xi matrix used by DMC algorithm
         Lambda % Lambda matrix used by DMC algorithm
         K % K matrix used by DMC algorithm
+        dUU_k % Vector containing control values
+        dUUp_k % DUUp vector containing past control value changes
+        % v % Validation class object
     end
 
-    methods (Access=protected)
+    methods (Access = protected)
 
         %% initMPC
         % Creates necessary matrices for MPC algorithms

@@ -1,24 +1,7 @@
 classdef DMC < MPC
     properties
-        %% DMC parmameters
-        D % Dynamic horizon
-        N % Prediction horizon
-        Nu % Moving horizon
-        stepResponses % Control object step response(s)
-        mi % Output importance
-        lambda % Control weight
         ny % Number of outputs
         nu % Number of inputs
-        U_k % Current control value
-        uMin % Minimal control value
-        uMax % Maximal control value
-        duMin % Minimal control change value
-        duMax % Maximal control change value
-    end
-
-    properties (Access=private)
-        dUU_k % Vector containing control values
-        dUUp_k % DUUp vector containing past control value changes
     end
 
     methods
@@ -37,16 +20,16 @@ classdef DMC < MPC
             %     duMin (1,1) double = -0.1
             %     duMax (1,1) double = 0.1
             % end
-            obj.D = D;
-            obj.N = N;
-            obj.Nu = Nu;
+            obj.D = obj.v.validateIntegerB0(D, 'D');
+            obj.N = obj.v.validateIntegerB0(N, 'N');
+            obj.Nu = obj.v.validateIntegerB0(Nu, 'Nu');
             obj.stepResponses = stepResponses;
             obj.mi = mi;
             obj.lambda = lambda;
-            obj.uMin = uMin;
-            obj.uMax = uMax;
-            obj.duMin = duMin;
-            obj.duMax = duMax;
+            obj.uMin = obj.v.validateDouble(uMin, 'uMin');
+            obj.uMax = obj.v.validateDouble(uMax, 'uMax');
+            obj.duMin = obj.v.validateDoubleS0(duMin, 'duMin');
+            obj.duMax = obj.v.validateDoubleB0(duMax, 'duMax');
             
             obj = obj.initMPC();
             obj = obj.initDMC();
@@ -99,7 +82,7 @@ classdef DMC < MPC
         end
     end
 
-    methods (Access=private)
+    methods (Access = private)
         %% initDMC
         % Prepares neccessary vectors used by DMC algorithms
         function obj = initDMC(obj)
@@ -168,7 +151,6 @@ classdef DMC < MPC
         end
     end
 end
-
 
 
 %% getImproperVectorSizeException
