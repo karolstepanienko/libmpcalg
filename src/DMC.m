@@ -1,38 +1,69 @@
+%% DMC
+% Analytical DMC also called classicDMC
 classdef DMC < MPC
     properties
-        ny % Number of outputs
-        nu % Number of inputs
+
     end
 
     methods
-        function obj = DMC(D, N, Nu, stepResponses, mi, lambda,...
-                uMin, uMax, duMin, duMax)
-            % OCTAVE treats argument checking as parse error
-            % arguments
-            %     D (1,1) int8
-            %     N (1,1) int8
-            %     Nu (1,1) int8
-            %     stepResponses
-            %     mi (:,1) double
-            %     lambda (:,1) double
-            %     uMin (1,1) double = -1
-            %     uMax (1,1) double = 1
-            %     duMin (1,1) double = -0.1
-            %     duMax (1,1) double = 0.1
-            % end
-            obj.D = obj.v.validateIntegerB0(D, 'D');
-            obj.N = obj.v.validateIntegerB0(N, 'N');
-            obj.Nu = obj.v.validateIntegerB0(Nu, 'Nu');
-            obj.stepResponses = stepResponses;
-            obj.mi = mi;
-            obj.lambda = lambda;
-            obj.uMin = obj.v.validateDouble(uMin, 'uMin');
-            obj.uMax = obj.v.validateDouble(uMax, 'uMax');
-            obj.duMin = obj.v.validateDoubleS0(duMin, 'duMin');
-            obj.duMax = obj.v.validateDoubleB0(duMax, 'duMax');
+        function obj = DMC(D, N, Nu, ny, nu, stepResponses, varargin)
+            % Arguments:
+            % D, N, Nu, stepResponses, ny, nu, mi, lambda, uMin, uMax, duMin,
+            % duMax
             
-            obj = obj.initMPC();
+            %% Parameter validation
+            p = inputParser;
+            p.CaseSensitive = true(1);
+            p.FunctionName = 'DMC';
+
+            % Requred parameters
+            addRequired(p, 'D', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'stepResponses', obj.v.validCell);
+            addRequired(p, 'numberOfOutputs', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfInputs', obj.v.validScalarIntGreaterThan0Num);
+
+            % Optional parameter values
+            defaultMi = 1;
+            defaultLambda = 1;
+            defaultuMin = -Inf;
+            defaultuMax = Inf;
+            defaultduMin = -Inf;
+            defaultduMax = Inf;
+
+            % Optional parameters
+            addParameter(p, 'mi', defaultMi, obj.v.validNum);
+            addParameter(p, 'lambda', defaultLambda, obj.v.validNum);
+            addParameter(p, 'uMin', defaultuMin, obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMax', defaultuMax, obj.v.validScalarDoubleNum);
+            addParameter(p, 'duMin', defaultduMin,...
+                obj.v.validScalarDoubleLessThan0Num);
+            addParameter(p, 'duMax', defaultduMax,...
+                obj.v.validScalarDoubleGreaterThan0Num);
+
+            % Parsing values
+            parse(p, D, N, Nu, stepResponses, ny, nu, varargin{:});            
+            
+            % Assign required parameters
+            obj.D = p.Results.D;
+            obj.N = p.Results.N;
+            obj.Nu = p.Results.Nu;
+            obj.ny = p.Results.numberOfOutputs;
+            obj.nu = p.Results.numberOfInputs;
+            obj.stepResponses = obj.v.validateStepResponses(...
+                p.Results.stepResponses, obj.ny, obj.nu, obj.D);
+
+            % Assign optional parameters
+            obj.mi = obj.v.validateArray('mi', p.Results.mi, obj.ny);
+            obj.lambda = obj.v.validateArray('lambda', p.Results.lambda, obj.nu);
+            obj.uMin = p.Results.uMin;
+            obj.uMax = p.Results.uMax;
+            obj.duMin = p.Results.duMin;
+            obj.duMax = p.Results.duMax;
+
             obj = obj.initDMC();
+            obj = obj.initMPC();
         end
 
         %% calculateControl
@@ -46,6 +77,7 @@ classdef DMC < MPC
             
             % Get YY_0
             YY_0 = YY_k + obj.Mp * obj.dUUp_k;
+            
             % Get new control change value
             obj.dUU_k = obj.K * (YYzad_k - YY_0);
             
@@ -59,20 +91,6 @@ classdef DMC < MPC
             % Get new control value
             % Here U_k = U_k_1 and is updated
             obj.U_k = obj.limitU_k(obj.U_k + obj.dUU_k(1:obj.nu, 1));
-        end
-        
-        %% Getters
-        function nu = get.nu(obj)
-            nu = size(obj.stepResponses, 1);
-        end
-        
-        function ny = get.ny(obj)
-            if obj.nu > 1 % For object with multiple inputs
-                % Get ncolumns for first input
-                ny = size(obj.stepResponses{1,1}, 2);
-            else % For object with single input
-                ny = size(obj.stepResponses{1,1}, 2);
-            end
         end
         
         %% getControl

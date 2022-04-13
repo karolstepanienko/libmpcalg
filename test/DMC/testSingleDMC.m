@@ -13,13 +13,22 @@ function testSingleDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk)
     % Get D elements of object step response
     stepResponses = getStepResponses(ny, nu, numDen, D);
 
+
     %% Variable initialisation
     YY = zeros(kk, ny);
     UU = zeros(kk, nu);
 
+    % Test parameter validation
+    % stepResponses = {1; 2}; % inputs
+    % stepResponses{nu} = [1,2, 3]; % outputs
+    % mi = [1;2];
+    % lambda = [1,2];
+
     % Regulator
-    reg = DMC(D, N, Nu, stepResponses, mi, lambda,...
-        uMin, uMax, duMin, duMax);
+    reg = DMC(D, N, Nu, ny, nu, stepResponses,...
+        'mi', mi, 'lambda', lambda,...
+        'uMin', uMin, 'uMax', uMax,...
+        'duMin', duMin, 'duMax', duMax);
 
     for k=1:kk
         YY(k, :) = getObjectOutput(ny, nu, numDen, YY, UU, ypp, upp, k);

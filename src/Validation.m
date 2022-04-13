@@ -1,25 +1,25 @@
 classdef Validation
-    properties (Access = private)
-        validScalarIntB0Num
+    properties  %(Access = public)
+        % Int
+        validScalarIntGreaterThan0Num
+        % Double
         validScalarDoubleNum
-        validScalarDoubleS0Num
-        validScalarDoubleB0Num
+        validScalarDoubleLessThan0Num
+        validScalarDoubleGreaterThan0Num
+        % Cell
+        validCell
+        % Double or array
+        validNum
     end
 
     methods
-        %--------------------------- int < 0 -----------------------------------
+        %--------------------------- int > 0 -----------------------------------
 
-        %% get.validScalarIntB0Num
+        %% get.validScalarIntGreaterThan0Num
         % Returns function for validating integers
-        function validScalarIntB0Num = get.validScalarIntB0Num(obj)
-            validScalarIntB0Num = @(x) isnumeric(x) && isscalar(x) &&...
+        function validScalarIntGreaterThan0Num = get.validScalarIntGreaterThan0Num(obj)
+            validScalarIntGreaterThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
                 (mod(x, 1) == 0) && (x > 0);
-        end
-
-        %% validateIntegerB0
-        % Runs validation for an integer value larger than zero
-        function value = validateIntegerB0(obj, value, variableName)
-            value = obj.validate(value, variableName, obj.validScalarIntB0Num);
         end
         
         %--------------------------- double ------------------------------------
@@ -31,58 +31,75 @@ classdef Validation
                 isa(x, 'double');
         end
 
-        %% validateDouble
-        % Runs validation for a double value
-        function value = validateDouble(obj, value, variableName)
-            value = obj.validate(value, variableName, obj.validScalarDoubleNum);
-        end
-
         %--------------------------- double < 0 --------------------------------
 
-        %% get.validScalarDoubleS0Num
+        %% get.validScalarDoubleLessThan0Num
         % Returns function for validating doubles smaller or equal to zero
-        function validScalarDoubleS0Num = get.validScalarDoubleS0Num(obj)
-            validScalarDoubleS0Num = @(x) isnumeric(x) && isscalar(x) &&...
+        function validScalarDoubleLessThan0Num = get.validScalarDoubleLessThan0Num(obj)
+            validScalarDoubleLessThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
                 isa(x, 'double') && (x <= 0);
-        end
-
-        %% validateDoubleS0
-        % Runs validation for a double value smaller or equal to zero
-        function value = validateDoubleS0(obj, value, variableName)
-            value = ...
-                obj.validate(value, variableName, obj.validScalarDoubleS0Num);
         end
 
         %--------------------------- double > 0 --------------------------------
 
-        %% get.validScalarDoubleB0Num
+        %% get.validScalarDoubleGreaterThan0Num
         % Returns function for validating doubles bigger or equal to zero
-        function validScalarDoubleB0Num = get.validScalarDoubleB0Num(obj)
-            validScalarDoubleB0Num = @(x) isnumeric(x) && isscalar(x) &&...
+        function validScalarDoubleGreaterThan0Num = get.validScalarDoubleGreaterThan0Num(obj)
+            validScalarDoubleGreaterThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
                 isa(x, 'double') && (x >= 0);
         end
 
-        %% validateDoubleB0
-        % Runs validation for a double value bigger or equal to zero
-        function value = validateDoubleB0(obj, value, variableName)
-            value = ...
-                obj.validate(value, variableName, obj.validScalarDoubleB0Num);
+        %--------------------------- cell --------------------------------------
+        function stepResponses = validateStepResponses(obj, stepResponses, ny, nu, D)
+            % Check number of inputs
+            if size(stepResponses, 1) ~= nu  
+                error('stepResponses:InvalidNumberOfInputs',...
+                    sprintf("Malformed step responses cell. Number of inputs (%s) doesn't match the number of inputs (%s) in provided step responses cell.",...
+                    num2str(nu), num2str(size(stepResponses, 1)) ));
+            end
+
+            % Check number of outputs
+            for i=1:nu
+                if size(stepResponses{i}, 2) ~= ny
+                    error('stepResponses:InvalidNumberOfOutputs',...
+                        sprintf("Malformed step responses cell. Number of outputs (%s) doesn't match the number of outputs (%s) in provided step responses cell.",...
+                        num2str(ny), num2str(size(stepResponses{i}, 2))));
+                end
+            end
+
+            % Warn if step response is shorter than dynamic horizon D
+            for cu=1:nu
+                for cy=1:ny
+                    if size(stepResponses{cu}(:, cy), 1) < D
+                        warning(sprintf('Step response for combination of input (%s) and output (%s) is shorter (%s) than dynamic horizon D=%s. Assumed constant step response equal to last known element.',...
+                        num2str(cu), num2str(cy),...
+                        num2str(size(stepResponses{cu}(:, cy), 1)),...
+                        num2str(D)));
+                    end
+                end
+            end
         end
 
-        %--------------------------- cell --------------------------------------
-        % TODO
+        function validCell = get.validCell(obj)
+            validCell = @(x) iscell(x) && ~isempty(x);
+        end
 
         %--------------------------- vector ------------------------------------
-        % TODO
-        
-        %-----------------------------------------------------------------------
+        function validNum = get.validNum(obj)
+            validNum = @isnumeric;
+        end
 
-        %% validate
-        % General validation function
-        function value = validate(obj, value, variableName, validationFunc)
-            p = inputParser;
-            addRequired(p, variableName, validationFunc);
-            parse(p, value);
+        function value = validateArray(obj, arrayName, array, n)
+            if size(array, 1) == 1 && size(array, 2) == 1 && n ~= 1
+                % Stretch the number to required array 
+                value = zeros(1, n) + array;
+            elseif size(array, 1) ~= 1 || size(array, 2) ~= n
+                error('array:ArrayInvalidSize',...
+                sprintf('Array %s should be horizontal and have (%s) elements.',...
+                arrayName, num2str(n)));
+            else
+                value = array;
+            end
         end
     end
 end

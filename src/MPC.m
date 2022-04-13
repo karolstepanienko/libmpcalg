@@ -1,34 +1,50 @@
 classdef MPC
     properties
-        %% MPC parmameters
-        D % Dynamic horizon
-        N % Prediction horizon
-        Nu % Moving horizon
-        stepResponses % Control object step response(s)
-        mi % Output importance
-        lambda % Control weight
+        % Required
+        D  % Dynamic horizon
+        N  % Prediction horizon
+        Nu  % Moving horizon
+        stepResponses  % Control object step response(s)
+        ny  % Number of outputs
+        nu  % Number of inputs
 
-        U_k % Current control value
-        uMin % Minimal control value
-        uMax % Maximal control value
-        duMin % Minimal control change value
-        duMax % Maximal control change value
+        % Optional
+        mi  % Output importance
+        lambda  % Control weight
+        uMin  % Minimal control value
+        uMax  % Maximal control value
+        duMin  % Minimal control change value
+        duMax  % Maximal control change value
+
+        % Calculated internally
+        U_k  % Current control value
     end
 
     properties (Access = protected, Constant)
-        v = Validation();
+        v = Validation();  % Validation object that stores data validation 
+                           % functions
     end
 
     properties (Access = protected)
-        Sp % Sp - cell of step response matrixes in p moment
-        Mp % Mp matrix used by DMC algorithm
-        M  % M matrix used by DMC algorithm
-        Xi % Xi matrix used by DMC algorithm
-        Lambda % Lambda matrix used by DMC algorithm
-        K % K matrix used by DMC algorithm
-        dUU_k % Vector containing control values
-        dUUp_k % DUUp vector containing past control value changes
-        % v % Validation class object
+        Sp  % Sp - cell of step response matrixes in p moment
+        Mp  % Mp matrix used by DMC algorithm
+        M   % M matrix used by DMC algorithm
+        Xi  % Xi matrix used by DMC algorithm
+        Lambda  % Lambda matrix used by DMC algorithm
+        K  % K matrix used by DMC algorithm
+        dUU_k  % Vector containing control values
+        dUUp_k  % DUUp vector containing past control value changes
+    end
+
+    methods
+        %% Getters
+        function ny = get.ny(obj)
+            ny = obj.ny;
+        end
+
+        function nu = get.nu(obj)
+            nu = obj.nu;
+        end
     end
 
     methods (Access = protected)
@@ -54,7 +70,14 @@ classdef MPC
             for p=1:obj.D % Step response moment
                 for i=1:obj.nu
                     for j=1:obj.ny
-                        sp(j,i) = obj.stepResponses{i}(p,j);
+                        if p <= size(obj.stepResponses{i}(:, j), 1)
+                            sp(j,i) = obj.stepResponses{i}(p,j);
+                        else
+                            % Stretch the step response assuming that elements
+                            % after D are equal to last known step response
+                            % value
+                            sp(j,i) = obj.stepResponses{i}(end,j);
+                        end
                     end
                 end
                 Sp{p, 1} = sp;
