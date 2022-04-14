@@ -14,6 +14,9 @@ function uFig = plotUUseparate(UU, st)
     legend_location = 'northeast';
     axesList = zeros(1, nu);
 
+    % Max value for every U
+    maxUValues = zeros(nu, 1);
+
     %% Plotting output
     uFig = figure;
     for i=1:nu
@@ -22,11 +25,12 @@ function uFig = plotUUseparate(UU, st)
         xlabel('t[s]');
         ylabel('u');
         legend(['u_', num2str(i)], 'location', legend_location,...
-            'Orientation', 'horizontal')
+            'Orientation', 'horizontal');
+        
+        maxUValues(i) = max(abs(UU(:, i)));
     end
     if nu > 1
-        linkaxes(axesList);
+        sortedAxesList = Utilities.sortAxes(maxUValues, axesList);
+        linkaxes(sortedAxesList);
     end
 end
-
-% TODO sort axes for vectors

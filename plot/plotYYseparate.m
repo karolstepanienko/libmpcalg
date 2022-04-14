@@ -14,6 +14,9 @@ function yFig = plotYYseparate(YY, YY_zad, st)
     legend_location = 'northeast';
     axesList = zeros(1, ny);
 
+    % Max value for every Y
+    maxYValues = zeros(ny, 1);
+
     %% Plotting output
     yFig = figure;
     for i=1:ny
@@ -26,10 +29,13 @@ function yFig = plotYYseparate(YY, YY_zad, st)
         xlabel('t[s]');
         ylabel('y');
         legend(['y_', num2str(i)], 'Y^{zad}', 'location', legend_location,...
-            'Orientation', 'horizontal')
+            'Orientation', 'horizontal');
+
+        maxYValues(i) = max(max(abs(YY(:, i)), abs(YY_zad(:, i))));
     end
     %% Enforcing the same limits
     if ny > 1
-        linkaxes(axesList);
+        sortedAxesList = Utilities.sortAxes(maxYValues, axesList);
+        linkaxes(sortedAxesList);
     end
 end

@@ -88,12 +88,20 @@ classdef Utilities
 
         %% sortAxesList
         % Sort axes descending for every output
-        function sortedAxesList = sortAxesList(iy, nu, kk, YstepResponses, axesList)
+        function sortedAxesList = sortAxesList(nu, kk, YstepResponses, axesList)
             maxSRValues = zeros(1, nu);
             for iu=1:nu
                 maxSRValues(1, iu) = max(abs(YstepResponses(:, iu)));
             end
             [~, sortIdx] = sort(maxSRValues, 2, 'descend');
+            % Using sorting index to sort another array accordingly
+            sortedAxesList = axesList(sortIdx);
+        end
+
+        %% sortAxes
+        % Sorts axes so the axis with biggest values is first
+        function sortedAxesList = sortAxes(maxYValues, axesList)
+            [~, sortIdx] = sort(maxYValues, 2, 'descend');
             % Using sorting index to sort another array accordingly
             sortedAxesList = axesList(sortIdx);
         end

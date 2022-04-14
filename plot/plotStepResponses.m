@@ -24,7 +24,7 @@ function plotStepResponses(stepResponses)
         if nu > 1
             YstepResponses = Utilities.getYStepResponses(iy, nu, ny,...
                                                         stepResponses, kk);
-            sortedAxesList = Utilities.sortAxesList(iy, nu, kk, YstepResponses, axesList);
+            sortedAxesList = Utilities.sortAxesList(nu, kk, YstepResponses, axesList);
             linkaxes(sortedAxesList);
         end
     end
