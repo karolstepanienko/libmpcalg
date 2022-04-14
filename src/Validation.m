@@ -50,20 +50,19 @@ classdef Validation
         end
 
         %--------------------------- cell --------------------------------------
-        function stepResponses = validateStepResponses(obj, stepResponses, ny, nu, D)
+        function stepResponses = validateStepResponses(obj, stepResponses,...
+            ny, nu, D)
             % Check number of inputs
-            if size(stepResponses, 1) ~= nu  
-                error('stepResponses:InvalidNumberOfInputs',...
-                    sprintf("Malformed step responses cell. Number of inputs (%s) doesn't match the number of inputs (%s) in provided step responses cell.",...
-                    num2str(nu), num2str(size(stepResponses, 1)) ));
+            if size(stepResponses, 1) ~= nu
+                Exceptions.throwStepResponsesInvalidNumberOfInputs(...
+                    nu, size(stepResponses, 1));
             end
 
             % Check number of outputs
             for i=1:nu
                 if size(stepResponses{i}, 2) ~= ny
-                    error('stepResponses:InvalidNumberOfOutputs',...
-                        sprintf("Malformed step responses cell. Number of outputs (%s) doesn't match the number of outputs (%s) in provided step responses cell.",...
-                        num2str(ny), num2str(size(stepResponses{i}, 2))));
+                    Exceptions.throwStepResponsesInvalidNumberOfOutputs(...
+                    ny, size(stepResponses{i}, 2));
                 end
             end
 
@@ -71,10 +70,8 @@ classdef Validation
             for cu=1:nu
                 for cy=1:ny
                     if size(stepResponses{cu}(:, cy), 1) < D
-                        warning(sprintf('Step response for combination of input (%s) and output (%s) is shorter (%s) than dynamic horizon D=%s. Assumed constant step response equal to last known element.',...
-                        num2str(cu), num2str(cy),...
-                        num2str(size(stepResponses{cu}(:, cy), 1)),...
-                        num2str(D)));
+                        Warnings.showStepResponseToShort(cu, cy,...
+                        size(stepResponses{cu}(:, cy), 1), D);
                     end
                 end
             end
@@ -94,9 +91,7 @@ classdef Validation
                 % Stretch the number to required array 
                 value = zeros(1, n) + array;
             elseif size(array, 1) ~= 1 || size(array, 2) ~= n
-                error('array:ArrayInvalidSize',...
-                sprintf('Array %s should be horizontal and have (%s) elements.',...
-                arrayName, num2str(n)));
+                Exceptions.throwArrayInvalidSize(arrayName, n);
             else
                 value = array;
             end
