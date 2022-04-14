@@ -1,4 +1,4 @@
-function test1x1DMC()
+function test1x1DMC(funcDMC)
     %% Object
     % Setting sampling time -> ../../obj/get2x2.m
     load(Utilities.getObjBinFilePath('1x1.mat'));
@@ -13,7 +13,7 @@ function test1x1DMC()
     Yzad = getTrajectory(kk, ny);
     
     %% Test loop
-    testSingleDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk);
+    testSingleDMC(funcDMC, ny, nu, st, numDen, ypp, upp, Yzad, kk);
 end
 
 function Yzad = getTrajectory(kk, ny)

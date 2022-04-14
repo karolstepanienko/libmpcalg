@@ -1,4 +1,4 @@
-function testSingleDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk)
+function testSingleDMC(funcDMC, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     %% DMC parameters
     D = 100; % Dynamic horizon
     N = D; % Prediction horizon
@@ -19,13 +19,14 @@ function testSingleDMC(ny, nu, st, numDen, ypp, upp, Yzad, kk)
     UU = zeros(kk, nu);
 
     % Test parameter validation
+    % ny = 2.1
     % stepResponses = {1; 2}; % inputs
     % stepResponses{nu} = [1,2, 3]; % outputs
     % mi = [1;2];
     % lambda = [1,2];
 
     % Regulator
-    reg = DMC(D, N, Nu, ny, nu, stepResponses,...
+    reg = funcDMC(D, N, Nu, ny, nu, stepResponses,...
         'mi', mi, 'lambda', lambda,...
         'uMin', uMin, 'uMax', uMax,...
         'duMin', duMin, 'duMax', duMax);
