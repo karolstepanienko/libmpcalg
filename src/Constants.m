@@ -2,20 +2,23 @@
 % Contains various constant values used in the project
 classdef Constants
     properties (Access = public)
-        libName % (1,1) string
-        objPath % (1,1) string
-        objBinPath % (1,1) string
-        plotPath % (1,1) string
-        testPath % (1,1) string
-        testStepResponsePath % (1,1) string
-        testDMCPath % (1,1) string
-        libFolders % (:, 1) cell
-        plotWaitSec % (1,1) int8
-        testSimulationLength % (1,1) int8
+        libName  % (1,1) string
+        objPath  % (1,1) string
+        objBinPath  % (1,1) string
+        trajectoriesPath  % (1,1) string
+        plotPath  % (1,1) string
+        testPath  % (1,1) string
+        testStepResponsePath  % (1,1) string
+        testDMCPath  % (1,1) string
+        libFolders  % (:, 1) cell
+        plotWaitSec  % (1,1) int8
+        testSimulationLength  % (1,1) int8
+        testYInitVal  % (1,1) int8
+        testUInitVal  % (1,1) int8
     end
 
     properties (Access = private)
-        u = Utilities() % Utilities object
+        u = Utilities()  % Utilities object
     end
     
     methods
@@ -31,7 +34,11 @@ classdef Constants
         function objBinPath = get.objBinPath(obj)
             objBinPath = obj.u.join({'obj', 'bin'}, filesep);
         end
-        
+
+        function trajectoriesPath = get.trajectoriesPath(obj)
+            trajectoriesPath = obj.u.join({'obj', 'trajectory'}, filesep);
+        end
+
         function plotPath = get.plotPath(obj)
             plotPath = 'plot';
         end
@@ -52,6 +59,7 @@ classdef Constants
             libFolders = {
                 obj.objPath;
                 obj.objBinPath;
+                obj.trajectoriesPath;
                 obj.plotPath;
                 obj.testPath;
                 obj.testStepResponsePath;
@@ -66,6 +74,14 @@ classdef Constants
 
         function testSimulationLength = get.testSimulationLength(obj)
             testSimulationLength = 1000;
+        end
+
+        function testYInitVal = get.testYInitVal(obj)
+            testYInitVal = 0;
+        end
+
+        function testUInitVal = get.testUInitVal(obj)
+            testUInitVal = 0;
         end
     end
 end
