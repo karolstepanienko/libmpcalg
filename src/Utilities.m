@@ -56,7 +56,7 @@ classdef Utilities
                 addpath(fullPath);
             end 
         end
-        
+
         %% cdf
         % Create destination folder if it does not exist
         function cdf(savePath)
@@ -65,7 +65,7 @@ classdef Utilities
                 mkdir(pathstr)
             end
         end
-        
+
         %% getObjBinPath
         % Returns absolute path to obj/bin .mat file woth a given name
         function filePath = getObjBinFilePath(fileName)
@@ -105,7 +105,16 @@ classdef Utilities
             % Using sorting index to sort another array accordingly
             sortedAxesList = axesList(sortIdx);
         end
-        
+
+        function closeFigAfterTimeout(fig)
+            % Figure timeout
+            c = Constants();
+            if c.plotWaitSec > 0
+                pause(c.plotWaitSec);
+                close(fig);
+            end
+        end
+
         % Wrapper for function out of class. Otherwise static methods in
         % one class do not see each other.
         function absPath = getAbsPathToLib()

@@ -1,7 +1,7 @@
-%% numericalDMC
+%% NumericalDMC
 % DMC algorithm that uses quadproc - a auqdratic equations solver to calculate
 % control value changes
-classdef numericalDMC < MPC & coreDMC
+classdef NumericalDMC < MPC & coreDMC
     properties
         yMin  % Minimal output value
         yMax  % Maximal output value 
@@ -21,8 +21,8 @@ classdef numericalDMC < MPC & coreDMC
     end
 
     methods
-        %% numericalDMC
-        % Creates numericalDMC regulator object
+        %% NumericalDMC
+        % Creates NumericalDMC regulator object
         % @param D Dynamic horizon
         % @param N Prediction horizon
         % @param Nu Moving horizon
@@ -38,7 +38,7 @@ classdef numericalDMC < MPC & coreDMC
         % TODO
         % @param yMin Minimal output value
         % @param yMax Maximal output value
-        function obj = numericalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
+        function obj = NumericalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
             obj = obj.validateDMCParams(D, N, Nu, ny, nu, stepResponses,...
                 varargin);
             obj = obj.initMPC();
@@ -129,6 +129,12 @@ classdef numericalDMC < MPC & coreDMC
                     col_number = col_number + 1;
                 end
             end
+        end
+    end
+
+    methods (Static = true)
+        function plotTitle = getPlotTitle()
+            plotTitle = 'Numerical DMC algorithm';
         end
     end
 end

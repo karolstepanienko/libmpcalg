@@ -1,7 +1,7 @@
 %% plot_y_separate
 % Plots y vectors on one figure. Every output signal gets it's own graph.
 % Graphs are alligned horizontally.
-function yFig = plotYYseparate(YY, YY_zad, st)
+function plotYYseparate(YY, YY_zad, st, ynPlot, unPlot)
     %% Get simulation length (length of vectors in matrix)
     % and number of output vectors
     [K, ny] = size(YY);
@@ -18,9 +18,9 @@ function yFig = plotYYseparate(YY, YY_zad, st)
     maxYValues = zeros(ny, 1);
 
     %% Plotting output
-    yFig = figure;
     for i=1:ny
-        axesList(1, i) = subplot(ny, 1, i);
+        axesList(1, i) = subplot(ynPlot, unPlot, i);
+        % axesList(1, i) = nexttile;
         hold on
             stairs(x_t, YY(:,i), 'LineWidth', line_width);
             stairs(x_t, YY_zad(:,i), '--', 'LineWidth', line_width,...

@@ -1,10 +1,10 @@
-%% fastDMC
+%% FastDMC
 % Analytical DMC that only calculates one set of nu control values
-% Also called fastDMC
-classdef fastDMC < MPC & coreDMC
+% Also called fast DMC
+classdef FastDMC < MPC & coreDMC
     methods
-        %% fastDMC
-        % Creates fastDMC regulator object
+        %% FastDMC
+        % Creates FastDMC regulator object
         % @param D Dynamic horizon
         % @param N Prediction horizon
         % @param Nu Moving horizon
@@ -17,7 +17,7 @@ classdef fastDMC < MPC & coreDMC
         % @param uMax Maximal control value
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
-        function obj = fastDMC(D, N, Nu, ny, nu, stepResponses, varargin)
+        function obj = FastDMC(D, N, Nu, ny, nu, stepResponses, varargin)
             obj = obj.validateDMCParams(D, N, Nu, ny, nu, stepResponses,...
                 varargin);
             obj = obj.initMPC();
@@ -47,6 +47,12 @@ classdef fastDMC < MPC & coreDMC
             % Get new control value
             % Here U_k = U_k_1 and is updated
             obj.U_k = obj.limitU_k(obj.U_k + obj.dUU_k(1:obj.nu, 1));
+        end
+    end
+
+    methods (Static = true)
+        function plotTitle = getPlotTitle()
+            plotTitle = 'Fast DMC algorithm';
         end
     end
 end

@@ -1,15 +1,15 @@
 %% testAllDMC
 % Runs all DMC algorithm tests
 function testAllDMC()    
-    test1x1DMC(@analyticalDMC);
-    test1x1DMC(@fastDMC);
-    test1x1DMC(@numericalDMC);
+    test1x1DMC(@AnalyticalDMC, AnalyticalDMC.getPlotTitle());
+    test1x1DMC(@FastDMC, FastDMC.getPlotTitle());
+    test1x1DMC(@NumericalDMC, NumericalDMC.getPlotTitle());
 
-    test1x2DMC(@analyticalDMC);
-    test1x2DMC(@fastDMC);
-    test1x2DMC(@numericalDMC);
+    test1x2DMC(@AnalyticalDMC, AnalyticalDMC.getPlotTitle());
+    test1x2DMC(@FastDMC, FastDMC.getPlotTitle());
+    test1x2DMC(@NumericalDMC, NumericalDMC.getPlotTitle());
     
-    test2x2DMC(@analyticalDMC);
-    test2x2DMC(@fastDMC);
-    test2x2DMC(@numericalDMC);
+    test2x2DMC(@AnalyticalDMC, AnalyticalDMC.getPlotTitle());
+    test2x2DMC(@FastDMC, FastDMC.getPlotTitle());
+    test2x2DMC(@NumericalDMC, NumericalDMC.getPlotTitle());
 end

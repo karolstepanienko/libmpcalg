@@ -20,17 +20,17 @@ classdef Constants
     properties (Access = private)
         u = Utilities()  % Utilities object
     end
-    
+
     methods
         %% Getters
         function libName = get.libName(obj)
             libName = 'libmpcalg';
         end
-        
+
         function objPath = get.objPath(obj)
             objPath = 'obj';
         end
-        
+
         function objBinPath = get.objBinPath(obj)
             objBinPath = obj.u.join({'obj', 'bin'}, filesep);
         end
@@ -42,15 +42,15 @@ classdef Constants
         function plotPath = get.plotPath(obj)
             plotPath = 'plot';
         end
-        
+
         function testPath = get.testPath(obj)
             testPath = 'test';
         end
-        
+
         function testStepResponsePath = get.testStepResponsePath(obj)
             testStepResponsePath = obj.u.join({'test', 'stepResponse'}, filesep);
         end
-        
+
         function testDMCPath = get.testDMCPath(obj)
             testDMCPath = obj.u.join({'test', 'DMC'}, filesep);
         end

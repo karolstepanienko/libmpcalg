@@ -1,7 +1,7 @@
 %% plot_u_separate
 % Plots u vectors on one figure. Every input signal gets it's own graph.
 % Graphs are alligned horizontally.
-function uFig = plotUUseparate(UU, st)
+function plotUUseparate(UU, st, ny, ynPlot, unPlot)
     %% Get simulation length (length of vectors in matrix)
     % and number of input vectors
     [K, nu] = size(UU);
@@ -18,9 +18,9 @@ function uFig = plotUUseparate(UU, st)
     maxUValues = zeros(nu, 1);
 
     %% Plotting output
-    uFig = figure;
     for i=1:nu
-        axesList(1, i) = subplot(nu,1,i);
+        axesList(1, i) = subplot(ynPlot, unPlot, i + ny);
+        % axesList(1, i) = nexttile;
         stairs(x_t, UU(:, i), 'LineWidth', line_width);
         xlabel('t[s]');
         ylabel('u');

@@ -1,4 +1,4 @@
-function testSingleDMC(funcDMC, ny, nu, st, numDen, ypp, upp, Yzad, kk)
+function testSingleDMC(classDMC, plotTitle, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     %% DMC parameters
     D = 100; % Dynamic horizon
     N = D; % Prediction horizon
@@ -13,7 +13,6 @@ function testSingleDMC(funcDMC, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     % Get D elements of object step response
     stepResponses = getStepResponses(ny, nu, numDen, D);
 
-
     %% Variable initialisation
     YY = zeros(kk, ny);
     UU = zeros(kk, nu);
@@ -27,7 +26,7 @@ function testSingleDMC(funcDMC, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     % Nu = 10;
 
     % Regulator
-    reg = funcDMC(D, N, Nu, ny, nu, stepResponses,...
+    reg = classDMC(D, N, Nu, ny, nu, stepResponses,...
         'mi', mi, 'lambda', lambda,...
         'uMin', uMin, 'uMax', uMax,...
         'duMin', duMin, 'duMax', duMax);
@@ -37,12 +36,5 @@ function testSingleDMC(funcDMC, ny, nu, st, numDen, ypp, upp, Yzad, kk)
         reg = reg.calculateControl(YY(k,:), Yzad(k,:));
         UU(k, :) = reg.getControl();
     end
-    yFig = plotYYseparate(YY, Yzad, st);
-    uFig = plotUUseparate(UU, st);
-    c = Constants();
-    if c.plotWaitSec > 0
-        pause(c.plotWaitSec);
-        close(yFig);
-        close(uFig);
-    end
+    plotTest(YY, Yzad, UU, st, ny, nu, plotTitle);
 end
