@@ -24,6 +24,7 @@ function testSingleDMC(funcDMC, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     % stepResponses{nu} = [1,2, 3]; % outputs
     % mi = [1;2];
     % lambda = [1,2];
+    % Nu = 10;
 
     % Regulator
     reg = funcDMC(D, N, Nu, ny, nu, stepResponses,...

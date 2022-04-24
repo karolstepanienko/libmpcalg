@@ -39,11 +39,10 @@ classdef fastDMC < MPC & coreDMC
             obj.dUU_k = obj.K(1:obj.nu, :) * (YYzad_k - YY_0);
             
             % Limit control change values
-            dU_k = obj.limitdU_k(obj.dUU_k(1:obj.nu));
+            dU_k = obj.limitdU_k(obj.dUU_k);
             
             % Shift dUUp values
-            obj.dUUp_k = [dU_k;...
-                obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
+            obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
             % Get new control value
             % Here U_k = U_k_1 and is updated

@@ -1,8 +1,8 @@
-%% classicDMC
+%% analyticalDMC
 % Analytical DMC also called classicDMC
-classdef classicDMC < MPC & coreDMC
+classdef analyticalDMC < MPC & coreDMC
     methods
-        %% classicDMC
+        %% analyticalDMC
         % Creates DMC regulator object
         % @param D Dynamic horizon
         % @param N Prediction horizon
@@ -16,7 +16,7 @@ classdef classicDMC < MPC & coreDMC
         % @param uMax Maximal control value
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
-        function obj = classicDMC(D, N, Nu, ny, nu, stepResponses, varargin)
+        function obj = analyticalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
             obj = obj.validateDMCParams(D, N, Nu, ny, nu, stepResponses,...
                 varargin);
             obj = obj.initMPC();
@@ -41,8 +41,7 @@ classdef classicDMC < MPC & coreDMC
             dU_k = obj.limitdU_k(obj.dUU_k(1:obj.nu));
             
             % Shift dUUp values
-            obj.dUUp_k = [dU_k;...
-                obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
+            obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
             % Get new control value
             % Here U_k = U_k_1 and is updated
