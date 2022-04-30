@@ -125,6 +125,52 @@ classdef Utilities
         function joinedStr = join(strCellArr, delimiter)
             joinedStr = join(strCellArr, delimiter);
         end
+
+        function returnVar = joinText(varargin)
+            % Joins character arrays or strings together
+            % @return char or string based on given parameters
+            returnChar = ischar(varargin{1});
+            if returnChar || Utilities.isOctave()
+                % Concatenate chars in MATLAB or Octave
+                returnVar = '';
+                for i=1:length(varargin)
+                    tmp = returnVar;
+                    tmp = strcat({tmp}, {varargin{i}});
+                    returnVar = tmp{1};
+                end
+            else
+                returnVar = "";
+                for i=1:length(varargin)
+                    returnVar = strcat(returnVar, varargin{i});
+                end
+            end
+        end
+
+        function plotTitle = getPlotTitle(alg, algType)
+            % Returns plot tile for given algorithm and it's type
+            plotTitle = Utilities.joinText(...
+                algType, ' ', upper(alg), ' ', 'algorithm');
+        end
+
+        function value = extractFromVarargin(charArray, vararginVar)
+            % Extracts specific parameter with a name in charArray from varargin
+            nout = max(nargout, 1) - 1;  % Get number of outputs
+            value = '';
+            for i=1:length(vararginVar)
+                if strcmp(vararginVar{i}, charArray)
+                    value = vararginVar{i + 1};
+                end
+            end
+        end
+
+        function varargin_ = replaceInVarargin(valueName, newValue, varargin_)
+            % Replaces value of a parameter in varargin type variable
+            for i=1:length(varargin_)
+                if strcmp(varargin_{i}, valueName)
+                    varargin_{i + 1} = newValue;
+                end
+            end
+        end
     end
 end
 

@@ -5,7 +5,6 @@ classdef NumericalDMC < MPC & coreDMC
     properties
         yMin  % Minimal output value
         yMax  % Maximal output value 
-        % optimOptions  % Optimisation options for quadprog function
     end
 
     properties (Access = private)
@@ -43,7 +42,6 @@ classdef NumericalDMC < MPC & coreDMC
                 varargin);
             obj = obj.initMPC();
             obj = obj.initNumericalDMC();
-            % obj.optimOptions = optimoptions('quadprog');
         end
 
         function obj = initNumericalDMC(obj)
@@ -129,12 +127,6 @@ classdef NumericalDMC < MPC & coreDMC
                     col_number = col_number + 1;
                 end
             end
-        end
-    end
-
-    methods (Static = true)
-        function plotTitle = getPlotTitle()
-            plotTitle = 'Numerical DMC algorithm';
         end
     end
 end

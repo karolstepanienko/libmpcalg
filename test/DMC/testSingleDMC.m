@@ -1,4 +1,4 @@
-function testSingleDMC(classDMC, plotTitle, ny, nu, st, numDen, ypp, upp, Yzad, kk)
+function testSingleDMC(algType, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     %% DMC parameters
     D = 100; % Dynamic horizon
     N = D; % Prediction horizon
@@ -26,15 +26,17 @@ function testSingleDMC(classDMC, plotTitle, ny, nu, st, numDen, ypp, upp, Yzad, 
     % Nu = 10;
 
     % Regulator
-    reg = classDMC(D, N, Nu, ny, nu, stepResponses,...
+    reg = DMC(D, N, Nu, ny, nu, stepResponses,...
         'mi', mi, 'lambda', lambda,...
         'uMin', uMin, 'uMax', uMax,...
-        'duMin', duMin, 'duMax', duMax);
-
+        'duMin', duMin, 'duMax', duMax,...
+        'algType', algType);
+    
     for k=1:kk
         YY(k, :) = getObjectOutput(ny, nu, numDen, YY, UU, ypp, upp, k);
         reg = reg.calculateControl(YY(k,:), Yzad(k,:));
         UU(k, :) = reg.getControl();
     end
+    plotTitle = Utilities.getPlotTitle('DMC', algType);
     plotTest(YY, Yzad, UU, st, ny, nu, plotTitle);
 end

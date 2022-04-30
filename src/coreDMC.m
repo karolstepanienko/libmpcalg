@@ -10,14 +10,14 @@ classdef (Abstract) coreDMC
     end
 
     properties (Access = protected, Constant)
-        v = Validation();  % Validation object that stores data validation 
-                           % functions
+        v = Validation();  % Validation object with data validation functions
+        c = Constants();  % Constant values
     end
 
     methods (Access = protected)
-        %% validateDMCParams
-        % Runs DMC algorithm parameter validation
         function obj = validateDMCParams(obj, D, N, Nu, ny, nu, stepResponses, varargin_)
+            % Runs DMC algorithm parameter validation
+
             %% Parameter validation
             p = inputParser;
             p.CaseSensitive = true(1);
@@ -31,13 +31,14 @@ classdef (Abstract) coreDMC
             addRequired(p, 'numberOfOutputs', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs', obj.v.validScalarIntGreaterThan0Num);
 
-            % Optional parameter values
+            % Optional parameter default values
             defaultMi = 1;
             defaultLambda = 1;
             defaultuMin = -Inf;
             defaultuMax = Inf;
             defaultduMin = -Inf;
             defaultduMax = Inf;
+            defaultAlgType = obj.c.analyticalAlgType;
 
             % Optional parameters
             addParameter(p, 'mi', defaultMi, obj.v.validNum);
@@ -48,6 +49,7 @@ classdef (Abstract) coreDMC
                 obj.v.validScalarDoubleLessThan0Num);
             addParameter(p, 'duMax', defaultduMax,...
                 obj.v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'algType', defaultAlgType, obj.v.validAlgType);
 
             % Parsing values
             parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});            

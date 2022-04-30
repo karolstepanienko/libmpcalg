@@ -49,10 +49,4 @@ classdef FastDMC < MPC & coreDMC
             obj.U_k = obj.limitU_k(obj.U_k + obj.dUU_k(1:obj.nu, 1));
         end
     end
-
-    methods (Static = true)
-        function plotTitle = getPlotTitle()
-            plotTitle = 'Fast DMC algorithm';
-        end
-    end
 end

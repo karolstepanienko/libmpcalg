@@ -15,6 +15,10 @@ classdef Constants
         testSimulationLength  % (1,1) int8
         testYInitVal  % (1,1) int8
         testUInitVal  % (1,1) int8
+        analyticalAlgType  % (1,10) char array
+        fastAlgType  % (1,4) char array
+        numericalAlgType  % (1,9) char array
+        algTypes  % (1, :) cell
     end
 
     properties (Access = private)
@@ -82,6 +86,26 @@ classdef Constants
 
         function testUInitVal = get.testUInitVal(obj)
             testUInitVal = 0;
+        end
+
+        function analytical = get.analyticalAlgType(obj)
+            analytical = 'analytical';
+        end
+ 
+        function fast = get.fastAlgType(obj)
+            fast = 'fast';
+        end
+ 
+        function numerical = get.numericalAlgType(obj)
+            numerical = 'numerical';
+        end
+
+        function algTypes = get.algTypes(obj)
+            algTypes = {
+                obj.analyticalAlgType,
+                obj.fastAlgType,
+                obj.numericalAlgType
+            };
         end
     end
 end

@@ -10,6 +10,12 @@ classdef Validation
         validCell
         % Double or array
         validNum
+        % Algorithm type
+        validAlgType
+    end
+
+    properties (Access = private)
+        c = Constants();  % Constant values
     end
 
     methods
@@ -81,7 +87,7 @@ classdef Validation
             validCell = @(x) iscell(x) && ~isempty(x);
         end
 
-        %--------------------------- vector ------------------------------------
+        %---------------------------- vector -----------------------------------
         function validNum = get.validNum(obj)
             validNum = @isnumeric;
         end
@@ -95,6 +101,11 @@ classdef Validation
             else
                 value = array;
             end
+        end
+
+        %---------------------------- algType ----------------------------------
+        function validAlgType = get.validAlgType(obj)
+            validAlgType = @(x) any(validatestring(x, obj.c.algTypes));
         end
     end
 end
