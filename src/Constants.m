@@ -2,23 +2,35 @@
 % Contains various constant values used in the project
 classdef Constants
     properties (Access = public)
-        libName  % (1,1) string
-        objPath  % (1,1) string
-        objBinPath  % (1,1) string
-        trajectoriesPath  % (1,1) string
-        plotPath  % (1,1) string
-        testPath  % (1,1) string
-        testStepResponsePath  % (1,1) string
-        testDMCPath  % (1,1) string
-        libFolders  % (:, 1) cell
+        % Paths
+        libName  % (1,9) char array
+        objPath  % (1,3) char array
+        objBinPath  % (1,7) char array
+        trajectoriesPath  % (1,14) char array
+        plotPath  % (1,4) char array
+        testPath  % (1,4) char array
+        testStepResponsePath  % (1,17) char array
+        testDMCPath  % (1,8) char array
+        libFolders  % (1,7) cell
+        % Constant numerical values
         plotWaitSec  % (1,1) int8
         testSimulationLength  % (1,1) int8
         testYInitVal  % (1,1) int8
         testUInitVal  % (1,1) int8
+        % Algorithm types
         analyticalAlgType  % (1,10) char array
         fastAlgType  % (1,4) char array
         numericalAlgType  % (1,9) char array
-        algTypes  % (1, :) cell
+        algTypes  % (1,3) cell
+        % Constraints
+        defaultMi  % (1,1) int8
+        defaultLambda  % (1,1) int8
+        defaultuMin  % (1,1) double
+        defaultuMax  % (1,1) double
+        defaultduMin  % (1,1) double
+        defaultduMax  % (1,1) double
+        defaultyMin  % (1,1) double
+        defaultyMax  % (1,1) double
     end
 
     properties (Access = private)
@@ -61,13 +73,13 @@ classdef Constants
 
         function libFolders = get.libFolders(obj)
             libFolders = {
-                obj.objPath;
-                obj.objBinPath;
-                obj.trajectoriesPath;
-                obj.plotPath;
-                obj.testPath;
-                obj.testStepResponsePath;
-                obj.testDMCPath;
+                obj.objPath,
+                obj.objBinPath,
+                obj.trajectoriesPath,
+                obj.plotPath,
+                obj.testPath,
+                obj.testStepResponsePath,
+                obj.testDMCPath
             };
         end
 
@@ -106,6 +118,38 @@ classdef Constants
                 obj.fastAlgType,
                 obj.numericalAlgType
             };
+        end
+
+        function defaultMi = get.defaultMi(obj)
+            defaultMi = 1;
+        end
+
+        function defaultLambda = get.defaultLambda(obj)
+            defaultLambda = 1;
+        end
+
+        function defaultuMin = get.defaultuMin(obj)
+            defaultuMin = -Inf;
+        end
+
+        function defaultuMax = get.defaultuMax(obj)
+            defaultuMax = Inf;
+        end
+
+        function defaultduMin = get.defaultduMin(obj)
+            defaultduMin = -Inf;
+        end
+
+        function defaultduMax = get.defaultduMax(obj)
+            defaultduMax = Inf;
+        end
+
+        function defaultyMin = get.defaultyMin(obj)
+            defaultyMin = -Inf;
+        end
+
+        function defaultyMax = get.defaultyMax(obj)
+            defaultyMax = Inf;
         end
     end
 end

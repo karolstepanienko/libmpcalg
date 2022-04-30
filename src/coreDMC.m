@@ -31,25 +31,24 @@ classdef (Abstract) coreDMC
             addRequired(p, 'numberOfOutputs', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs', obj.v.validScalarIntGreaterThan0Num);
 
-            % Optional parameter default values
-            defaultMi = 1;
-            defaultLambda = 1;
-            defaultuMin = -Inf;
-            defaultuMax = Inf;
-            defaultduMin = -Inf;
-            defaultduMax = Inf;
-            defaultAlgType = obj.c.analyticalAlgType;
-
             % Optional parameters
-            addParameter(p, 'mi', defaultMi, obj.v.validNum);
-            addParameter(p, 'lambda', defaultLambda, obj.v.validNum);
-            addParameter(p, 'uMin', defaultuMin, obj.v.validScalarDoubleNum);
-            addParameter(p, 'uMax', defaultuMax, obj.v.validScalarDoubleNum);
-            addParameter(p, 'duMin', defaultduMin,...
+            addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
+            addParameter(p, 'lambda', obj.c.defaultLambda, obj.v.validNum);
+            
+            addParameter(p, 'uMin', obj.c.defaultuMin,...
+                obj.v.validScalarDoubleNum);
+            
+            addParameter(p, 'uMax', obj.c.defaultuMax,...
+                obj.v.validScalarDoubleNum);
+            
+            addParameter(p, 'duMin', obj.c.defaultduMin,...
                 obj.v.validScalarDoubleLessThan0Num);
-            addParameter(p, 'duMax', defaultduMax,...
+            
+            addParameter(p, 'duMax', obj.c.defaultduMax,...
                 obj.v.validScalarDoubleGreaterThan0Num);
-            addParameter(p, 'algType', defaultAlgType, obj.v.validAlgType);
+            
+            addParameter(p, 'algType', obj.c.analyticalAlgType,...
+                obj.v.validAlgType);
 
             % Parsing values
             parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});            
@@ -70,6 +69,7 @@ classdef (Abstract) coreDMC
             obj.uMax = p.Results.uMax;
             obj.duMin = p.Results.duMin;
             obj.duMax = p.Results.duMax;
+            % algType is not saved as a class property
         end
 
         function obj = validateNumericalDMCParams(obj, D, N, Nu, ny, nu,...
@@ -89,29 +89,30 @@ classdef (Abstract) coreDMC
             addRequired(p, 'numberOfOutputs', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs', obj.v.validScalarIntGreaterThan0Num);
 
-            % Optional parameter default values
-            defaultMi = 1;
-            defaultLambda = 1;
-            defaultuMin = -Inf;
-            defaultuMax = Inf;
-            defaultduMin = -Inf;
-            defaultduMax = Inf;
-            defaultyMin = -Inf;
-            defaultyMax = Inf;
-            defaultAlgType = obj.c.analyticalAlgType;
-
             % Optional parameters
-            addParameter(p, 'mi', defaultMi, obj.v.validNum);
-            addParameter(p, 'lambda', defaultLambda, obj.v.validNum);
-            addParameter(p, 'uMin', defaultuMin, obj.v.validScalarDoubleNum);
-            addParameter(p, 'uMax', defaultuMax, obj.v.validScalarDoubleNum);
-            addParameter(p, 'duMin', defaultduMin,...
+            addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
+            addParameter(p, 'lambda', obj.c.defaultLambda, obj.v.validNum);
+            
+            addParameter(p, 'uMin', obj.c.defaultuMin,...
+                obj.v.validScalarDoubleNum);
+            
+            addParameter(p, 'uMax', obj.c.defaultuMax,...
+                obj.v.validScalarDoubleNum);
+            
+            addParameter(p, 'duMin', obj.c.defaultduMin,...
                 obj.v.validScalarDoubleLessThan0Num);
-            addParameter(p, 'duMax', defaultduMax,...
+            
+            addParameter(p, 'duMax', obj.c.defaultduMax,...
                 obj.v.validScalarDoubleGreaterThan0Num);
-            addParameter(p, 'yMin', defaultyMin, obj.v.validScalarDoubleNum);
-            addParameter(p, 'yMax', defaultyMax, obj.v.validScalarDoubleNum);
-            addParameter(p, 'algType', defaultAlgType, obj.v.validAlgType);
+            
+            addParameter(p, 'yMin', obj.c.defaultyMin,...
+                obj.v.validScalarDoubleNum);
+            
+            addParameter(p, 'yMax', obj.c.defaultyMax,...
+                obj.v.validScalarDoubleNum);
+            
+            addParameter(p, 'algType', obj.c.analyticalAlgType,...
+                obj.v.validAlgType);
 
             % Parsing values
             parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});            
