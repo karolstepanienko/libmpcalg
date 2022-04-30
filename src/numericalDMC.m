@@ -38,15 +38,13 @@ classdef NumericalDMC < MPC & coreDMC
         % @param yMin Minimal output value
         % @param yMax Maximal output value
         function obj = NumericalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
-            obj = obj.validateDMCParams(D, N, Nu, ny, nu, stepResponses,...
-                varargin);
+            obj = obj.validateNumericalDMCParams(D, N, Nu, ny, nu,...
+                stepResponses, varargin);
             obj = obj.initMPC();
             obj = obj.initNumericalDMC();
         end
 
         function obj = initNumericalDMC(obj)
-            obj.yMin = -Inf;
-            obj.yMax = Inf;
             obj.H = obj.getH();
             obj.J = obj.getJ();
             obj.UUmin = ones(obj.nu * obj.Nu, 1) * obj.uMin;

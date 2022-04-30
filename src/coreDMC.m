@@ -16,7 +16,7 @@ classdef (Abstract) coreDMC
 
     methods (Access = protected)
         function obj = validateDMCParams(obj, D, N, Nu, ny, nu, stepResponses, varargin_)
-            % Runs DMC algorithm parameter validation
+            % Runs Analytical and Fast DMC algorithm parameter validation
 
             %% Parameter validation
             p = inputParser;
@@ -70,6 +70,71 @@ classdef (Abstract) coreDMC
             obj.uMax = p.Results.uMax;
             obj.duMin = p.Results.duMin;
             obj.duMax = p.Results.duMax;
+        end
+
+        function obj = validateNumericalDMCParams(obj, D, N, Nu, ny, nu,...
+            stepResponses, varargin_)
+            % Runs Numerical algorithm parameter validation
+
+            %% Parameter validation
+            p = inputParser;
+            p.CaseSensitive = true(1);
+            p.FunctionName = 'DMC';
+
+            % Requred parameters
+            addRequired(p, 'D', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'stepResponses', obj.v.validCell);
+            addRequired(p, 'numberOfOutputs', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfInputs', obj.v.validScalarIntGreaterThan0Num);
+
+            % Optional parameter default values
+            defaultMi = 1;
+            defaultLambda = 1;
+            defaultuMin = -Inf;
+            defaultuMax = Inf;
+            defaultduMin = -Inf;
+            defaultduMax = Inf;
+            defaultyMin = -Inf;
+            defaultyMax = Inf;
+            defaultAlgType = obj.c.analyticalAlgType;
+
+            % Optional parameters
+            addParameter(p, 'mi', defaultMi, obj.v.validNum);
+            addParameter(p, 'lambda', defaultLambda, obj.v.validNum);
+            addParameter(p, 'uMin', defaultuMin, obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMax', defaultuMax, obj.v.validScalarDoubleNum);
+            addParameter(p, 'duMin', defaultduMin,...
+                obj.v.validScalarDoubleLessThan0Num);
+            addParameter(p, 'duMax', defaultduMax,...
+                obj.v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'yMin', defaultyMin, obj.v.validScalarDoubleNum);
+            addParameter(p, 'yMax', defaultyMax, obj.v.validScalarDoubleNum);
+            addParameter(p, 'algType', defaultAlgType, obj.v.validAlgType);
+
+            % Parsing values
+            parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});            
+            
+            % Assign required parameters
+            obj.D = p.Results.D;
+            obj.N = p.Results.N;
+            obj.Nu = p.Results.Nu;
+            obj.ny = p.Results.numberOfOutputs;
+            obj.nu = p.Results.numberOfInputs;
+            obj.stepResponses = obj.v.validateStepResponses(...
+                p.Results.stepResponses, obj.ny, obj.nu, obj.D);
+
+            % Assign optional parameters
+            obj.mi = obj.v.validateArray('mi', p.Results.mi, obj.ny);
+            obj.lambda = obj.v.validateArray('lambda', p.Results.lambda, obj.nu);
+            obj.uMin = p.Results.uMin;
+            obj.uMax = p.Results.uMax;
+            obj.duMin = p.Results.duMin;
+            obj.duMax = p.Results.duMax;
+            obj.yMin = p.Results.yMin;
+            obj.yMax = p.Results.yMax;
+            % algType is not saved as a class property
         end
     end
 end
