@@ -5,8 +5,8 @@ function testStepResponse(fileName, simTime)
     filePath = u.getObjBinFilePath(fileName);
     load(filePath);
     kk = simTime/st; % Simulation length
-    stepResponses = getStepResponses(ny, nu, numDen, kk);
-    plotStepResponses(stepResponses);
+    stepResponses = getStepResponses(ny, nu, A, B, kk);
+    plotStepResponses(stepResponses, st);
 end
 
 % TODO automatic sim length detection

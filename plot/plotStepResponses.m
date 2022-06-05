@@ -1,6 +1,6 @@
 %% plotStepResponses
 % Plots step responses in 'step' like fashion
-function plotStepResponses(stepResponses)
+function plotStepResponses(stepResponses, st)
     nu = length(stepResponses);
     [kk, ny] = size(stepResponses{1});
     nPlot = 1;
@@ -20,6 +20,9 @@ function plotStepResponses(stepResponses)
             xlabel(['From: In(', num2str(ju), ')']);
             ylabel(['To: Out(', num2str(iy), ')']); 
             % set(gca,'xaxisLocation','top');
+            xt = get(gca, 'XTick');  % 'XTick' Values
+            % Relabel 'XTick' With 'XTickLabel' Values
+            set(gca, 'XTick', xt, 'XTickLabel', xt*st);
         end
         if nu > 1
             YstepResponses = Utilities.getYStepResponses(iy, nu, ny,...
@@ -29,5 +32,3 @@ function plotStepResponses(stepResponses)
         end
     end
 end
-
-

@@ -3,9 +3,9 @@
 % y x u
 function obj = get2x2(st)
     arguments
-        st (1,1) {mustBeNumeric} = 0.1
+        st (1,1) { mustBeNumeric } = 0.01
     end
-    %% Single intertial object
+    %% Single inertial object
     %               1                       2
     % (y1, u1): ----------,   (y1, u2): ----------
     %            0.1s + 1                0.2s + 1
@@ -28,6 +28,7 @@ function obj = get2x2(st)
     
     Gs = tf(cNum, cDen);
     obj = MIMOObj(Gs, st);
-    step(Gs)
+    figure;
+    step(Gs);
     obj.save('2x2.mat');
 end

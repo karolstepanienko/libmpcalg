@@ -3,7 +3,7 @@
 % y x u
 function obj = get1x2(st)
     arguments
-        st (1,1) {mustBeNumeric} = 0.1
+        st (1,1) { mustBeNumeric } = 1
     end
     %% Single inertial object
     %               2                       3
@@ -23,5 +23,7 @@ function obj = get1x2(st)
 
     Gs = tf(cNum, cDen);
     obj = MIMOObj(Gs, st);
+    figure;
+    step(Gs);
     obj.save('1x2.mat');
 end

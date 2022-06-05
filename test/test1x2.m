@@ -8,7 +8,7 @@ function test1x2(algName, algType)
 
     %% Test loop
     if strcmp(algName, 'DMC')
-        testSingleDMC(algType, ny, nu, st, numDen, ypp, upp, Yzad, kk);
+        testSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk);
     else
         disp(Utilities.joinText('Unknown algorithm : ', algName));
     end;

@@ -1,6 +1,6 @@
 %% plot_u_separate
 % Plots u vectors on one figure. Every input signal gets it's own graph.
-% Graphs are alligned horizontally.
+% Graphs are aligned horizontally.
 function plotUUseparate(UU, st, ny, ynPlot, unPlot)
     %% Get simulation length (length of vectors in matrix)
     % and number of input vectors

@@ -3,10 +3,10 @@
 % y x u
 function obj = get1x1(st)
     arguments
-        st (1,1) {mustBeNumeric} = 0.1
+        st (1,1) { mustBeNumeric } = 1
     end
 
-    %% Double intertial object
+    %% Double inertial object
     % Object's continuous transmittance
     %          K                     2
     % -------------------- = --------------------
@@ -23,6 +23,7 @@ function obj = get1x1(st)
     st = 0.1; % Sampling time
     
     obj = MIMOObj(Gs, st);
-    step(Gs)
+    figure;
+    step(Gs);
     obj.save('1x1.mat');
 end

@@ -1,4 +1,4 @@
-function testSingleDMC(algType, ny, nu, st, numDen, ypp, upp, Yzad, kk)
+function testSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
     %% DMC parameters
     D = 100; % Dynamic horizon
     N = D; % Prediction horizon
@@ -11,7 +11,7 @@ function testSingleDMC(algType, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     duMax = -duMin;
 
     % Get D elements of object step response
-    stepResponses = getStepResponses(ny, nu, numDen, D);
+    stepResponses = getStepResponses(ny, nu, A, B, D);
 
     %% Variable initialisation
     YY = zeros(kk, ny);
@@ -28,7 +28,7 @@ function testSingleDMC(algType, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     c = Constants();
     % Regulator
     if strcmp(algType, c.numericalAlgType)
-        yMin = -4;
+        yMin = -10;
         yMax = -yMin;
         reg = DMC(D, N, Nu, ny, nu, stepResponses,...
             'mi', mi, 'lambda', lambda,...
@@ -45,7 +45,8 @@ function testSingleDMC(algType, ny, nu, st, numDen, ypp, upp, Yzad, kk)
     end
     
     for k=1:kk
-        YY(k, :) = getObjectOutput(ny, nu, numDen, YY, UU, ypp, upp, k);
+        YY(k, :) = getObjectOutput(A, B, YY, ypp, UU, upp, ny, nu, k);
+        % YY(k, :) = getObjectOutput(ny, nu, numDen, YY, UU, ypp, upp, k);
         reg = reg.calculateControl(YY(k,:), Yzad(k,:));
         UU(k, :) = reg.getControl();
     end
