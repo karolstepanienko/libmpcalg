@@ -3,7 +3,6 @@
 % Run before using scripts.
 function init()
     clear all;
-    addpath('./src');
     u = Utilities();
     u.addAllPaths();
 end

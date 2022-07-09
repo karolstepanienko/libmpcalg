@@ -2,6 +2,7 @@
 % Allows choosing DMC algorithm type thanks to 'algType' parameter
 % Returns an object of proper DMC algorithm
 function obj = DMC(D, N, Nu, ny, nu, stepResponses, varargin)
+    init();  % Adding necessary paths
     v = Validation();  % Validation object with data validation functions
     c = Constants();  % Constant values
 

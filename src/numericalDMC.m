@@ -86,7 +86,7 @@ classdef NumericalDMC < MPC & coreDMC
             Aeq = [];
             beq = [];
             x0 = [];
-            obj.dUU_k = quadprog(obj.H, f, A, b, Aeq, beq, obj.duuMin, ...
+            obj.dUU_k = quadprog(obj.H, f, A, b, Aeq, beq, obj.duuMin,...
                 obj.duuMax, x0);
 
             % New control change value
