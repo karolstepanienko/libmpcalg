@@ -1,4 +1,4 @@
-function testSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
+function runSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
     %% DMC parameters
     D = 100; % Dynamic horizon
     N = D; % Prediction horizon
@@ -16,14 +16,6 @@ function testSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
     %% Variable initialisation
     YY = zeros(kk, ny);
     UU = zeros(kk, nu);
-
-    % Test parameter validation
-    % ny = 2.1
-    % stepResponses = {1; 2}; % inputs
-    % stepResponses{nu} = [1,2, 3]; % outputs
-    % mi = [1;2];
-    % lambda = [1,2];
-    % Nu = 10;
 
     c = Constants();
     % Regulator
@@ -46,7 +38,6 @@ function testSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
     
     for k=1:kk
         YY(k, :) = getObjectOutput(A, B, YY, ypp, UU, upp, ny, nu, k);
-        % YY(k, :) = getObjectOutput(ny, nu, numDen, YY, UU, ypp, upp, k);
         reg = reg.calculateControl(YY(k,:), Yzad(k,:));
         UU(k, :) = reg.getControl();
     end

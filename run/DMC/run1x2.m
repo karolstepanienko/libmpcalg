@@ -1,4 +1,4 @@
-function test1x2(algName, algType)
+function run1x2(algName, algType)
     %% Object
     % Setting sampling time -> ../../obj/get1x2.m
     load(Utilities.getObjBinFilePath('1x2.mat'));
@@ -8,7 +8,7 @@ function test1x2(algName, algType)
 
     %% Test loop
     if strcmp(algName, 'DMC')
-        testSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk);
+        runSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk);
     else
         disp(Utilities.joinText('Unknown algorithm : ', algName));
     end;

@@ -1,6 +1,6 @@
-%% testStepResponse
+%% runStepResponse
 % Universal function that tests step responses for object in a given file name
-function testStepResponse(fileName, simTime)
+function runStepResponse(fileName, simTime)
     u = Utilities();
     filePath = u.getObjBinFilePath(fileName);
     load(filePath);
@@ -9,4 +9,4 @@ function testStepResponse(fileName, simTime)
     plotStepResponses(stepResponses, st);
 end
 
-% TODO automatic sim length detection
+% TODO automatic simulation length detection

@@ -8,10 +8,9 @@ classdef Constants
         objBinPath  % (1,7) char array
         trajectoriesPath  % (1,14) char array
         plotPath  % (1,4) char array
-        testPath  % (1,4) char array
-        testStepResponsePath  % (1,17) char array
-        testDMCPath  % (1,8) char array
-        testErrors  % (1,11) char array
+        runStepResponsePath  % (1,17) char array
+        runDMCPath  % (1,8) char array
+        testValidation  % (1,15) char array
         libFolders  % (1,7) cell
         % Constant numerical values
         plotWaitSec  % (1,1) int8
@@ -60,20 +59,16 @@ classdef Constants
             plotPath = 'plot';
         end
 
-        function testPath = get.testPath(obj)
-            testPath = 'test';
+        function runStepResponsePath = get.runStepResponsePath(obj)
+            runStepResponsePath = obj.u.join({'run', 'stepResponse'}, filesep);
         end
 
-        function testStepResponsePath = get.testStepResponsePath(obj)
-            testStepResponsePath = obj.u.join({'test', 'stepResponse'}, filesep);
+        function runDMCPath = get.runDMCPath(obj)
+            runDMCPath = obj.u.join({'run', 'DMC'}, filesep);
         end
 
-        function testDMCPath = get.testDMCPath(obj)
-            testDMCPath = obj.u.join({'test', 'DMC'}, filesep);
-        end
-
-        function testErrors = get.testErrors(obj)
-            testErrors = obj.u.join({'test', 'validation'}, filesep);
+        function testValidation = get.testValidation(obj)
+            testValidation = obj.u.join({'test', 'validation'}, filesep);
         end
 
         function libFolders = get.libFolders(obj)
@@ -82,10 +77,9 @@ classdef Constants
                 obj.objBinPath,
                 obj.trajectoriesPath,
                 obj.plotPath,
-                obj.testPath,
-                obj.testStepResponsePath,
-                obj.testDMCPath,
-                obj.testErrors
+                obj.runStepResponsePath,
+                obj.runDMCPath,
+                obj.testValidation
             };
         end
 
