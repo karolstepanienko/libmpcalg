@@ -11,6 +11,7 @@ classdef Constants
         testPath  % (1,4) char array
         testStepResponsePath  % (1,17) char array
         testDMCPath  % (1,8) char array
+        testErrors  % (1,11) char array
         libFolders  % (1,7) cell
         % Constant numerical values
         plotWaitSec  % (1,1) int8
@@ -71,6 +72,10 @@ classdef Constants
             testDMCPath = obj.u.join({'test', 'DMC'}, filesep);
         end
 
+        function testErrors = get.testErrors(obj)
+            testErrors = obj.u.join({'test', 'validation'}, filesep);
+        end
+
         function libFolders = get.libFolders(obj)
             libFolders = {
                 obj.objPath,
@@ -79,7 +84,8 @@ classdef Constants
                 obj.plotPath,
                 obj.testPath,
                 obj.testStepResponsePath,
-                obj.testDMCPath
+                obj.testDMCPath,
+                obj.testErrors
             };
         end
 

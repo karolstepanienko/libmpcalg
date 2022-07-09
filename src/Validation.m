@@ -24,8 +24,8 @@ classdef Validation
         %% get.validScalarIntGreaterThan0Num
         % Returns function for validating integers
         function validScalarIntGreaterThan0Num = get.validScalarIntGreaterThan0Num(obj)
-            validScalarIntGreaterThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
-                (mod(x, 1) == 0) && (x > 0);
+            validScalarIntGreaterThan0Num = @(x) isnumeric(x) && isscalar(x)...
+            && x == round(x) && mod(x, 1) == 0 && obj.isPositive(x);
         end
         
         %--------------------------- double ------------------------------------
@@ -33,8 +33,8 @@ classdef Validation
         %% get.validScalarDoubleNum
         % Returns function for validating doubles
         function validScalarDoubleNum = get.validScalarDoubleNum(obj)
-            validScalarDoubleNum = @(x) isnumeric(x) && isscalar(x) &&...
-                isa(x, 'double');
+            validScalarDoubleNum = @(x) isnumeric(x) && isscalar(x)...
+                && isa(x, 'double');
         end
 
         %--------------------------- double < 0 --------------------------------
@@ -43,7 +43,7 @@ classdef Validation
         % Returns function for validating doubles smaller or equal to zero
         function validScalarDoubleLessThan0Num = get.validScalarDoubleLessThan0Num(obj)
             validScalarDoubleLessThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
-                isa(x, 'double') && (x <= 0);
+                isa(x, 'double') && obj.isNegativeOrEqualToZero(x);
         end
 
         %--------------------------- double > 0 --------------------------------
@@ -52,7 +52,7 @@ classdef Validation
         % Returns function for validating doubles bigger or equal to zero
         function validScalarDoubleGreaterThan0Num = get.validScalarDoubleGreaterThan0Num(obj)
             validScalarDoubleGreaterThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
-                isa(x, 'double') && (x >= 0);
+                isa(x, 'double') && obj.isPositiveOrEqualToZero(x);
         end
 
         %--------------------------- cell --------------------------------------
@@ -93,19 +93,61 @@ classdef Validation
         end
 
         function value = validateArray(obj, arrayName, array, n)
-            if size(array, 1) == 1 && size(array, 2) == 1 && n ~= 1
-                % Stretch the number to required array 
-                value = zeros(1, n) + array;
-            elseif size(array, 1) ~= 1 || size(array, 2) ~= n
+            if obj.validateArraySize(arrayName, array, n)...
+                && obj.validateArrayIsHorizontal(arrayName, array)
+                value = array;
+            end
+        end
+
+        function isValid = validateArraySize(obj, arrayName, array, n)
+            isValid = false;
+            if size(array, 1) == 1 && size(array, 2) ~= n
                 Exceptions.throwArrayInvalidSize(arrayName, n);
             else
-                value = array;
+                isValid = true;
+            end
+        end
+
+        function isValid = validateArrayIsHorizontal(obj, arrayName, array)
+            isValid = false;
+            if size(array, 1) ~= 1
+                Exceptions.throwArrayNotHorizontal(arrayName);
+            else
+                isValid = true;
             end
         end
 
         %---------------------------- algType ----------------------------------
         function validAlgType = get.validAlgType(obj)
             validAlgType = @(x) any(validatestring(x, obj.c.algTypes));
+        end
+    end
+
+    methods (Static)
+        % Those methods were implemented for the purpose of Octave tests
+
+        function r = isPositive(x)
+            if x > 0
+                r = 1;
+            else
+                r = 0;
+            end
+        end
+
+        function r = isNegativeOrEqualToZero(x)
+            if x <= 0
+                r = 1;
+            else
+                r = 0;
+            end
+        end
+
+        function r = isPositiveOrEqualToZero(x)
+            if x >= 0
+                r = 1;
+            else
+                r = 0;
+            end
         end
     end
 end
