@@ -8,8 +8,10 @@ classdef Constants
         objBinPath  % (1,7) char array
         trajectoriesPath  % (1,14) char array
         plotPath  % (1,4) char array
+        runPath  % (1,3) char array
         runStepResponsePath  % (1,17) char array
         runDMCPath  % (1,8) char array
+        runGPCPath  % (1,8) char array
         testValidation  % (1,15) char array
         libFolders  % (1,7) cell
         % Constant numerical values
@@ -59,12 +61,20 @@ classdef Constants
             plotPath = 'plot';
         end
 
+        function runPath = get.runPath(obj)
+            runPath = 'run';
+        end
+
         function runStepResponsePath = get.runStepResponsePath(obj)
             runStepResponsePath = obj.u.join({'run', 'stepResponse'}, filesep);
         end
 
         function runDMCPath = get.runDMCPath(obj)
             runDMCPath = obj.u.join({'run', 'DMC'}, filesep);
+        end
+
+        function runGPCPath = get.runGPCPath(obj)
+            runGPCPath = obj.u.join({'run', 'GPC'}, filesep);
         end
 
         function testValidation = get.testValidation(obj)
@@ -77,8 +87,10 @@ classdef Constants
                 obj.objBinPath,
                 obj.trajectoriesPath,
                 obj.plotPath,
+                obj.runPath,
                 obj.runStepResponsePath,
                 obj.runDMCPath,
+                obj.runGPCPath,
                 obj.testValidation
             };
         end

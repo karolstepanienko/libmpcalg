@@ -171,6 +171,16 @@ classdef Utilities
                 end
             end
         end
+
+        function choosenConstructorFunc = chooseAlgorithm(c, algType)
+            if strcmp(algType, c.analyticalAlgType)
+                choosenConstructorFunc = @AnalyticalDMC;
+            elseif strcmp(algType, c.fastAlgType)
+                choosenConstructorFunc = @FastDMC;
+            elseif strcmp(algType, c.numericalAlgType)
+                choosenConstructorFunc = @NumericalDMC;
+            end
+        end
     end
 end
 
