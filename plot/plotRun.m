@@ -1,6 +1,8 @@
-%% plotTest
-% Plots test results
-function plotTest(YY, Yzad, UU, st, ny, nu, plotTitle)
+%% plotRun
+% Plots run results
+function plotRun(YY, Yzad, UU, st, ny, nu, algName, algType)
+    plotTitle = Utilities.getPlotTitle(algName, algType);
+
     fig = figure;
     
     ynPlot = max(ny, nu);

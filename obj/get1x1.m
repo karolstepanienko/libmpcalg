@@ -16,14 +16,34 @@ function obj = get1x1(st)
     K = 2;
     T1 = 0.3;
     T2 = 0.8;
-    
+
     cNum = [K];
     cDen = [T1*T2 T1+T2 1];
     Gs = tf(cNum, cDen);
     st = 0.1; % Sampling time
     
     obj = MIMOObj(Gs, st);
-    figure;
-    step(Gs);
-    obj.save('1x1.mat');
+    % figure;
+    % step(Gs);
+
+    fileName = '1x1.mat';
+    obj.save(fileName);
+
+    % Appending the save file
+    m = matfile(Utilities.getObjBinFilePath(fileName), 'Writable',true);
+
+    %% MPC regulator parameters
+    m.D = 20;  % Dynamic horizon
+    m.N = 8;  % Prediction horizon
+    m.Nu = 5;  % Moving horizon
+    m.ny = 1;
+    m.nu = 1;
+    m.mi = ones(1, m.ny);  % Output importance
+    m.lambda = ones(1, m.nu);  % Control weight
+    m.uMin = -2;
+    m.uMax = -m.uMin;
+    m.duMin = -1;
+    m.duMax = -m.duMin;
+    m.yMin = -1.3;
+    m.yMax = -m.yMin;
 end

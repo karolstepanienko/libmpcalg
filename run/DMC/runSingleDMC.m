@@ -1,14 +1,5 @@
-function runSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
-    %% DMC parameters
-    D = 100; % Dynamic horizon
-    N = D; % Prediction horizon
-    Nu = D; % Moving horizon
-    mi = ones(1, ny); % Output importance
-    lambda = ones(1, nu); % Control weight
-    uMin = -10;
-    uMax = -uMin;
-    duMin = -0.5;
-    duMax = -duMin;
+function e = runSingleDMC(D, N, Nu, mi, lambda, uMin, uMax, duMin, duMax,...
+    yMin, yMax, algType, ny, nu, st, A, B, ypp, upp, Yzad, kk, isPlotting)
 
     % Get D elements of object step response
     stepResponses = getStepResponses(ny, nu, A, B, D);
@@ -20,8 +11,6 @@ function runSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
     c = Constants();
     % Regulator
     if strcmp(algType, c.numericalAlgType)
-        yMin = -10;
-        yMax = -yMin;
         reg = DMC(D, N, Nu, ny, nu, stepResponses,...
             'mi', mi, 'lambda', lambda,...
             'uMin', uMin, 'uMax', uMax,...
@@ -41,6 +30,21 @@ function runSingleDMC(algType, ny, nu, st, A, B, ypp, upp, Yzad, kk)
         reg = reg.calculateControl(YY(k,:), Yzad(k,:));
         UU(k, :) = reg.getControl();
     end
-    plotTitle = Utilities.getPlotTitle('DMC', algType);
-    plotTest(YY, Yzad, UU, st, ny, nu, plotTitle);
+    if isPlotting
+        algName = 'DMC';
+        plotRun(YY, Yzad, UU, st, ny, nu, algName, algType);
+    end
+    e = calculateError(YY, Yzad);
+end
+
+function e = calculateError(YY, Yzad)
+    ny_YY = size(YY, 2);
+    ny_Yzad = size(Yzad, 2);
+    assert(ny_YY == ny_Yzad)
+    ny = ny_YY;
+
+    e = 0;
+    for cy = 1:ny
+        e = e + (Yzad(:, cy) - YY(:, cy))' * (Yzad(:, cy) - YY(:, cy));
+    end
 end

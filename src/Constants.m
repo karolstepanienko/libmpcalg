@@ -13,6 +13,7 @@ classdef Constants
         runDMCPath  % (1,8) char array
         runGPCPath  % (1,8) char array
         testValidation  % (1,15) char array
+        testControlError  % (1,17) char array
         libFolders  % (1,7) cell
         % Constant numerical values
         plotWaitSec  % (1,1) int8
@@ -81,6 +82,10 @@ classdef Constants
             testValidation = obj.u.join({'test', 'validation'}, filesep);
         end
 
+        function testControlError = get.testControlError(obj)
+            testControlError = obj.u.join({'test', 'controlError'}, filesep);
+        end
+
         function libFolders = get.libFolders(obj)
             libFolders = {
                 obj.objPath,
@@ -91,7 +96,8 @@ classdef Constants
                 obj.runStepResponsePath,
                 obj.runDMCPath,
                 obj.runGPCPath,
-                obj.testValidation
+                obj.testValidation,
+                obj.testControlError
             };
         end
 
