@@ -20,6 +20,8 @@ classdef Constants
         testSimulationLength  % (1,1) int8
         testYInitVal  % (1,1) int8
         testUInitVal  % (1,1) int8
+        numIdx  % (1,1) int8
+        denIdx  % (1,1) int8
         % Algorithm types
         analyticalAlgType  % (1,10) char array
         fastAlgType  % (1,4) char array
@@ -116,6 +118,14 @@ classdef Constants
 
         function testUInitVal = get.testUInitVal(obj)
             testUInitVal = 0;
+        end
+
+        function numIdx = get.numIdx(obj)
+            numIdx = 1;
+        end
+
+        function denIdx = get.denIdx(obj)
+            denIdx = 2;
         end
 
         function analytical = get.analyticalAlgType(obj)

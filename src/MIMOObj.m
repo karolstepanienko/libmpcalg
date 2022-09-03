@@ -187,12 +187,12 @@ classdef MIMOObj
                 for cy=1:obj.ny
                     for cu=1:obj.nu
                         uCoeffs{cy, cu} = obj.getUCoeffsVector(...
-                            obj.numDen{cy, cu}{1},...
+                            obj.numDen{cy, cu}{obj.c.numIdx},...
                             obj.getOtherDenominators(cy, cu));
                     end
                 end
             else
-                uCoeffs{1, 1} = obj.numDen{1, 1}{1};
+                uCoeffs{1, 1} = obj.numDen{1, 1}{obj.c.numIdx};
             end
         end
 
@@ -213,9 +213,9 @@ classdef MIMOObj
             for ccu=1:obj.nu
                 if ccu ~= cu
                     if otherDenominators == 0
-                        otherDenominators = {obj.numDen{cy, ccu}{2}};
+                        otherDenominators = {obj.numDen{cy, ccu}{obj.c.denIdx}};
                     else
-                        otherDenominators = {otherDenominators; obj.numDen{cy, ccu}{2}};
+                        otherDenominators = {otherDenominators; obj.numDen{cy, ccu}{obj.c.denIdx}};
                     end
                 end
             end
@@ -225,9 +225,9 @@ classdef MIMOObj
             % Returns common denominator for every output equation
             commonDen = cell(obj.ny, 1);
             for cy=1:obj.ny
-                commonDen{cy} = obj.numDen{cy, 1}{2};
+                commonDen{cy} = obj.numDen{cy, 1}{obj.c.denIdx};
                 for cu=1:obj.nu-1
-                    commonDen{cy} = conv(commonDen{cy}, obj.numDen{cy, cu+1}{2});
+                    commonDen{cy} = conv(commonDen{cy}, obj.numDen{cy, cu+1}{obj.c.denIdx});
                 end
             end
         end
