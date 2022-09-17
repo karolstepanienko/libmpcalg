@@ -1,4 +1,5 @@
-% TODO
+%% AnalyticalMPCS
+% Analytical MPCS also called classicMPCS
 classdef AnalyticalMPCS < CoreMPCS & ValidateMPCS
     methods
         %% AnalyticalMPCS
@@ -19,9 +20,8 @@ classdef AnalyticalMPCS < CoreMPCS & ValidateMPCS
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
         function obj = AnalyticalMPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin)
-            D = 1
-            obj = obj.validateMPCSParams(D, N, Nu, ny, nu, nx, dA, dB, dC,...
-                dD, varargin);
+            obj = obj.validateMPCSParams(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+                varargin);
             obj = obj.initMPCS();
         end
 

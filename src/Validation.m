@@ -6,6 +6,9 @@ classdef Validation
         validScalarDoubleNum
         validScalarDoubleLessThan0Num
         validScalarDoubleGreaterThan0Num
+        % Matrix
+        validMatrix
+        validSquareMatrix
         % Cell
         validCell
         % Double or array
@@ -55,6 +58,72 @@ classdef Validation
                 isa(x, 'double') && obj.isPositiveOrEqualToZero(x);
         end
 
+        %---------------------------- vector -----------------------------------
+        function validNum = get.validNum(obj)
+            validNum = @isnumeric;
+        end
+
+        function value = validateArray(obj, arrayName, array, n)
+            if obj.validateArraySize(arrayName, array, n)...
+                && obj.validateArrayIsHorizontal(arrayName, array)
+                value = array;
+            end
+        end
+
+        function isValid = validateArraySize(obj, arrayName, array, n)
+            isValid = false;
+            if size(array, 1) == 1 && size(array, 2) ~= n
+                Exceptions.throwArrayInvalidSize(arrayName, n);
+            else
+                isValid = true;
+            end
+        end
+
+        function isValid = validateArrayIsHorizontal(obj, arrayName, array)
+            isValid = false;
+            if size(array, 1) ~= 1
+                Exceptions.throwArrayNotHorizontal(arrayName);
+            else
+                isValid = true;
+            end
+        end
+
+        %---------------------------- matrix -----------------------------------
+        function validSquareMatrix = get.validSquareMatrix(obj)
+            validSquareMatrix = @(x) isnumeric(x) && isa(x, 'double') &&...
+                ismatrix(x) && size(x, 1) == size(x, 2);
+        end
+
+        % Not tested
+        function validMatrix = get.validMatrix(obj)
+            validMatrix = @(x) isnumeric(x) && isa(x, 'double') && ismatrix(x);
+        end
+
+        function isValid = validateSquareMatrix(obj, matrix, matrixName, n)
+            isValid = false;
+            if size(matrix, 1) ~= n || size(matrix, 2) ~= n
+                Exceptions.throwMatrixNotSquare(matrixName);
+            else
+                isValid = true;
+            end
+        end
+
+        function value = validateAStateMatrix(obj, dA, nx)
+            if obj.validateSquareMatrix(dA, 'dA', nx)
+                value = dA;
+            end
+        end
+
+        % Not tested
+        function value = validateStateMatrix(obj, matrix, matrixName, nRows,...
+            nColumns)
+            if ~(size(matrix, 1) == nRows && size(matrix, 2) == nColumns)
+                Exceptions.throwMatrixInvalidSize(matrixName, nRows, nColumns);
+            else
+                value = matrix;
+            end
+        end
+
         %--------------------------- cell --------------------------------------
         function stepResponses = validateStepResponses(obj, stepResponses,...
             ny, nu, D)
@@ -85,36 +154,6 @@ classdef Validation
 
         function validCell = get.validCell(obj)
             validCell = @(x) iscell(x) && ~isempty(x);
-        end
-
-        %---------------------------- vector -----------------------------------
-        function validNum = get.validNum(obj)
-            validNum = @isnumeric;
-        end
-
-        function value = validateArray(obj, arrayName, array, n)
-            if obj.validateArraySize(arrayName, array, n)...
-                && obj.validateArrayIsHorizontal(arrayName, array)
-                value = array;
-            end
-        end
-
-        function isValid = validateArraySize(obj, arrayName, array, n)
-            isValid = false;
-            if size(array, 1) == 1 && size(array, 2) ~= n
-                Exceptions.throwArrayInvalidSize(arrayName, n);
-            else
-                isValid = true;
-            end
-        end
-
-        function isValid = validateArrayIsHorizontal(obj, arrayName, array)
-            isValid = false;
-            if size(array, 1) ~= 1
-                Exceptions.throwArrayNotHorizontal(arrayName);
-            else
-                isValid = true;
-            end
         end
 
         %---------------------------- algType ----------------------------------

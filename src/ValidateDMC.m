@@ -1,5 +1,5 @@
 %% ValidateDMC
-% Abstract class containing DMC specific elements
+% Abstract class responsible for validation of DMC parameters
 classdef (Abstract) ValidateDMC
     properties (Access = protected, Constant)
         v = Validation();  % Validation object with data validation functions
@@ -15,7 +15,7 @@ classdef (Abstract) ValidateDMC
             p.CaseSensitive = true(1);
             p.FunctionName = 'DMC';
 
-            % Requred parameters
+            % Required parameters
             addRequired(p, 'D', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
@@ -73,7 +73,7 @@ classdef (Abstract) ValidateDMC
             p.CaseSensitive = true(1);
             p.FunctionName = 'DMC';
 
-            % Requred parameters
+            % Required parameters
             addRequired(p, 'D', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);

@@ -1,5 +1,5 @@
-%% ValidateDMC
-% Abstract class containing DMC specific elements
+%% ValidateMPCS
+% Abstract class responsible for validation of MPCS parameters
 classdef (Abstract) ValidateMPCS
     properties (Access = protected, Constant)
         v = Validation();  % Validation object with data validation functions
@@ -7,22 +7,24 @@ classdef (Abstract) ValidateMPCS
     end
 
     methods (Access = protected)
-        % TODO: adjust this
-        function obj = validateMPCSParams(obj, D, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_)
-            % Runs Analytical and Fast DMC algorithm parameter validation
+        function obj = validateMPCSParams(obj, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_)
+            % Runs Analytical and Fast MPCS algorithm parameter validation
 
             %% Parameter validation
             p = inputParser;
             p.CaseSensitive = true(1);
-            p.FunctionName = 'DMC';
+            p.FunctionName = 'MPCS';
 
-            % Requred parameters
-            addRequired(p, 'D', obj.v.validScalarIntGreaterThan0Num);
+            % Required parameters
             addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfOutputs', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs', obj.v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfStateVariables', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'dA', obj.v.validSquareMatrix);
+            addRequired(p, 'dB', obj.v.validMatrix);
+            addRequired(p, 'dC', obj.v.validMatrix);
+            addRequired(p, 'dD', obj.v.validMatrix);
 
             % Optional parameters
             addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
@@ -44,19 +46,18 @@ classdef (Abstract) ValidateMPCS
                 obj.v.validAlgType);
 
             % Parsing values
-            parse(p, D, N, Nu, ny, nu, nx, varargin_{:});            
+            parse(p, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_{:});            
             
             % Assign required parameters
-            obj.D = p.Results.D;
             obj.N = p.Results.N;
             obj.Nu = p.Results.Nu;
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
             obj.nx = p.Results.numberOfStateVariables;
-            obj.dA = dA;
-            obj.dB = dB;
-            obj.dC = dC;
-            obj.dD = dD;
+            obj.dA = obj.v.validateAStateMatrix(p.Results.dA, obj.nx);
+            obj.dB = obj.v.validateStateMatrix(p.Results.dB, 'dB', obj.nx, obj.nu);
+            obj.dC = obj.v.validateStateMatrix(p.Results.dC, 'dC', obj.ny, obj.nx);
+            obj.dD = obj.v.validateStateMatrix(p.Results.dD, 'dD', obj.ny, obj.nu);
 
             % Assign optional parameters
             obj.mi = obj.v.validateArray('mi', p.Results.mi, obj.ny);
