@@ -67,7 +67,7 @@ classdef NumericalDMC < MPC & ValidateDMC
             YY_0 = YY_k + obj.Mp * obj.dUUp_k;
 
             % f vector used by quadproc
-            f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_k - obj.Mp * obj.dUUp_k);
+            f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
             % Most recent control values
             UU_k_1 = Utilities.stackVector(obj.U_k, obj.Nu);
