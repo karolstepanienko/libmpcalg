@@ -1,4 +1,4 @@
-classdef (Abstract) MPC
+classdef (Abstract) MPC < MPCUtilities
     properties
         % Required
         D  % Dynamic horizon
@@ -27,7 +27,7 @@ classdef (Abstract) MPC
         Xi  % Xi matrix used by DMC algorithm
         Lambda  % Lambda matrix used by DMC algorithm
         K  % K matrix used by DMC algorithm
-        dUU_k  % Vector containing control values
+        dUU_k  % Vector containing current control value change
         dUUp_k  % DUUp vector containing past control value changes
     end
 
@@ -39,6 +39,12 @@ classdef (Abstract) MPC
 
         function nu = get.nu(obj)
             nu = obj.nu;
+        end
+
+        %% getControl
+        % Returns horizontal vector of new control values
+        function U_k = getControl(obj)
+            U_k = obj.U_k';
         end
     end
 
@@ -55,7 +61,7 @@ classdef (Abstract) MPC
             obj.M = obj.getM();
             obj.Xi = obj.getXi();
             obj.Lambda = obj.getLambda();
-            obj.K = obj.getK();
+            obj.K = obj.getK(obj.M, obj.Xi, obj.Lambda);
         end
 
         %% getSp
@@ -109,48 +115,6 @@ classdef (Abstract) MPC
             end
         end
 
-        %% getXi
-        % Creates Xi matrix used by DMC algorithm
-        function Xi = getXi(obj)
-            Xi = zeros(obj.ny*obj.N);
-            for i=1:obj.N
-                Xi((i - 1)*obj.ny + 1:i*obj.ny,...
-                    (i - 1)*obj.ny + 1:i*obj.ny) = ...
-                    diag(obj.mi); % square ny x ny matrix
-            end
-        end
-
-        %% getLambdaMatrix
-        % Creates Lambda matrix used by DMC algorithm
-        function Lambda = getLambda(obj)
-            Lambda = zeros(obj.nu*obj.Nu);
-            for i=1:obj.Nu
-                Lambda((i - 1)*obj.nu + 1:i*obj.nu,...
-                    (i - 1)*obj.nu + 1:i*obj.nu) = ...
-                    diag(obj.lambda); % square ny x ny matrix
-            end
-        end
-
-        %% getKMatrix
-        % Creates full K matrix used by DMC algorithm
-        function K = getK(obj)
-            K =...
-            (obj.M' * obj.Xi * obj.M + obj.Lambda) \ (obj.M' * obj.Xi);
-        end
-
-        %% getYYFromY
-        % Tries to stack given vector N time vertically
-        % @throws MalformedVector error if stacking is not possible.
-        function YY = getYYFromY(obj, Y)
-            if size(Y, 1) == obj.ny && size(Y, 2) == 1  % Vertical vector
-                YY = Utilities.stackVector(Y, obj.N);
-            elseif size(Y, 1) == 1 && size(Y, 2) == obj.ny  % Horizontal vector
-                YY = Utilities.stackVector(Y', obj.N);
-            else
-                error("Malformed vector. Cannot be stacked.");
-            end
-        end
-
         %% initdUUp
         function dUUp_k = initdUUp_k(obj)
             dUUp_k = zeros(obj.nu*(obj.D - 1), 1);
@@ -164,28 +128,6 @@ classdef (Abstract) MPC
         %% getUU_k
         function U_k = initU_k(obj)
             U_k = zeros(obj.nu, 1);
-        end
-        
-        %% limitU_k
-        function U_k = limitU_k(obj, U_k)
-            for i=1:obj.nu
-                if U_k(i, 1) < obj.uMin
-                    U_k(i, 1) = obj.uMin;
-                elseif U_k(i, 1) > obj.uMax
-                    U_k(i, 1) = obj.uMax;
-                end
-            end
-        end
-
-        %% limitdU_k
-        function dU_k = limitdU_k(obj, dU_k)
-            for i=1:obj.nu
-                if dU_k(i, 1) < obj.duMin
-                    dU_k(i, 1) = obj.duMin;
-                elseif dU_k(i, 1) > obj.duMax
-                    dU_k(i, 1) = obj.duMax;
-                end
-            end
         end
     end
 end

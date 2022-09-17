@@ -1,9 +1,10 @@
-function [Yzad, kk, ypp, upp] = getY1Trajectory()
+function [Yzad, kk, ypp, upp, xpp] = getY1Trajectory()
     % Simulation length
     c = Constants();
     kk = c.testSimulationLength;
     ypp = c.testYInitVal;
     upp = c.testUInitVal;
+    xpp = c.testXInitVal;
 
     % Space allocation
     Yzad = zeros(kk, 1) + ypp;

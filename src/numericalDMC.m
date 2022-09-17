@@ -1,7 +1,7 @@
 %% NumericalDMC
 % DMC algorithm that uses quadproc - a auqdratic equations solver to calculate
 % control value changes
-classdef NumericalDMC < MPC & coreDMC
+classdef NumericalDMC < MPC & ValidateDMC
     properties
         yMin  % Minimal output value
         yMax  % Maximal output value 
@@ -34,7 +34,6 @@ classdef NumericalDMC < MPC & coreDMC
         % @param uMax Maximal control value
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
-        % TODO
         % @param yMin Minimal output value
         % @param yMax Maximal output value
         function obj = NumericalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
@@ -61,8 +60,8 @@ classdef NumericalDMC < MPC & coreDMC
         % @param Y_k        horizontal vector of current output values
         % @param Yzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, Y_k, Yzad_k)
-            YY_k = obj.getYYFromY(Y_k);
-            YYzad_k = obj.getYYFromY(Yzad_k);
+            YY_k = obj.stackVectorVertically(Y_k);
+            YYzad_k = obj.stackVectorVertically(Yzad_k);
             
             % Get YY_0
             YY_0 = YY_k + obj.Mp * obj.dUUp_k;

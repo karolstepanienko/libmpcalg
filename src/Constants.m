@@ -12,6 +12,7 @@ classdef Constants
         runStepResponsePath  % (1,17) char array
         runDMCPath  % (1,8) char array
         runGPCPath  % (1,8) char array
+        runMPCSPath  % (1,9) char array
         testValidation  % (1,15) char array
         testControlError  % (1,17) char array
         libFolders  % (1,7) cell
@@ -20,6 +21,7 @@ classdef Constants
         testSimulationLength  % (1,1) int8
         testYInitVal  % (1,1) int8
         testUInitVal  % (1,1) int8
+        testXInitVal  % (1,1) int8
         numIdx  % (1,1) int8
         denIdx  % (1,1) int8
         % Algorithm types
@@ -27,6 +29,12 @@ classdef Constants
         fastAlgType  % (1,4) char array
         numericalAlgType  % (1,9) char array
         algTypes  % (1,3) cell
+        % Variables (used in 'tagging' objects and switching between them)
+        algTypeVariableName  % (1, 7) char array
+        % Algorithms
+        algDMC  % (1, 3) char array
+        algGPC  % (1, 3) char array
+        algMPCS  % (1, 4) char array
         % Constraints
         defaultMi  % (1,1) int8
         defaultLambda  % (1,1) int8
@@ -80,6 +88,10 @@ classdef Constants
             runGPCPath = obj.u.join({'run', 'GPC'}, filesep);
         end
 
+        function runMPCSPath = get.runMPCSPath(obj)
+            runMPCSPath = obj.u.join({'run', 'MPCS'}, filesep);
+        end
+
         function testValidation = get.testValidation(obj)
             testValidation = obj.u.join({'test', 'validation'}, filesep);
         end
@@ -98,6 +110,7 @@ classdef Constants
                 obj.runStepResponsePath,
                 obj.runDMCPath,
                 obj.runGPCPath,
+                obj.runMPCSPath,
                 obj.testValidation,
                 obj.testControlError
             };
@@ -118,6 +131,10 @@ classdef Constants
 
         function testUInitVal = get.testUInitVal(obj)
             testUInitVal = 0;
+        end
+
+        function testXInitVal = get.testXInitVal(obj)
+            testXInitVal = 0;
         end
 
         function numIdx = get.numIdx(obj)
@@ -146,6 +163,22 @@ classdef Constants
                 obj.fastAlgType,
                 obj.numericalAlgType
             };
+        end
+
+        function algTypeVariableName = get.algTypeVariableName(obj)
+            algTypeVariableName = 'algType';
+        end
+
+        function algDMC = get.algDMC(obj)
+            algDMC = 'DMC';
+        end
+
+        function algGPC = get.algGPC(obj)
+            algGPC = 'GPC';
+        end
+
+        function algMPCS = get.algMPCS(obj)
+            algMPCS = 'MPCS';
         end
 
         function defaultMi = get.defaultMi(obj)

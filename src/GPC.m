@@ -12,6 +12,6 @@
 function obj = GPC(D, N, Nu, ny, nu, A, B, varargin)
     init();  % Adding necessary paths
     kk = D;
-    stepResponses = getStepResponses(ny, nu, A, B, kk);
+    stepResponses = getStepResponsesEq(ny, nu, A, B, kk);
     obj = DMC(D, N, Nu, ny, nu, stepResponses, varargin{:});
 end

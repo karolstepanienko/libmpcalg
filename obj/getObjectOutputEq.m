@@ -1,4 +1,4 @@
-function Y_k = getObjectOutput(A, B, YY, ypp, UU, upp, ny, nu, k)
+function Y_k = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, k)
     Y_k = zeros(1, ny);
     na = size(A{1, 1}(2:end), 2);  % First element is always one, so discard it
     nb = size(B{1, 1}, 2) - 1;  % vector in B matrix has nb + 1 elements

@@ -1,11 +1,15 @@
 %% runStepResponse
 % Universal function that tests step responses for object in a given file name
-function runStepResponse(fileName, simTime)
+function runStepResponse(fileName, simTime, stepResponseGetter)
     u = Utilities();
     filePath = u.getObjBinFilePath(fileName);
     load(filePath);
     kk = simTime/st; % Simulation length
-    stepResponses = getStepResponses(ny, nu, A, B, kk);
+    if strcmp(stepResponseGetter, 'Eq')
+        stepResponses = getStepResponsesEq(ny, nu, A, B, kk);
+    elseif strcmp(stepResponseGetter, 'state')
+        stepResponses = getStepResponsesState(nx, ny, nu, dA, dB, dC, dD, kk);
+    end
     plotStepResponses(stepResponses, st);
 end
 

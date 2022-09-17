@@ -1,14 +1,6 @@
-%% coreDMC
+%% ValidateDMC
 % Abstract class containing DMC specific elements
-classdef (Abstract) coreDMC
-    methods
-        %% getControl
-        % Returns horizontal vector of new control values
-        function U_k = getControl(obj)
-            U_k = obj.U_k';
-        end
-    end
-
+classdef (Abstract) ValidateDMC
     properties (Access = protected, Constant)
         v = Validation();  % Validation object with data validation functions
         c = Constants();  % Constant values

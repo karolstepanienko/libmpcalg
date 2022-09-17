@@ -1,10 +1,13 @@
 function e = runAlg(object, alg, algType, varargin)
+    %% Loads optim package for octave
+    Utilities.loadPkgOptimInOctave();
     %% Load object
     load(Utilities.getObjBinFilePath(Utilities.joinText(object, '.mat')));
+    c = Constants();
 
     %% Trajectory
     trajectoryGetterFunc = getTrajectory(object);
-    [Yzad, kk, ypp, upp] = trajectoryGetterFunc();
+    [Yzad, kk, ypp, upp, xpp] = trajectoryGetterFunc();
 
     %% Check for plotting being turned off
     if length(varargin) >= 1
@@ -14,54 +17,55 @@ function e = runAlg(object, alg, algType, varargin)
     end
 
     %% Test loop
-    if strcmp(func2str(alg), 'DMC') || strcmp(func2str(alg), 'GPC')
+    if strcmp(func2str(alg), c.algDMC)...
+        || strcmp(func2str(alg), c.algGPC)...
+        || strcmp(func2str(alg), c.algMPCS)
         e = runSingleAlg(D, N, Nu, mi, lambda, uMin, uMax, duMin, duMax,...
-        yMin, yMax, alg, algType, ny, nu, st, A, B, ypp, upp, Yzad, kk, isPlotting);
+        yMin, yMax, alg, algType, ny, nu, nx, st, A, B, dA, dB, dC, dD, xpp,...
+        ypp, upp, Yzad, kk, isPlotting);
     else
         disp(Utilities.joinText('Unknown algorithm : ', func2str(alg)));
     end
 end
 
 function e = runSingleAlg(D, N, Nu, mi, lambda, uMin, uMax, duMin, duMax,...
-    yMin, yMax, alg, algType, ny, nu, st, A, B, ypp, upp, Yzad, kk, isPlotting)
+    yMin, yMax, alg, algType, ny, nu, nx, st, A, B, dA, dB, dC, dD, xpp, ypp,...
+    upp, Yzad, kk, isPlotting)
 
     % Get D elements of object step response
-    stepResponses = getStepResponses(ny, nu, A, B, D);
+    stepResponses = getStepResponsesEq(ny, nu, A, B, D);
 
     %% Variable initialisation
+    XX = zeros(kk, nx);    
     YY = zeros(kk, ny);
     UU = zeros(kk, nu);
 
     %% Regulator
-    reg = getRegulatorObject(D, N, Nu, ny, nu, stepResponses, A, B, mi,...
-    lambda, uMin, uMax, duMin, duMax, yMin, yMax, alg, algType);
+    reg = getRegulatorObject(D, N, Nu, ny, nu, nx, stepResponses, A, B,...
+        dA, dB, dC, dD, mi, lambda, uMin, uMax, duMin, duMax, yMin, yMax,...
+        alg, algType);
 
     for k=1:kk
-        YY(k, :) = getObjectOutput(A, B, YY, ypp, UU, upp, ny, nu, k);
-        reg = reg.calculateControl(YY(k,:), Yzad(k,:));
+        if strcmp(func2str(alg), func2str(@MPCS))
+            [XX(k, :), YY(k, :)]= getObjectOutputState(dA, dB, dC, dD,...
+                XX, xpp, nx, UU, upp, nu, ny, k);
+            reg = reg.calculateControl(XX(k, :), Yzad(k, :));
+        else
+            YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, k);
+            reg = reg.calculateControl(YY(k, :), Yzad(k, :));
+        end
         UU(k, :) = reg.getControl();
     end
     if isPlotting
         algName = func2str(alg);
         plotRun(YY, Yzad, UU, st, ny, nu, algName, algType);
     end
-    e = calculateError(YY, Yzad);
+    e = Utilities.calculateError(YY, Yzad)
 end
 
-function e = calculateError(YY, Yzad)
-    ny_YY = size(YY, 2);
-    ny_Yzad = size(Yzad, 2);
-    assert(ny_YY == ny_Yzad)
-    ny = ny_YY;
-
-    e = 0;
-    for cy = 1:ny
-        e = e + (Yzad(:, cy) - YY(:, cy))' * (Yzad(:, cy) - YY(:, cy));
-    end
-end
-
-function reg = getRegulatorObject(D, N, Nu, ny, nu, stepResponses, A, B, mi,...
-    lambda, uMin, uMax, duMin, duMax, yMin, yMax, alg, algType)
+function reg = getRegulatorObject(D, N, Nu, ny, nu, nx, stepResponses, A, B,...
+        dA, dB, dC, dD, mi, lambda, uMin, uMax, duMin, duMax, yMin, yMax,...
+        alg, algType)
     c = Constants();
     % DMC
     if strcmp(func2str(alg), func2str(@DMC))
@@ -90,6 +94,22 @@ function reg = getRegulatorObject(D, N, Nu, ny, nu, stepResponses, A, B, mi,...
                 'algType', algType);
         else
             reg = alg(D, N, Nu, ny, nu, A, B,...
+                'mi', mi, 'lambda', lambda,...
+                'uMin', uMin, 'uMax', uMax,...
+                'duMin', duMin, 'duMax', duMax,...
+                'algType', algType);
+        end
+    % MPCS
+    elseif strcmp(func2str(alg), func2str(@MPCS))
+        if strcmp(algType, c.numericalAlgType)
+            reg = alg(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+                'mi', mi, 'lambda', lambda,...
+                'uMin', uMin, 'uMax', uMax,...
+                'duMin', duMin, 'duMax', duMax,...
+                'yMin', yMin, 'yMax', yMax,...
+                'algType', algType);
+        else
+            reg = alg(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
                 'mi', mi, 'lambda', lambda,...
                 'uMin', uMin, 'uMax', uMax,...
                 'duMin', duMin, 'duMax', duMax,...

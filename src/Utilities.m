@@ -172,13 +172,59 @@ classdef Utilities
             end
         end
 
-        function choosenConstructorFunc = chooseAlgorithm(c, algType)
-            if strcmp(algType, c.analyticalAlgType)
-                choosenConstructorFunc = @AnalyticalDMC;
-            elseif strcmp(algType, c.fastAlgType)
-                choosenConstructorFunc = @FastDMC;
-            elseif strcmp(algType, c.numericalAlgType)
-                choosenConstructorFunc = @NumericalDMC;
+        function choosenConstructorFunc = chooseAlgorithm(c, algorithm, algType)
+            if strcmp(algorithm, c.algDMC)
+                if strcmp(algType, c.analyticalAlgType)
+                    choosenConstructorFunc = @AnalyticalDMC;
+                elseif strcmp(algType, c.fastAlgType)
+                    choosenConstructorFunc = @FastDMC;
+                elseif strcmp(algType, c.numericalAlgType)
+                    choosenConstructorFunc = @NumericalDMC;
+                end
+            elseif strcmp(algorithm, c.algMPCS)
+                if strcmp(algType, c.analyticalAlgType)
+                    choosenConstructorFunc = @AnalyticalMPCS;
+                elseif strcmp(algType, c.fastAlgType)
+                    choosenConstructorFunc = @FastMPCS;
+                elseif strcmp(algType, c.numericalAlgType)
+                    choosenConstructorFunc = @NumericalMPCS;
+                end
+            end
+        end
+
+        function e = calculateError(YY, Yzad)
+            ny_YY = size(YY, 2);
+            ny_Yzad = size(Yzad, 2);
+            % Matrix sizes have to match
+            assert(ny_YY == ny_Yzad)
+            ny = ny_YY;
+            e = 0;
+            for cy = 1:ny
+                e = e + (Yzad(:, cy) - YY(:, cy))' * (Yzad(:, cy) - YY(:, cy));
+            end
+        end
+
+        function [algType, varargin_] = resolveAlgType(c, varargin_)
+            % Validation object with data validation functions
+            v = Validation();
+
+            algType = Utilities.extractFromVarargin(c.algTypeVariableName,...
+                varargin_);
+            if strcmp(algType, '') ~= 1
+                % Algorithm type was defined
+                v.validAlgType(algType);  % Validate algorithm type
+            else
+                % Algorithm type was not defined, use analytical algorithm type
+                algType = c.analyticalAlgType;
+                varargin_ = Utilities.replaceInVarargin(...
+                    c.algTypeVariableName, algType, varargin_);
+            end
+        end
+
+        function loadPkgOptimInOctave()
+            % If in run in octave, will load optim package
+            if Utilities.isOctave()
+                pkg load optim
             end
         end
     end

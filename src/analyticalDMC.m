@@ -1,6 +1,6 @@
 %% AnalyticalDMC
 % Analytical DMC also called classicDMC
-classdef AnalyticalDMC < MPC & coreDMC
+classdef AnalyticalDMC < MPC & ValidateDMC
     methods
         %% AnalyticalDMC
         % Creates DMC regulator object
@@ -28,12 +28,12 @@ classdef AnalyticalDMC < MPC & coreDMC
         % @param Y_k        horizontal vector of current output values
         % @param Yzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, Y_k, Yzad_k)
-            YY_k = obj.getYYFromY(Y_k);
-            YYzad_k = obj.getYYFromY(Yzad_k);
+            YY_k = obj.stackVectorVertically(Y_k);
+            YYzad_k = obj.stackVectorVertically(Yzad_k);
             
             % Get YY_0
             YY_0 = YY_k + obj.Mp * obj.dUUp_k;
-            
+
             % Get new control change value
             obj.dUU_k = obj.K * (YYzad_k - YY_0);
             

@@ -8,7 +8,7 @@ classdef MIMOObj
         cC % Continuous-time relation between outputs and internal process variables
         cD % Continuous-time relation between outputs and inputs
         Gs % Continuous transmittance
-        
+
         %% Discrete-time
         st % Sampling time
         dA % Discrete-time relation between internal process variables
@@ -24,16 +24,15 @@ classdef MIMOObj
         %% Model parameters
         ny % Number of outputs
         nu % Number of inputs
+        nx % Number of state variables
     end
-    
+
     properties (Access = private)
         u % Utilities object
         c % Constants object
-        cSS % Continuous-time state-space model
-        dSS % Discrete-time state-space model.
         numDen % Numerators and denominators
     end
-    
+
     methods
         %% MIMOObj
         % Creates MIMO object model using continuous transmittance
@@ -42,20 +41,20 @@ classdef MIMOObj
             obj.u = Utilities();
             obj.Gs = Gs;
             obj.st = st;
-            
+
             % Matlab only methods
             obj.checkMatlab();
-            
-            obj.cSS = ss(obj.Gs);
+
+            [obj.cA, obj.cB, obj.cC, obj.cD] = ssdata(ss(obj.Gs));
             obj = obj.getDiscreteTransmittance();
-            obj.dSS = ss(obj.Gz);
+            [obj.dA, obj.dB, obj.dC, obj.dD] = ssdata(ss(obj.Gz));
             obj = obj.getNumDen();
 
             % A and B matrix -- need numDen
             obj = obj.getA();
             obj = obj.getB();
         end
-    
+
         %% Getters
         function ny = get.ny(obj)
             ny = size(obj.cC, 1);
@@ -63,56 +62,43 @@ classdef MIMOObj
         function nu = get.nu(obj)
             nu = max([size(obj.cB, 2), size(obj.cD, 2)]);
         end
-        
-        % Continuous-time
-        function cA = get.cA(obj)
-            cA = obj.cSS.A;
-        end
-        function cB = get.cB(obj)
-            cB = obj.cSS.B;
-        end
-        function cC = get.cC(obj)
-            cC = obj.cSS.C;
-        end
-        function cD = get.cD(obj)
-            cD = obj.cSS.D;
+        function nx = get.nx(obj)
+            nx = size(obj.dA, 1);
         end
 
-        % Discrete-time
-        function dA = get.dA(obj)
-            dA = obj.dSS.A;
-        end
-        function dB = get.dB(obj)
-            dB = obj.dSS.B;
-        end
-        function dC = get.dC(obj)
-            dC = obj.dSS.C;
-        end
-        function dD = get.dD(obj)
-            dD = obj.dSS.D;
-        end
-        
         % Others
         function numDen = getnumDen(obj)
             numDen = obj.numDen;
         end
-        
+
         function save(obj, fileName)
             % Saves object data
             filePath = obj.u.getObjBinFilePath(fileName);
             obj.u.cdf(filePath);
             % Prepare variables for saving
-            % TODO add cSS and dSS matrices
             ny = obj.ny;
             nu = obj.nu;
+            nx = obj.nx;
             numDen = obj.numDen;
+            % Continuous-time state-space model
+            cA = obj.cA;
+            cB = obj.cB;
+            cC = obj.cC;
+            cD = obj.cD;
+            % Discrete-time state-space model
             st = obj.st;
+            dA = obj.dA;
+            dB = obj.dB;
+            dC = obj.dC;
+            dD = obj.dD;
+            % Differential equation
             A = obj.A;
             B = obj.B;
-            save(filePath, 'ny', 'nu', 'numDen', 'st', 'A', 'B');
+            save(filePath, 'ny', 'nu', 'nx', 'numDen', 'st', 'A', 'B',...
+            'cA', 'cB', 'cC', 'cD', 'dA', 'dB', 'dC', 'dD');
         end
     end
-    
+
     methods (Access = private)
         function checkMatlab(obj)
             % This code has to be executed in MATLAB.
@@ -136,7 +122,6 @@ classdef MIMOObj
             % Returns object's discrete transmittance
             obj.Gz = c2d(obj.Gs, obj.st);
         end
-        
 
         function obj = getNumDen(obj)
             % Returns numerators and denumerators cell for every transmittance 
@@ -155,7 +140,7 @@ classdef MIMOObj
         end
 
         function obj = getA(obj)
-            % Calculates A matrix vectors
+            % Calculates normalised A matrix vectors
             commonDen = obj.getCommonDen();
 
             obj.A = cell(obj.ny, obj.ny);
@@ -175,7 +160,7 @@ classdef MIMOObj
         end
 
         function obj = getB(obj)
-            % Calculates B matrix vectors
+            % Calculates normalised B matrix vectors
             obj.B = obj.getUCoeffs();
         end
 

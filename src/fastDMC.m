@@ -1,7 +1,7 @@
 %% FastDMC
 % Analytical DMC that only calculates one set of nu control values
 % Also called fast DMC
-classdef FastDMC < MPC & coreDMC
+classdef FastDMC < MPC & ValidateDMC
     methods
         %% FastDMC
         % Creates FastDMC regulator object
@@ -29,8 +29,8 @@ classdef FastDMC < MPC & coreDMC
         % @param Y_k        horizontal vector of current output values
         % @param Yzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, Y_k, Yzad_k)
-            YY_k = obj.getYYFromY(Y_k);
-            YYzad_k = obj.getYYFromY(Yzad_k);
+            YY_k = obj.stackVectorVertically(Y_k);
+            YYzad_k = obj.stackVectorVertically(Yzad_k);
             
             % Get YY_0
             YY_0 = YY_k + obj.Mp * obj.dUUp_k;

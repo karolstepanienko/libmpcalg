@@ -26,6 +26,8 @@ function obj = get1x2(st)
 
     Gs = tf(cNum, cDen);
     obj = MIMOObj(Gs, st);
+    % SSs = ss(Gs);
+    % SSz = c2d(SSs, st)
     % figure;
     % step(Gs);
 
