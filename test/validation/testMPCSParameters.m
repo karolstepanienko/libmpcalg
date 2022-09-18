@@ -190,6 +190,34 @@
 %!error <MPCS: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCSParameters('duMax', -1);
 
 
+%------------------------------------- yMin ------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCSParameters('yMin', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCS: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCSParameters('yMin', [1, 1]);
+
+% Value has a type of 'double'
+%!error <MPCS: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCSParameters('yMin', int8(1));
+
+% Not accessible in analyticalAlgType
+%!error <MPCS: argument 'YMIN' is not a valid parameter> testMPCSParameters('algType', Constants().analyticalAlgType);
+
+% Not accessible in fastAlgType
+%!error <MPCS: argument 'YMIN' is not a valid parameter> testMPCSParameters('algType', Constants().fastAlgType);
+
+
+%------------------------------------- yMax ------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCSParameters('yMax', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCS: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCSParameters('yMax', [1, 1]);
+
+% Value has a type of 'double'
+%!error <MPCS: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCSParameters('yMax', int8(1));
+
+
 %------------------------------------ algType ----------------------------------
 % algType can be analytical, fast or numerical
 %!error <validatestring: 'something' does not match any of\nanalytical, fast, numerical> testMPCSParameters('algType', 'something');
@@ -202,7 +230,7 @@ function testMPCSParameters(valueName, testValue)
 
     c = Constants();
 
-    algType = c.analyticalAlgType;
+    algType = c.numericalAlgType;
 
     % Assign test values
     if strcmp(valueName, 'N')
@@ -235,11 +263,10 @@ function testMPCSParameters(valueName, testValue)
         duMin = testValue;
     elseif strcmp(valueName, 'duMax')
         duMax = testValue;
-    % TODO
-    % elseif strcmp(valueName, 'yMin')
-    %     yMin = testValue;
-    % elseif strcmp(valueName, 'yMax')
-    %     yMax = testValue;
+    elseif strcmp(valueName, 'yMin')
+        yMin = testValue;
+    elseif strcmp(valueName, 'yMax')
+        yMax = testValue;
     elseif strcmp(valueName, 'algType')
         algType = testValue;
     end
@@ -249,7 +276,6 @@ function testMPCSParameters(valueName, testValue)
         'mi', mi, 'lambda', lambda,...
         'uMin', uMin, 'uMax', uMax,...
         'duMin', duMin, 'duMax', duMax,...
-        % TODO
-        % 'yMin', yMin, 'yMax', yMax,...
+        'yMin', yMin, 'yMax', yMax,...
         'algType', algType);
 end
