@@ -29,8 +29,8 @@ classdef FastDMC < MPC & ValidateDMC
         % @param Y_k        horizontal vector of current output values
         % @param Yzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, Y_k, Yzad_k)
-            YY_k = obj.stackVectorVertically(Y_k);
-            YYzad_k = obj.stackVectorVertically(Yzad_k);
+            YY_k = obj.stackVectorNTimes(Y_k);
+            YYzad_k = obj.stackVectorNTimes(Yzad_k);
             
             % Get YY_0
             YY_0 = YY_k + obj.Mp * obj.dUUp_k;

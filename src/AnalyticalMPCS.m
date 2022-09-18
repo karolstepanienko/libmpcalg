@@ -31,7 +31,7 @@ classdef AnalyticalMPCS < CoreMPCS & ValidateMPCS
         % @param X_k        horizontal vector of current state values
         % @param Yzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, X_k, Yzad_k)
-            YYzad_k = obj.stackVectorVertically(Yzad_k);
+            YYzad_k = obj.stackVectorNTimes(Yzad_k);
 
             % Get YY_0
             YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V * (obj.dB * obj.U_k);

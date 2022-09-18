@@ -50,10 +50,10 @@ classdef (Abstract) MPCUtilities
             end
         end
 
-        %% stackVectorVertically
+        %% stackVectorNTimes
         % Tries to stack given vector N time vertically
         % @throws MalformedVector error if stacking is not possible.
-        function YY = stackVectorVertically(obj, Y)
+        function YY = stackVectorNTimes(obj, Y)
             if size(Y, 1) == obj.ny && size(Y, 2) == 1  % Vertical vector
                 YY = Utilities.stackVector(Y, obj.N);
             elseif size(Y, 1) == 1 && size(Y, 2) == obj.ny  % Horizontal vector

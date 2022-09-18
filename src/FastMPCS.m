@@ -9,7 +9,11 @@ classdef FastMPCS < CoreMPCS & ValidateMPCS
         % @param Nu Moving horizon
         % @param ny Number of outputs
         % @param nu Number of inputs
-        % @param stepResponses Cell of control object step response(s)
+        % @param nx Number of state variables
+        % @param dA Discrete-time relation between internal process variables
+        % @param dB Discrete-time relation between internal process variables and inputs
+        % @param dC Discrete-time relation between outputs and internal process variables
+        % @param dD Discrete-time relation between outputs and inputs
         % @param mi Output importance
         % @param lambda Control weight
         % @param uMin Minimal control value
@@ -28,7 +32,7 @@ classdef FastMPCS < CoreMPCS & ValidateMPCS
         % @param X_k        horizontal vector of current state values
         % @param Yzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, X_k, Yzad_k)
-            YYzad_k = obj.stackVectorVertically(Yzad_k);
+            YYzad_k = obj.stackVectorNTimes(Yzad_k);
 
             % Get YY_0
             YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V * (obj.dB * obj.U_k);
