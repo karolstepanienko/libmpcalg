@@ -3,16 +3,20 @@ function runAllTestsOctave()
         disp('These tests can only be run in Octave');
         return
     end
-    disp('Testing DMC regulator implementation:')
+
+    %% DMC
+    fprintf('Testing DMC regulator implementation:\n')
     test testDMC
-    disp('Testing DMC regulator parameter validation:')
+    fprintf('\nTesting DMC regulator parameter validation:\n')
     test testDMCParameters
-    
-    disp('Testing GPC regulator implementation:')
+
+    %% GPC
+    fprintf('\nTesting GPC regulator implementation:\n')
     test testGPC
-    
-    disp('Testing MPCS regulator implementation:')
+
+    %% MPCS
+    fprintf('\nTesting MPCS regulator implementation:\n')
     test testMPCS
-    disp('Testing MPCS regulator parameter validation:')
+    fprintf('\nTesting MPCS regulator parameter validation:\n')
     test testMPCSParameters
 end
