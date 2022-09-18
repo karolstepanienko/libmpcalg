@@ -23,7 +23,7 @@ classdef NumericalDMC < MPC & NumericalUtilities & ValidateDMC
             obj = obj.validateNumericalDMCParams(D, N, Nu, ny, nu,...
                 stepResponses, varargin);
             obj = obj.initMPC();
-            obj = obj.initNumericalDMC(obj.M, obj.Xi, obj.Lambda);
+            obj = obj.initNumerical(obj.M, obj.Xi, obj.Lambda);
         end
 
         %% calculateControl

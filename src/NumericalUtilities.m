@@ -17,7 +17,7 @@ classdef (Abstract) NumericalUtilities
     end
 
     methods (Access = protected)
-        function obj = initNumericalDMC(obj, M, Xi, Lambda)
+        function obj = initNumerical(obj, M, Xi, Lambda)
             obj.H = obj.getH(M, Xi, Lambda);
             obj.J = obj.getJ();
             obj.A = obj.getA(M);
