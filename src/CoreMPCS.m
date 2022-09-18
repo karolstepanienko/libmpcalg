@@ -22,8 +22,6 @@ classdef (Abstract) CoreMPCS < MPCUtilities
     end
 
     properties (Access = protected)
-        X_k_1  % (nx, 1) past state values
-        dUU_k  % (nu, 1) control value(s) changes
         U_k  % (nu, 1) current control value
         Xi  % (N*ny, N*ny)
         Lambda  % (Nu*nu, Nu*nu)
@@ -37,8 +35,6 @@ classdef (Abstract) CoreMPCS < MPCUtilities
 
     methods (Access = public)
         function obj = initMPCS(obj, D, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin)
-            obj.dUU_k = zeros(obj.nu*obj.Nu, 1);
-            obj.X_k_1 = zeros(obj.nx, 1);
             obj.U_k = zeros(obj.nu, 1);
             obj.Xi = obj.getXi();
             obj.Lambda = obj.getLambda();
