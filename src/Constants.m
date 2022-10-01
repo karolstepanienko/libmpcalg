@@ -13,6 +13,7 @@ classdef Constants
         runDMCPath  % (1,8) char array
         runGPCPath  % (1,8) char array
         runMPCSPath  % (1,9) char array
+        mwe  % (1, 3) char array
         test  % (1, 4) char array
         testValidation  % (1,15) char array
         testControlError  % (1,17) char array
@@ -93,6 +94,10 @@ classdef Constants
             runMPCSPath = obj.u.join({'run', 'MPCS'}, filesep);
         end
 
+        function mwe = get.mwe(obj)
+            mwe = 'mwe';
+        end
+
         function test = get.test(obj)
             test = 'test';
         end
@@ -116,6 +121,7 @@ classdef Constants
                 obj.runDMCPath,
                 obj.runGPCPath,
                 obj.runMPCSPath,
+                obj.mwe,
                 obj.test,
                 obj.testValidation,
                 obj.testControlError
