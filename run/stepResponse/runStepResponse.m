@@ -6,9 +6,9 @@ function runStepResponse(fileName, simTime, stepResponseGetter)
     load(filePath);
     kk = simTime/st; % Simulation length
     if strcmp(stepResponseGetter, 'Eq')
-        stepResponses = getStepResponsesEq(ny, nu, A, B, kk);
+        stepResponses = getStepResponsesEq(ny, nu, InputDelay, A, B, kk);
     elseif strcmp(stepResponseGetter, 'state')
-        stepResponses = getStepResponsesState(nx, ny, nu, dA, dB, dC, dD, kk);
+        stepResponses = getStepResponsesState(nx, ny, nu, InputDelay, dA, dB, dC, dD, kk);
     end
     plotStepResponses(stepResponses, st);
 end

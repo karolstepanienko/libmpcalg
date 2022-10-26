@@ -25,6 +25,7 @@ classdef MIMOObj
         ny % Number of outputs
         nu % Number of inputs
         nx % Number of state variables
+        InputDelay
     end
 
     properties (Access = private)
@@ -59,11 +60,17 @@ classdef MIMOObj
         function ny = get.ny(obj)
             ny = size(obj.cC, 1);
         end
+
         function nu = get.nu(obj)
             nu = max([size(obj.cB, 2), size(obj.cD, 2)]);
         end
+
         function nx = get.nx(obj)
             nx = size(obj.dA, 1);
+        end
+
+        function InputDelay = get.InputDelay(obj)
+            InputDelay = obj.Gs.InputDelay;
         end
 
         % Others
@@ -79,6 +86,7 @@ classdef MIMOObj
             ny = obj.ny;
             nu = obj.nu;
             nx = obj.nx;
+            InputDelay = obj.InputDelay;
             numDen = obj.numDen;
             % Continuous-time state-space model
             cA = obj.cA;
@@ -91,11 +99,11 @@ classdef MIMOObj
             dB = obj.dB;
             dC = obj.dC;
             dD = obj.dD;
-            % Differential equation
+            % Difference equation
             A = obj.A;
             B = obj.B;
-            save(filePath, 'ny', 'nu', 'nx', 'numDen', 'st', 'A', 'B',...
-            'cA', 'cB', 'cC', 'cD', 'dA', 'dB', 'dC', 'dD');
+            save(filePath, 'ny', 'nu', 'nx', 'InputDelay', 'numDen', 'st',...
+                'A', 'B', 'cA', 'cB', 'cC', 'cD', 'dA', 'dB', 'dC', 'dD');
         end
     end
 

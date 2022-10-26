@@ -4,6 +4,7 @@ addpath('../libmpcalg/src')
 % Object parameters
 ny = 2;  % Number of outputs
 nu = 2;  % Number of inputs
+InputDelay = [1; 1];
 
 % Object model
 stepResponse = cell(nu, 1);
@@ -38,7 +39,7 @@ UU = zeros(kk, nu);
 
 % Control loop
 for k=1:kk
-    YY(k, :) = simulateObjectDMC(ny, nu, YY, ypp, UU, upp, k);
+    YY(k, :) = simulateObjectDMC(ny, nu, InputDelay, YY, ypp, UU, upp, k);
     reg = reg.calculateControl(YY(k, :), YYzad(k, :));
     UU(k, :) = reg.getControl();
 end

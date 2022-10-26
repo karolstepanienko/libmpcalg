@@ -4,6 +4,7 @@ addpath('../libmpcalg/src')
 % Object parameters
 ny = 2;  % Number of outputs
 nu = 2;  % Number of inputs
+InputDelay = [1; 1];
 
 % Object model: difference equation
 %
@@ -43,7 +44,7 @@ duMax = -duMin;
 algType = 'fast';
 
 % Regulator
-reg = GPC(D, N, Nu, ny, nu, A, B, 'mi', mi, 'lambda', lambda, 'uMin', uMin,...
+reg = GPC(D, N, Nu, ny, nu, InputDelay, A, B, 'mi', mi, 'lambda', lambda, 'uMin', uMin,...
     'uMax', uMax, 'duMin', duMin, 'duMax', duMax, 'algType', algType);
 
 % Trajectory
@@ -55,7 +56,7 @@ UU = zeros(kk, nu);
 
 % Control loop
 for k=1:kk
-    YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, k);
+    YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k);
     reg = reg.calculateControl(YY(k, :), YYzad(k, :));
     UU(k, :) = reg.getControl();
 end

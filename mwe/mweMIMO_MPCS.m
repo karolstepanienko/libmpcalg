@@ -5,6 +5,7 @@ addpath('../libmpcalg/src')
 ny = 2;  % Number of outputs
 nu = 2;  % Number of inputs
 nx = 4;  % Number of state variables
+InputDelay = [0; 0];
 
 % Object model
 dA = [0.9048, 0, 0, 0;
@@ -47,7 +48,7 @@ UU = zeros(kk, nu);
 % Control loop
 for k=1:kk
     [XX(k, :), YY(k, :)] = getObjectOutputState(dA, dB, dC, dD, XX, xpp, nx,...
-        UU, upp, nu, ny, k);
+        UU, upp, nu, ny, InputDelay, k);
     reg = reg.calculateControl(XX(k, :), YYzad(k, :));
     UU(k, :) = reg.getControl();
 end

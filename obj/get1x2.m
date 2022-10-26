@@ -11,9 +11,6 @@ function obj = get1x2(st)
     %            1.5s + 1                2.5s + 1
     %
 
-    ny = 1;
-    nu = 2;
-
     cNum = {
     %  u1 u2
         2 3 % y1
@@ -24,7 +21,9 @@ function obj = get1x2(st)
         [1.5 1] [2.5 1] % y1
     };
 
-    Gs = tf(cNum, cDen);
+    InputDelay = [0; 0];
+
+    Gs = tf(cNum, cDen, 'InputDelay', InputDelay);
     obj = MIMOObj(Gs, st);
     % SSs = ss(Gs);
     % SSz = c2d(SSs, st)
@@ -41,8 +40,6 @@ function obj = get1x2(st)
     m.D = 25;  % Dynamic horizon
     m.N = 5;  % Prediction horizon
     m.Nu = 1;  % Moving horizon
-    m.ny = 1;
-    m.nu = 2;
     m.mi = ones(1, m.ny);  % Output importance
     m.lambda = ones(1, m.nu);  % Control weight
     m.uMin = -1;

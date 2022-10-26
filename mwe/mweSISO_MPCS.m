@@ -5,6 +5,7 @@ addpath('../libmpcalg/src')
 ny = 1;  % Number of outputs
 nu = 1;  % Number of inputs
 nx = 2;  % Number of state variables
+InputDelay = 0;
 
 % Object model
 dA = [1.5990, -0.6323; 1, 0];
@@ -32,7 +33,7 @@ reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, 'mi', mi, 'lambda', lambda,...
     'yMin', yMin, 'yMax', yMax, 'algType', algType);
 
 % Trajectory
-[Yzad, kk, ypp, upp, xpp] = getY1Trajectory()
+[Yzad, kk, ypp, upp, xpp] = getY1Trajectory();
 
 % Variable initialisation
 X = zeros(kk, nx);
@@ -42,7 +43,7 @@ U = zeros(kk, nu);
 % Control loop
 for k=1:kk
     [X(k, :), Y(k, :)] = getObjectOutputState(dA, dB, dC, dD, X, xpp, nx, U,...
-        upp, nu, ny, k);
+        upp, nu, ny, InputDelay, k);
     reg = reg.calculateControl(X(k, :), Yzad(k, :));
     U(k, :) = reg.getControl();
 end
