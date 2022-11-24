@@ -8,6 +8,6 @@
 %!assert(runAlg('1x2', @GPC, 'fast', false) < 20)
 %!assert(runAlg('1x2', @GPC, 'numerical', false) < 20)
 
-%!assert(runAlg('2x2', @GPC, 'analytical', false) < 20)
-%!assert(runAlg('2x2', @GPC, 'fast', false) < 20)
-%!assert(runAlg('2x2', @GPC, 'numerical', false) < 20)
+%!assert(runAlg('2x2', @GPC, 'analytical', false) < 30)
+%!assert(runAlg('2x2', @GPC, 'fast', false) < 30)
+%!assert(runAlg('2x2', @GPC, 'numerical', false) < 30)

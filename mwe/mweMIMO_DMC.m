@@ -46,3 +46,6 @@ end
 
 % Plotting
 plotRun(YY, YYzad, UU, 0.01, ny, nu, 'DMC', algType);
+
+% Control error
+err = Utilities.calculateError(YY, YYzad)

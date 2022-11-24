@@ -24,7 +24,7 @@ function Y_k = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k)
         % Input - B matrix part
         for cu=1:nu
             b = B{cy, cu};
-            if k - 1 - nb - InputDelay(cu) <= 1
+            if k - nb - InputDelay(cu) < 1
 
                 % In a loop
                 for i=1:nb+1
@@ -37,7 +37,7 @@ function Y_k = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k)
 
             else
                 % Using vectors
-                Y_k(1, cy) = Y_k(1, cy) + b * flip(UU(k-1-nb - InputDelay(cu):k-1 - InputDelay(cu), cu));
+                Y_k(1, cy) = Y_k(1, cy) + b * flip(UU(k - nb - InputDelay(cu):k - InputDelay(cu), cu));
             end
         end
     end

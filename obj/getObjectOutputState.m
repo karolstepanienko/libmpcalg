@@ -1,18 +1,12 @@
-function [X_k, Y_k] = getObjectOutputState(dA, dB, dC, dD, XX, xpp, nx, UU, upp, nu, ny, InputDelay, k)
+function [X_kp1, Y_k] = getObjectOutputState(dA, dB, dC, dD, XX, xpp, nx, UU, upp, nu, ny, InputDelay, k)
     for cu=1:nu
-        if k - InputDelay(cu) - 1 < 1
-            U_k_1(cu) = upp;
+        if k - InputDelay(cu) < 1
+            U_k(cu) = upp;
         else
-            U_k_1(cu) = UU(k - InputDelay(cu) - 1, cu);
+            U_k(cu) = UU(k - InputDelay(cu), cu);
         end
     end
 
-    if k - 1 < 1
-        X_k_1 = xpp * zeros(1, nx);
-    else
-        X_k_1 = XX(k - 1, :);
-    end
-
-    X_k = (dA * X_k_1' + dB * U_k_1')';
-    Y_k = (dC * X_k_1' + dD * U_k_1')';
+    X_kp1 = (dA * XX(k, :)' + dB * U_k')';
+    Y_k = (dC * XX(k, :)' + dD * U_k')';
 end

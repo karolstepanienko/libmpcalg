@@ -47,14 +47,15 @@ function e = runSingleAlg(D, N, Nu, mi, lambda, uMin, uMax, duMin, duMax,...
 
     for k=1:kk
         if strcmp(func2str(alg), func2str(@MPCS))
-            [XX(k, :), YY(k, :)]= getObjectOutputState(dA, dB, dC, dD,...
-                XX, xpp, nx, UU, upp, nu, ny, InputDelay, k);
             reg = reg.calculateControl(XX(k, :), Yzad(k, :));
+            UU(k, :) = reg.getControl();
+            [XX(k + 1, :), YY(k, :)]= getObjectOutputState(dA, dB, dC, dD,...
+                XX, xpp, nx, UU, upp, nu, ny, InputDelay, k);
         else
             YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k);
             reg = reg.calculateControl(YY(k, :), Yzad(k, :));
+            UU(k, :) = reg.getControl();
         end
-        UU(k, :) = reg.getControl();
     end
     if isPlotting
         algName = func2str(alg);

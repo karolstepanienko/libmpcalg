@@ -48,3 +48,6 @@ end
 
 % Plotting
 plotRun(Y, Yzad, U, 0.1, ny, nu, 'GPC', algType);
+
+% Control error
+err = Utilities.calculateError(Y, Yzad)

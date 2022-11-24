@@ -42,11 +42,14 @@ U = zeros(kk, nu);
 
 % Control loop
 for k=1:kk
-    [X(k, :), Y(k, :)] = getObjectOutputState(dA, dB, dC, dD, X, xpp, nx, U,...
-        upp, nu, ny, InputDelay, k);
     reg = reg.calculateControl(X(k, :), Yzad(k, :));
     U(k, :) = reg.getControl();
+    [X(k + 1, :), Y(k, :)] = getObjectOutputState(dA, dB, dC, dD, X, xpp, nx,...
+        U, upp, nu, ny, InputDelay, k);
 end
 
 % Plotting
 plotRun(Y, Yzad, U, 0.1, ny, nu, 'MPCS', algType);
+
+% Control error
+err = Utilities.calculateError(Y, Yzad)

@@ -44,8 +44,9 @@ duMax = -duMin;
 algType = 'fast';
 
 % Regulator
-reg = GPC(D, N, Nu, ny, nu, InputDelay, A, B, 'mi', mi, 'lambda', lambda, 'uMin', uMin,...
-    'uMax', uMax, 'duMin', duMin, 'duMax', duMax, 'algType', algType);
+reg = GPC(D, N, Nu, ny, nu, InputDelay, A, B, 'mi', mi, 'lambda', lambda,...
+    'uMin', uMin,'uMax', uMax, 'duMin', duMin, 'duMax', duMax,...
+    'algType', algType);
 
 % Trajectory
 [YYzad, kk, ypp, upp, ~] = getY2Trajectory();
@@ -63,3 +64,6 @@ end
 
 % Plotting
 plotRun(YY, YYzad, UU, 0.01, ny, nu, 'GPC', algType);
+
+% Control error
+err = Utilities.calculateError(YY, YYzad)

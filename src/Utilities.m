@@ -222,9 +222,14 @@ classdef Utilities
         end
 
         function loadPkgOptimInOctave()
-            % If in run in octave, will load optim package
             if Utilities.isOctave()
                 pkg load optim
+            end
+        end
+
+        function loadPkgParallelInOctave()
+            if Utilities.isOctave()
+                pkg load parallel
             end
         end
     end
