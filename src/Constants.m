@@ -27,6 +27,7 @@ classdef Constants
         testXInitVal  % (1,1) int8
         numIdx  % (1,1) int8
         denIdx  % (1,1) int8
+        objectSamplingFactor  % (1,1) int8
         % Algorithm types
         analyticalAlgType  % (1,10) char array
         fastAlgType  % (1,4) char array
@@ -163,6 +164,12 @@ classdef Constants
 
         function denIdx = get.denIdx(obj)
             denIdx = 2;
+        end
+
+        % Describes how often object output is calculated between consecutive
+        % generated control values
+        function objectSamplingFactor = get.objectSamplingFactor(obj)
+            objectSamplingFactor = 10;
         end
 
         function analytical = get.analyticalAlgType(obj)

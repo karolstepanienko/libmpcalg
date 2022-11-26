@@ -3,7 +3,7 @@
 % y x u
 function obj = get1x1(st)
     arguments
-        st (1,1) { mustBeNumeric } = 1
+        st (1,1) { mustBeNumeric } = 0.1  % Sampling time
     end
 
     %% Double inertial object
@@ -23,7 +23,6 @@ function obj = get1x1(st)
     InputDelay = 0;
 
     Gs = tf(cNum, cDen, 'InputDelay', InputDelay);
-    st = 0.1; % Sampling time
     
     obj = MIMOObj(Gs, st);
     % figure;

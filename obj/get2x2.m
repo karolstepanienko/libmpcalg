@@ -3,7 +3,7 @@
 % y x u
 function obj = get2x2(st)
     arguments
-        st (1,1) { mustBeNumeric } = 0.01
+        st (1,1) { mustBeNumeric } = 0.1
     end
     %% Single inertial object
     %               1                       2
@@ -22,8 +22,8 @@ function obj = get2x2(st)
 
     cDen = {
         %  u1     u2
-        [0.1 1] [0.2 1]; % y1
-        [0.3 1] [0.4 1]  % y2
+        [1 1] [2 1]; % y1
+        [3 1] [4 1]  % y2
     };
 
     InputDelay = [0; 0];
@@ -49,8 +49,8 @@ function obj = get2x2(st)
     m.lambda = ones(1, m.nu);  % Control weight
     m.uMin = -2;
     m.uMax = -m.uMin;
-    m.duMin = -0.5;
+    m.duMin = -2.5;
     m.duMax = -m.duMin;
-    m.yMin = -0.6;
+    m.yMin = -1;
     m.yMax = -m.yMin;
 end

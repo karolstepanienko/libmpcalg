@@ -3,7 +3,7 @@
 % y x u
 function obj = get1x2(st)
     arguments
-        st (1,1) { mustBeNumeric } = 1
+        st (1,1) { mustBeNumeric } = 0.1
     end
     %% Single inertial object
     %               2                       3
@@ -38,14 +38,14 @@ function obj = get1x2(st)
 
     %% MPC regulator parameters
     m.D = 25;  % Dynamic horizon
-    m.N = 5;  % Prediction horizon
-    m.Nu = 1;  % Moving horizon
+    m.N = 25;  % Prediction horizon
+    m.Nu = 6;  % Moving horizon
     m.mi = ones(1, m.ny);  % Output importance
     m.lambda = ones(1, m.nu);  % Control weight
-    m.uMin = -1;
+    m.uMin = -0.5;
     m.uMax = -m.uMin;
     m.duMin = -0.4;
     m.duMax = -m.duMin;
-    m.yMin = -1.5;
+    m.yMin = -1.8;
     m.yMax = -m.yMin;
 end

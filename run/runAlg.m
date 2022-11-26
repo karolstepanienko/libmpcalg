@@ -22,7 +22,7 @@ function e = runAlg(object, alg, algType, varargin)
         || strcmp(func2str(alg), c.algMPCS)
         e = runSingleAlg(D, N, Nu, mi, lambda, uMin, uMax, duMin, duMax,...
         yMin, yMax, alg, algType, ny, nu, InputDelay, nx, st, A, B, dA, dB,...
-        dC, dD, xpp, ypp, upp, Yzad, kk, isPlotting);
+        dC, dD, xpp, ypp, upp, Yzad, kk, isPlotting, c);
     else
         disp(Utilities.joinText('Unknown algorithm : ', func2str(alg)));
     end
@@ -30,15 +30,15 @@ end
 
 function e = runSingleAlg(D, N, Nu, mi, lambda, uMin, uMax, duMin, duMax,...
     yMin, yMax, alg, algType, ny, nu, InputDelay, nx, st, A, B, dA, dB, dC,...
-    dD, xpp, ypp, upp, Yzad, kk, isPlotting)
+    dD, xpp, ypp, upp, Yzad, kk, isPlotting, c)
 
     % Get D elements of object step response
     stepResponses = getStepResponsesEq(ny, nu, InputDelay, A, B, D);
 
     %% Variable initialisation
-    XX = zeros(kk, nx);    
-    YY = zeros(kk, ny);
-    UU = zeros(kk, nu);
+    XX = ones(kk * c.objectSamplingFactor, nx) * xpp;
+    YY = ones(kk * c.objectSamplingFactor, ny) * ypp;
+    UU = ones(kk * c.objectSamplingFactor, nu) * upp;
 
     %% Regulator
     reg = getRegulatorObject(D, N, Nu, ny, nu, InputDelay, nx, stepResponses, A, B,...
@@ -46,22 +46,49 @@ function e = runSingleAlg(D, N, Nu, mi, lambda, uMin, uMax, duMin, duMax,...
         alg, algType);
 
     for k=1:kk
+        % MPCS
         if strcmp(func2str(alg), func2str(@MPCS))
-            reg = reg.calculateControl(XX(k, :), Yzad(k, :));
-            UU(k, :) = reg.getControl();
-            [XX(k + 1, :), YY(k, :)]= getObjectOutputState(dA, dB, dC, dD,...
-                XX, xpp, nx, UU, upp, nu, ny, InputDelay, k);
+            reg = reg.calculateControl(...
+                XX(k * c.objectSamplingFactor, :), Yzad(k, :));
+            % Assign control values (row will not be stretched over multiple
+            % rows)
+            U_k = reg.getControl();
+            for cu = 1:nu
+                UU(k * c.objectSamplingFactor:...
+                    (k + 1)* c.objectSamplingFactor - 1, cu) = U_k(cu);
+            end
+            for k_obj = c.objectSamplingFactor-1:-1:0
+
+                [XX((k + 1) * c.objectSamplingFactor - k_obj, :),...
+                 YY(k*c.objectSamplingFactor - k_obj, :)] =...
+                    getObjectOutputState(dA, dB, dC, dD, XX, xpp, nx,...
+                    UU, upp, nu, ny, InputDelay,...
+                    k*c.objectSamplingFactor - k_obj);
+            end
+        % DMC and GPC
         else
-            YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k);
-            reg = reg.calculateControl(YY(k, :), Yzad(k, :));
-            UU(k, :) = reg.getControl();
+            for k_obj = c.objectSamplingFactor-1:-1:0
+                YY(k*c.objectSamplingFactor - k_obj, :) = ...
+                    getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu,...
+                    InputDelay, k*c.objectSamplingFactor - k_obj);
+            end
+            reg = reg.calculateControl(...
+                YY(k*c.objectSamplingFactor, :), Yzad(k, :));
+            % Assign control values (row will not be stretched over multiple
+            % rows)
+            U_k = reg.getControl();
+            for cu = 1:nu
+                UU(k*c.objectSamplingFactor:...
+                    (k + 1)* c.objectSamplingFactor - 1, cu) = U_k(cu);
+            end
         end
     end
     if isPlotting
         algName = func2str(alg);
-        plotRun(YY, Yzad, UU, st, ny, nu, algName, algType);
+        plotRun(YY(1:c.objectSamplingFactor:end, :), Yzad,...
+            UU(1:c.objectSamplingFactor:end, :), st, ny, nu, algName, algType);
     end
-    e = Utilities.calculateError(YY, Yzad);
+    e = Utilities.calculateError(YY(1:c.objectSamplingFactor:end, :), Yzad);
     disp(Utilities.joinText('Control error for ', func2str(alg),...
         ' algorithm in (ny: ', num2str(ny), ', nu: ', num2str(nu),...
         ') configuration and type ', algType, ': ', num2str(e)));
