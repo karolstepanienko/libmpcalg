@@ -1,3 +1,4 @@
+% Returns all object step responses
 function stepResponses = getStepResponsesState(nx, ny, nu, InputDelay, dA, dB, dC, dD, kk)
     stepResponses = cell(nu, 1);
     for i=1:nu % for every input
@@ -9,13 +10,14 @@ end
 
 % Returns output response for a step on a given input
 function YY = getStepResponse(nx, ny, nu, InputDelay, dA, dB, dC, dD, chosenU, kk)
+    c = Constants();
     %% Variable initialisation
-    XX = zeros(kk, nx);
-    YY = zeros(kk, ny);
-    UU = zeros(kk, nu);
-    xpp = 0;
-    ypp = 0;
-    upp = 0;
+    xpp = c.testUInitVal;
+    ypp = c.testYInitVal;
+    upp = c.testUInitVal;
+    XX = ones(kk, nx) * xpp;
+    YY = ones(kk, ny) * ypp;
+    UU = ones(kk, nu) * upp;
 
     %% Add control step
     % Step starts at k = 1 (matlab indexing),

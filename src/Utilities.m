@@ -33,6 +33,31 @@ classdef Utilities
             end
         end
 
+        %% getGzFromNumDen
+        % Creates discrete transmittance from discrete numerators
+        % and denominators
+        function Gz = getGzFromNumDen(numDen, st)
+            [ny, nu] = size(numDen);
+            allNum = {};
+            allDen = {};
+            for cy = 1:ny
+                num = {};
+                den = {};
+                for cu = 1:nu
+                    num = {num{:}, numDen{cy,cu}{1}};
+                    den = {den{:}, numDen{cy,cu}{2}};
+                end
+                if size(allNum, 2) == 0
+                    allNum = num;
+                    allDen = den;
+                else
+                    allNum = {allNum{:}; num{:}};
+                    allDen = {allDen{:}; den{:}};
+                end
+            end
+            Gz = tf(allNum, allDen, st);
+        end
+
         %% stackVector
         % Returns vertical vector containing n V vectors stacked on top of
         % each other
@@ -230,6 +255,12 @@ classdef Utilities
         function loadPkgParallelInOctave()
             if Utilities.isOctave()
                 pkg load parallel
+            end
+        end
+
+        function loadPkgControlInOctave()
+            if Utilities.isOctave()
+                pkg load control
             end
         end
     end

@@ -240,4 +240,10 @@ classdef Constants
             defaultyMax = Inf;
         end
     end
+
+    methods (Access = public, Static)
+        function AllowedNumericError = getAllowedNumericLimit(obj)
+            AllowedNumericError = power(10, -15);
+        end
+    end
 end

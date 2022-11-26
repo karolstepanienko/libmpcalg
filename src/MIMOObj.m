@@ -3,28 +3,28 @@
 classdef MIMOObj
     properties (Access = public)
         %% Continuous-time
-        cA % Continuous-time relation between internal process variables
-        cB % Continuous-time relation between internal process variables and inputs
-        cC % Continuous-time relation between outputs and internal process variables
-        cD % Continuous-time relation between outputs and inputs
-        Gs % Continuous transmittance
+        cA  % Continuous-time relation between internal process variables
+        cB  % Continuous-time relation between internal process variables and inputs
+        cC  % Continuous-time relation between outputs and internal process variables
+        cD  % Continuous-time relation between outputs and inputs
+        Gs  % Continuous transmittance
 
         %% Discrete-time
-        st % Sampling time
-        dA % Discrete-time relation between internal process variables
-        dB % Discrete-time relation between internal process variables and inputs
-        dC % Discrete-time relation between outputs and internal process variables
-        dD % Discrete-time relation between outputs and inputs
-        Gz % Discrete transmittance
-        A  % A matrix describing relation between current output value and past
-           % output values
-        B  % B matrix describing relation between current control value and past
-           % control values
+        st  % Sampling time
+        dA  % Discrete-time relation between internal process variables
+        dB  % Discrete-time relation between internal process variables and inputs
+        dC  % Discrete-time relation between outputs and internal process variables
+        dD  % Discrete-time relation between outputs and inputs
+        Gz  % Discrete transmittance
+        A   % A matrix describing relation between current output value and past
+            % output values
+        B   % B matrix describing relation between current control value and past
+            % control values
 
         %% Model parameters
-        ny % Number of outputs
-        nu % Number of inputs
-        nx % Number of state variables
+        ny  % Number of outputs
+        nu  % Number of inputs
+        nx  % Number of state variables
         InputDelay
     end
 
@@ -88,6 +88,8 @@ classdef MIMOObj
             nx = obj.nx;
             InputDelay = obj.InputDelay;
             numDen = obj.numDen;
+            % Discrete transmittance for step response comparison
+            Gz = obj.Gz;
             % Continuous-time state-space model
             cA = obj.cA;
             cB = obj.cB;
@@ -103,7 +105,7 @@ classdef MIMOObj
             A = obj.A;
             B = obj.B;
             save(filePath, 'ny', 'nu', 'nx', 'InputDelay', 'numDen', 'st',...
-                'A', 'B', 'cA', 'cB', 'cC', 'cD', 'dA', 'dB', 'dC', 'dD');
+                'Gz', 'A', 'B', 'cA', 'cB', 'cC', 'cD', 'dA', 'dB', 'dC', 'dD');
         end
     end
 

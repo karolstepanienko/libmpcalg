@@ -3,7 +3,7 @@
 % y x u
 function obj = get1x2(st)
     arguments
-        st (1,1) { mustBeNumeric } = 0.1
+        st (1,1) { mustBeNumeric } = 0.1  % Sampling time
     end
     %% Single inertial object
     %               2                       3
@@ -37,8 +37,8 @@ function obj = get1x2(st)
     m = matfile(Utilities.getObjBinFilePath(fileName), 'Writable',true);
 
     %% MPC regulator parameters
-    m.D = 25;  % Dynamic horizon
-    m.N = 25;  % Prediction horizon
+    m.D = 250;  % Dynamic horizon
+    m.N = 150;  % Prediction horizon
     m.Nu = 6;  % Moving horizon
     m.mi = ones(1, m.ny);  % Output importance
     m.lambda = ones(1, m.nu);  % Control weight

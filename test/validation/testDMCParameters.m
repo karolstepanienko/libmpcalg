@@ -82,7 +82,7 @@
 %!error <Malformed step responses cell. Number of outputs \(2\) doesn't match the number of outputs \(1\) in provided step responses cell> testDMCParameters('stepResponses', { 1; 1 })
 
 % Warn about stepResponses shorter than dynamic horizon D
-%!warning <Step response for combination of input \(2\) and output \(2\) is shorter \(1\) than dynamic horizon D=200. Assumed constant step response equal to last known element.> testDMCParameters('stepResponses', {[1 1]; [1 1]})
+%!warning <Step response for combination of input \(2\) and output \(2\) is shorter \(1\) than dynamic horizon D=300. Assumed constant step response equal to last known element.> testDMCParameters('stepResponses', {[1 1]; [1 1]})
 
 
 %-------------------------------------- mi -------------------------------------

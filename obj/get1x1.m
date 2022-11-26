@@ -35,8 +35,8 @@ function obj = get1x1(st)
     m = matfile(Utilities.getObjBinFilePath(fileName), 'Writable',true);
 
     %% MPC regulator parameters
-    m.D = 20;  % Dynamic horizon
-    m.N = 8;  % Prediction horizon
+    m.D = 80;  % Dynamic horizon
+    m.N = 70;  % Prediction horizon
     m.Nu = 5;  % Moving horizon
     m.mi = ones(1, m.ny);  % Output importance
     m.lambda = ones(1, m.nu);  % Control weight

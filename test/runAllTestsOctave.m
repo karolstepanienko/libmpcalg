@@ -4,6 +4,10 @@ function runAllTestsOctave()
         return
     end
 
+    % Step responses
+    fprintf('Comparing step responses')
+    test compareStepResponse
+
     %% DMC
     fprintf('Testing DMC regulator implementation:\n')
     test testDMC
