@@ -217,15 +217,38 @@ classdef Utilities
             end
         end
 
-        function e = calculateError(YY, Yzad)
+        function err = calculateError(YY, Yzad)
             ny_YY = size(YY, 2);
             ny_Yzad = size(Yzad, 2);
             % Matrix sizes have to match
             assert(ny_YY == ny_Yzad)
             ny = ny_YY;
-            e = 0;
+            err = 0;
             for cy = 1:ny
-                e = e + (Yzad(:, cy) - YY(:, cy))' * (Yzad(:, cy) - YY(:, cy));
+                err = err + (Yzad(:, cy) - YY(:, cy))' * (Yzad(:, cy) - YY(:, cy));
+            end
+        end
+
+        %% calMatrixError
+        % Calculates full quadratic error for every element in given matrices
+        % Then adds all error values
+        function squareError = calMatrixError(A, B)
+            tmp = abs(A-B).^2;
+            squareError = sum(tmp(:));
+        end
+
+        function stepResponse = stepResponseMatrix2Cell(stepResponseRef, nu)
+            stepResponse = cell(nu, 1);
+            for cu = 1:nu
+                stepResponse{cu} = stepResponseRef(:, :, cu);
+            end
+        end
+
+        function stepResponseMatrix = stepResponseCell2Matrix(...
+            stepResponseCell, kk, ny, nu)
+            stepResponseMatrix = zeros(kk, ny, nu);
+            for cu = 1:nu
+                stepResponseMatrix(:, :, cu) = stepResponseCell{cu};
             end
         end
 

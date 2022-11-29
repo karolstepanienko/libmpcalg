@@ -17,11 +17,11 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
     Gz = Utilities.getGzFromNumDen(numDen, st);
 
     %% Reference step response (k, ny, nu)
-    stepResponseRef = step(Gz, seconds);
+    stepResponseMatrix = step(Gz, seconds);
     % Removing first element of step response
-    stepResponseRef = stepResponseRef(2:end, :, :);
+    stepResponseMatrix = stepResponseMatrix(2:end, :, :);
     % Adjust to step response format used in libmpcalg
-    stepResponseRef = formatStepResponse(stepResponseRef, nu);
+    stepResponseRef = Utilities.stepResponseMatrix2Cell(stepResponseMatrix, nu);
 
     %% Differential equation step response
     stepResponseEq = getStepResponsesEq(ny, nu, InputDelay, A, B, kk);    
@@ -31,14 +31,11 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
         dA, dB, dC, dD, kk);
 
     %% Differences between step responses
-    errEq = 0;
-    errState = 0;
-    for cu = nu
-        errEq = errEq + Utilities.calculateError(...
-            stepResponseRef{cu}, stepResponseEq{cu});
-        errState = errState + Utilities.calculateError(...
-            stepResponseRef{cu}, stepResponseState{cu});
-    end
+    errEq = Utilities.calMatrixError(stepResponseMatrix,...
+        Utilities.stepResponseCell2Matrix(stepResponseEq, kk, ny, nu));
+    errState = Utilities.calMatrixError(stepResponseMatrix,...
+        Utilities.stepResponseCell2Matrix(stepResponseState, kk, ny, nu));
+
     fprintf('Differential equation step response error: %s\n', num2str(errEq));
     fprintf('State space step response error: %s\n', num2str(errState));
 
@@ -55,12 +52,5 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
         figure;
         plotStepResponses(stepResponseCombined, st);
         legend({'Reference', 'Differential equation', 'State system'});
-    end
-end
-
-function stepResponse = formatStepResponse(stepResponseRef, nu)
-    stepResponse = cell(nu, 1);
-    for cu = 1:nu
-        stepResponse{cu} = stepResponseRef(:, :, cu);
     end
 end

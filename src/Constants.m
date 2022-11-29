@@ -17,7 +17,8 @@ classdef Constants
         test  % (1, 4) char array
         testValidation  % (1,15) char array
         testAbsoluteControlError  % (1,24) char array
-        testRelativeControlError  % (1,24) char array
+        testRelativeControlErrorStepResponse  % (1,36) char array
+        testRelativeControlErrorDMC  % (1,27) char array
         libFolders  % (1,7) cell
         % Constant numerical values
         plotWaitSec  % (1,1) int8
@@ -113,9 +114,16 @@ classdef Constants
                 {'test', 'absoluteControlError'}, filesep);
         end
 
-        function testRelativeControlError = get.testRelativeControlError(obj)
-            testRelativeControlError = obj.u.join(...
-                {'test', 'relativeControlError'}, filesep);
+        function testRelativeControlErrorStepResponse =...
+            get.testRelativeControlErrorStepResponse(obj)
+            testRelativeControlErrorStepResponse = obj.u.join(...
+                {'test', 'relativeControlError', 'stepResponse'}, filesep);
+        end
+
+        function testRelativeControlErrorDMC =...
+            get.testRelativeControlErrorDMC(obj)
+            testRelativeControlErrorDMC = obj.u.join(...
+                {'test', 'relativeControlError', 'DMC'}, filesep);
         end
 
         function libFolders = get.libFolders(obj)
@@ -133,7 +141,8 @@ classdef Constants
                 obj.test,
                 obj.testValidation,
                 obj.testAbsoluteControlError,
-                obj.testRelativeControlError
+                obj.testRelativeControlErrorStepResponse,
+                obj.testRelativeControlErrorDMC
             };
         end
 
