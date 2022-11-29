@@ -23,4 +23,8 @@ function runAllTestsOctave()
     test testMPCS
     fprintf('\nTesting MPCS regulator parameter validation:\n')
     test testMPCSParameters
+
+    % Compare DMC algorithms
+    fprintf('Comparing DMC regulator implementations:\n')
+    test compareDMC
 end

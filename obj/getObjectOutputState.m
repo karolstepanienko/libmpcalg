@@ -1,4 +1,5 @@
-function [X_kp1, Y_k] = getObjectOutputState(dA, dB, dC, dD, XX, xpp, nx, UU, upp, nu, ny, InputDelay, k)
+function [X_kp1, Y_k] = getObjectOutputState(dA, dB, dC, dD, XX, xpp, nx,...
+    UU, upp, nu, ny, InputDelay, k)
     for cu=1:nu
         if k - InputDelay(cu) < 1
             U_k(cu) = upp;

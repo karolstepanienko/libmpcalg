@@ -252,7 +252,7 @@ classdef Constants
 
     methods (Access = public, Static)
         function AllowedNumericError = getAllowedNumericLimit(obj)
-            AllowedNumericError = power(10, -15);
+            AllowedNumericError = power(10, -10);
         end
     end
 end
