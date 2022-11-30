@@ -251,8 +251,12 @@ classdef Constants
     end
 
     methods (Access = public, Static)
-        function AllowedNumericError = getAllowedNumericLimit(obj)
-            AllowedNumericError = power(10, -10);
+        function allowedNumericError = getAllowedNumericLimit(obj)
+            allowedNumericError = power(10, -10);
+        end
+
+        function optimOptions = getOptimOptions(obj)
+            optimOptions = optimset('Display', 'off');
         end
     end
 end

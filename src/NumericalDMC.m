@@ -57,7 +57,7 @@ classdef NumericalDMC < MPC & NumericalUtilities & ValidateDMC
             beq = [];
             x0 = [];
             obj.dUU_k = quadprog(obj.H, f, obj.A, b, Aeq, beq, obj.duuMin,...
-                obj.duuMax, x0);
+                obj.duuMax, x0, Constants.getOptimOptions());
 
             % New control change value
             dU_k = obj.dUU_k(1:obj.nu);

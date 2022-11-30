@@ -1,15 +1,18 @@
 %% runAllGPC
 % Runs all GPC algorithm combinations of test object and algorithm type
-function runAllGPC()    
-    runAlg('1x1', @GPC, 'analytical');
-    runAlg('1x1', @GPC, 'fast');
-    runAlg('1x1', @GPC, 'numerical');
+function runAllGPC(varargin)
+    if size(varargin, 1) == 0 isPlotting = false;
+    else isPlotting = varargin{1}; end
 
-    runAlg('1x2', @GPC, 'analytical');
-    runAlg('1x2', @GPC, 'fast');
-    runAlg('1x2', @GPC, 'numerical');
+    runAlg('1x1', @GPC, 'analytical', isPlotting);
+    runAlg('1x1', @GPC, 'fast', isPlotting);
+    runAlg('1x1', @GPC, 'numerical', isPlotting);
 
-    runAlg('2x2', @GPC, 'analytical');
-    runAlg('2x2', @GPC, 'fast');
-    runAlg('2x2', @GPC, 'numerical');
+    runAlg('1x2', @GPC, 'analytical', isPlotting);
+    runAlg('1x2', @GPC, 'fast', isPlotting);
+    runAlg('1x2', @GPC, 'numerical', isPlotting);
+
+    runAlg('2x2', @GPC, 'analytical', isPlotting);
+    runAlg('2x2', @GPC, 'fast', isPlotting);
+    runAlg('2x2', @GPC, 'numerical', isPlotting);
 end
