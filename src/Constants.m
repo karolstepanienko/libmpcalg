@@ -4,6 +4,7 @@ classdef Constants
     properties (Access = public)
         % Paths
         libName  % (1,9) char array
+        srcPath  % (1,3) char array
         objPath  % (1,3) char array
         objBinPath  % (1,7) char array
         trajectoriesPath  % (1,14) char array
@@ -19,6 +20,7 @@ classdef Constants
         testAbsoluteControlError  % (1,24) char array
         testRelativeControlErrorStepResponse  % (1,36) char array
         testRelativeControlErrorDMC  % (1,27) char array
+        testLambda0   % (1,11) char array
         libFolders  % (1,7) cell
         % Constant numerical values
         plotWaitSec  % (1,1) int8
@@ -28,7 +30,6 @@ classdef Constants
         testXInitVal  % (1,1) int8
         numIdx  % (1,1) int8
         denIdx  % (1,1) int8
-        objectSamplingFactor  % (1,1) int8
         % Algorithm types
         analyticalAlgType  % (1,10) char array
         fastAlgType  % (1,4) char array
@@ -59,6 +60,10 @@ classdef Constants
         %% Getters
         function libName = get.libName(obj)
             libName = 'libmpcalg';
+        end
+
+        function srcPath = get.srcPath(obj)
+            srcPath = 'src';
         end
 
         function objPath = get.objPath(obj)
@@ -126,8 +131,13 @@ classdef Constants
                 {'test', 'relativeControlError', 'DMC'}, filesep);
         end
 
+        function testLambda0 = get.testLambda0(obj)
+            testLambda0 = obj.u.join({'test', 'lambda0'}, filesep);
+        end
+
         function libFolders = get.libFolders(obj)
             libFolders = {
+                obj.srcPath,
                 obj.objPath,
                 obj.objBinPath,
                 obj.trajectoriesPath,
@@ -142,7 +152,8 @@ classdef Constants
                 obj.testValidation,
                 obj.testAbsoluteControlError,
                 obj.testRelativeControlErrorStepResponse,
-                obj.testRelativeControlErrorDMC
+                obj.testRelativeControlErrorDMC,
+                obj.testLambda0
             };
         end
 
@@ -173,12 +184,6 @@ classdef Constants
 
         function denIdx = get.denIdx(obj)
             denIdx = 2;
-        end
-
-        % Describes how often object output is calculated between consecutive
-        % generated control values
-        function objectSamplingFactor = get.objectSamplingFactor(obj)
-            objectSamplingFactor = 10;
         end
 
         function analytical = get.analyticalAlgType(obj)

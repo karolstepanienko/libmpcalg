@@ -1,7 +1,7 @@
-function [Yzad, kk, ypp, upp, xpp] = getY1Trajectory(osf)
+function [Yzad, kk, ypp, upp, xpp] = getY1RelativeTestTrajectory(osf)
     % Simulation length
     c = Constants();
-    kk = c.testSimulationLength * osf;
+    kk = 4000 * osf;
     ypp = c.testYInitVal;
     upp = c.testUInitVal;
     xpp = c.testXInitVal;

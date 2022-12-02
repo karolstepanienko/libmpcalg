@@ -1,70 +1,42 @@
-% Runs step response relative/comparison tests
+% Runs DMC relative/comparison tests and DMC lambda0 relative/comparison tests
 
-%!assert(compareDMC(false, 1.0, 'analytical') < [40, 40])
-%!assert(compareDMC(false, 1.0, 'numerical') < [40, 40])
-%!assert(compareDMC(false, 0.0, 'analytical') < [131, 131])
-%!assert(compareDMC(false, 0.0, 'numerical') < [131, 131])
+%!assert(compareDMC(false, 1.0, '1x1', 'analytical') < [40, 40])
+%!assert(compareDMC(false, 1.0, '1x1', 'numerical') < [40, 40])
+%!assert(compareDMC(false, 0, '1x1', 'analytical') < [130, 130])
+%!assert(compareDMC(false, 0, '1x1', 'numerical') < [130, 130])
+
+%!assert(compareDMC(false, 1.0, '1x1RelativeTest', 'analytical') < [135, 135])
+%!assert(compareDMC(false, 1.0, '1x1RelativeTest', 'numerical') < [135, 135])
+%!assert(compareDMC(false, 0, '1x1RelativeTest', 'analytical') < [30000, 30000])
+%!assert(compareDMC(false, 0, '1x1RelativeTest', 'numerical') < [30000, 30000])
 
 
 function [controlErrRef, controlErrDMC] = compareDMC(isPlotting, lambda,...
-    algType)
-    po = prepareObject(lambda, algType);
+    object, algType)
+    po = Utilities.prepareObjectStruct(lambda, object, algType);
 
-    % Reference DMC
-    [regRef, YDMC, U] = getReferenceDMC(isPlotting, po);
-    controlErrRef = Utilities.calMatrixError(YDMC, po.Yzad);
+    %% Reference DMC
+    [regRef, YRef, URef] = getReferenceDMC(isPlotting, po);
+    controlErrRef = Utilities.calMatrixError(YRef, po.Yzad);
 
-    % libmpcalg DMC
-    [regDMC, YRef, U] = getDMC(isPlotting, po);
-    controlErrDMC = Utilities.calMatrixError(YRef, po.Yzad);
+    %% libmpcalg DMC
+    [regDMC, YDMC, UDMC] = Utilities.getDMC(isPlotting, po);
+    controlErrDMC = Utilities.calMatrixError(YDMC, po.Yzad);
+    % Error difference DMC
+    errDiffDMC = (controlErrRef - controlErrDMC)^2;
+    % Difference between control results DMC
+    controlDiffDMC = Utilities.calMatrixError(YRef, YDMC);
 
-    % Error difference
-    errDiff = (controlErrRef - controlErrDMC)^2;
-    assert(errDiff < Constants.getAllowedNumericLimit());
-
-    % Difference between control results
-    controlDiff = Utilities.calMatrixError(YDMC, YRef);
-    assert(controlDiff < Constants.getAllowedNumericLimit());
-    fprintf('Reference error: %s, DMC error: %s\n', num2str(controlErrRef),...
-        num2str(controlErrDMC));
-end
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%% libmpcalg DMC %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-function [regDMC, Y, U] = getDMC(isPlotting, po)
-    % Regulator parameters
-    D = po.D;  % Dynamic horizon
-    N = po.N;  % Prediction horizon
-    Nu = po.Nu;  % Moving horizon
-    mi = ones(1, po.ny);  % Output importance
-    lambda = po.lambda;  % Control weight
-    uMin = po.uMin;
-    uMax = -uMin;
-    duMin = po.duMin;
-    duMax = -duMin;
-    algType = po.algType;
-
-    % Regulator
-    regDMC = DMC(D, N, Nu, po.ny, po.nu, po.stepResponse, 'mi', mi,...
-        'lambda', lambda, 'uMin', uMin, 'uMax', uMax, 'duMin', duMin,...
-        'duMax', duMax,'algType', algType);
-
-    % Variable initialisation
-    X = zeros(po.kk, po.nx);
-    Y = zeros(po.kk, po.ny);
-    U = zeros(po.kk, po.nu);
-
-    for k=2:po.kk
-        regDMC = regDMC.calculateControl(Y(k-1, :), po.Yzad(k-1, :));
-        U(k, :) = regDMC.getControl();
-        [X(k + 1, :), Y(k, :)] = getObjectOutputState(po.dA, po.dB, po.dC,...
-            po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny, po.InputDelay, k);
+    if strcmp(object, '1x1')
+        assert(errDiffDMC < Constants.getAllowedNumericLimit);
+        assert(controlDiffDMC < Constants.getAllowedNumericLimit);
+    else
+        assert(errDiffDMC < power(10, -4));
+        assert(controlDiffDMC < power(10, -4));
     end
 
-    if isPlotting
-        plotRun(Y, po.Yzad, U, po.st, po.ny, po.nu, 'DMC', algType);
-    end
+    fprintf('Reference error: %s, DMC error: %s\n',...
+        num2str(controlErrRef), num2str(controlErrDMC));
 end
 
 
@@ -100,11 +72,11 @@ function [regRef, Y, U] = getReferenceDMC(isPlotting, po)
     U = zeros(po.kk, po.nu);
 
     for k=1:po.kk
+        regRef.Ysp = po.Yzad(k, :);
         U(k, :) = regRef.calc();
         [X(k + 1, :), Y(k, :)] = getObjectOutputState(po.dA, po.dB, po.dC,...
             po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny, po.InputDelay, k);
         regRef.Ypv = Y(k, :);
-        regRef.Ysp = po.Yzad(k, :);
     end
 
     if isPlotting
@@ -120,47 +92,4 @@ function S = getS(ny, nu, Y)
             S(i,j,:) = Y(:,i,j);
         end
     end
-end
-
-
-% Repetitive object work
-function po = prepareObject(lambda, algType)
-    % Structure (before load)
-    po.lambda = lambda;
-    po.duMin = -1000;
-    po.uMin = -1000;
-
-    % Object
-    Utilities.loadPkgControlInOctave();
-    Utilities.loadPkgOptimInOctave();
-    object = '1x1';
-    load(Utilities.getObjBinFilePath(Utilities.joinText(object, '.mat')));
-    % Trajectory
-    [Yzad, kk, ypp, upp, xpp] = getY1Trajectory();
-
-    % Step response
-    stepResponse = getStepResponsesEq(ny, nu, InputDelay, A, B, D);
-
-    % Structure
-    po.algType = algType;
-    po.Yzad = Yzad;
-    po.kk = kk;
-    po.st = st;
-    po.InputDelay = InputDelay;
-    po.ypp = ypp;
-    po.upp = upp;
-    po.xpp = xpp;
-    po.stepResponse = stepResponse;
-    po.ny = ny;
-    po.nu = nu;
-    po.nx = nx;
-    po.D = D;
-    po.N = N;
-    po.Nu = Nu;
-    po.A = A;
-    po.B = B;
-    po.dA = dA;
-    po.dB = dB;
-    po.dC = dC;
-    po.dD = dD;
 end

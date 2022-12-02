@@ -53,4 +53,5 @@ function obj = get2x2(st)
     m.duMax = -m.duMin;
     m.yMin = -1;
     m.yMax = -m.yMin;
+    m.osf = 2;  % Object Sampling Factor
 end

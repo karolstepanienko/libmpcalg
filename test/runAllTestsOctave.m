@@ -1,4 +1,7 @@
 function runAllTestsOctave()
+    % Start time measurement
+    tic
+
     if Utilities.isMatlab()
         disp('These tests can only be run in Octave');
         return
@@ -27,4 +30,15 @@ function runAllTestsOctave()
     % Compare DMC algorithms
     fprintf('Comparing DMC regulator implementations:\n')
     test compareDMC
+
+    % Lambda0 DMC algorithm
+    fprintf('Lambda0 DMC:\n')
+    test lambda0DMC
+
+    % Lambda0 MPCS algorithm
+    fprintf('Lambda0 MPCS:\n')
+    test lambda0MPCS
+
+    % End time measurement
+    toc
 end

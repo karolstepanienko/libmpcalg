@@ -8,6 +8,10 @@ function runAllDMC(varargin)
     runAlg('1x1', @DMC, 'fast', isPlotting);
     runAlg('1x1', @DMC, 'numerical', isPlotting);
 
+    runAlg('1x1RelativeTest', @DMC, 'analytical', isPlotting);
+    runAlg('1x1RelativeTest', @DMC, 'fast', isPlotting);
+    runAlg('1x1RelativeTest', @DMC, 'numerical', isPlotting);
+
     runAlg('1x2', @DMC, 'analytical', isPlotting);
     runAlg('1x2', @DMC, 'fast', isPlotting);
     runAlg('1x2', @DMC, 'numerical', isPlotting);

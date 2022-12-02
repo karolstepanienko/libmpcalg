@@ -8,6 +8,10 @@ function runAllMPCS(varargin)
     runAlg('1x1', @MPCS, 'fast', isPlotting);
     runAlg('1x1', @MPCS, 'numerical', isPlotting);
 
+    runAlg('1x1RelativeTest', @MPCS, 'analytical', isPlotting);
+    runAlg('1x1RelativeTest', @MPCS, 'fast', isPlotting);
+    runAlg('1x1RelativeTest', @MPCS, 'numerical', isPlotting);
+
     runAlg('1x2', @MPCS, 'analytical', isPlotting);
     runAlg('1x2', @MPCS, 'fast', isPlotting);
     runAlg('1x2', @MPCS, 'numerical', isPlotting);

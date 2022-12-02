@@ -4,5 +4,7 @@ function func = getTrajectory(object)
         func = @getY1Trajectory;
     elseif strcmp(object, '2x2')
         func = @getY2Trajectory;
+    elseif strcmp(object, '1x1RelativeTest')
+        func = @getY1RelativeTestTrajectory;
     end
 end

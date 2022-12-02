@@ -8,6 +8,10 @@ function runAllGPC(varargin)
     runAlg('1x1', @GPC, 'fast', isPlotting);
     runAlg('1x1', @GPC, 'numerical', isPlotting);
 
+    runAlg('1x1RelativeTest', @GPC, 'analytical', isPlotting);
+    runAlg('1x1RelativeTest', @GPC, 'fast', isPlotting);
+    runAlg('1x1RelativeTest', @GPC, 'numerical', isPlotting);
+
     runAlg('1x2', @GPC, 'analytical', isPlotting);
     runAlg('1x2', @GPC, 'fast', isPlotting);
     runAlg('1x2', @GPC, 'numerical', isPlotting);

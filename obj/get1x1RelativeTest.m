@@ -3,7 +3,7 @@
 % Large time constant enables testing stability of MPC algorithms
 function obj = get1x1RelativeTest(st)
     arguments
-        st (1,1) { mustBeNumeric } = 0.1  % Sampling time
+        st (1,1) { mustBeNumeric } = 1  % Sampling time
     end
 
     %% Single inertial object
@@ -30,15 +30,16 @@ function obj = get1x1RelativeTest(st)
     m = matfile(Utilities.getObjBinFilePath(fileName), 'Writable',true);
 
     %% MPC regulator parameters
-    m.D = 3500;  % Dynamic horizon
-    m.N = 3000;  % Prediction horizon
-    m.Nu = 10;  % Moving horizon
+    m.D = 350;  % Dynamic horizon
+    m.N = 300;  % Prediction horizon
+    m.Nu = 2;  % Moving horizon
     m.mi = ones(1, m.ny);  % Output importance
-    m.lambda = ones(1, m.nu);  % Control weight
-    m.uMin = -2;
+    m.lambda = ones(1, m.nu) * 6;  % Control weight
+    m.uMin = -1.5;
     m.uMax = -m.uMin;
-    m.duMin = -1;
+    m.duMin = -0.1;
     m.duMax = -m.duMin;
     m.yMin = -1.3;
     m.yMax = -m.yMin;
+    m.osf = 4;  % Object Sampling Factor
 end

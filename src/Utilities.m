@@ -79,7 +79,7 @@ classdef Utilities
                 relativePath = c.libFolders{iPath};
                 fullPath = join({absPath, relativePath}, filesep);
                 addpath(fullPath);
-            end 
+            end
         end
 
         %% cdf
@@ -91,13 +91,10 @@ classdef Utilities
             end
         end
 
-        %% getObjBinPath
-        % Returns absolute path to obj/bin .mat file woth a given name
+        %% getObjBinFilePath
+        % Wrapper 
         function filePath = getObjBinFilePath(fileName)
-            c = Constants();
-            absPath = getAbsPathToLib();
-            relativePath = c.objBinPath;
-            filePath = join({absPath, relativePath, fileName}, filesep);
+            filePath = getObjBinFilePath(fileName);
         end
 
         %% getYStepResponses
@@ -252,6 +249,83 @@ classdef Utilities
             end
         end
 
+        % Saves loaded object parameters in a struct object
+        % Used in relative and lambda0 tests
+        function po = prepareObjectStruct(lambda, object, algType)
+            % Structure (before load)
+            po.lambda = lambda;
+            po.duMin = -Inf;
+            po.uMin = -Inf;
+
+            % Object
+            Utilities.loadPkgControlInOctave();
+            Utilities.loadPkgOptimInOctave();
+            load(getObjBinFilePath(Utilities.joinText(object, '.mat')));
+            po.lambda = ones(1, nu) * po.lambda;
+
+            % Trajectory
+            % Comparison tests do not include object sampling factor
+            osf = 1;
+            trajectoryGetterFunc = getTrajectory(object);
+            [Yzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
+
+            % Step response
+            stepResponse = getStepResponsesEq(ny, nu, InputDelay, A, B, D);
+
+            % Structure
+            po.algType = algType;
+            po.Yzad = Yzad;
+            po.kk = kk;
+            po.st = st;
+            po.InputDelay = InputDelay;
+            po.ypp = ypp;
+            po.upp = upp;
+            po.xpp = xpp;
+            po.stepResponse = stepResponse;
+            po.ny = ny;
+            po.nu = nu;
+            po.nx = nx;
+            po.D = D;
+            po.N = N;
+            po.Nu = Nu;
+            po.A = A;
+            po.B = B;
+            po.dA = dA;
+            po.dB = dB;
+            po.dC = dC;
+            po.dD = dD;
+        end
+
+        function [regDMC, Y, U] = getDMC(isPlotting, po)
+            % Regulator parameters
+            mi = ones(1, po.ny);  % Output importance
+
+            % Regulator
+            regDMC = DMC(po.D, po.N, po.Nu, po.ny, po.nu, po.stepResponse,...
+                'mi', mi, 'lambda', po.lambda,...
+                'uMin', po.uMin, 'uMax', -po.uMin,...
+                'duMin', po.duMin, 'duMax', -po.duMin,'algType', po.algType);
+
+            % Variable initialisation
+            X = zeros(po.kk, po.nx) * po.xpp;
+            Y = zeros(po.kk, po.ny) * po.ypp;
+            U = zeros(po.kk, po.nu) * po.upp;
+
+            Y_k = ones(1, po.ny) * po.ypp;
+            for k=1:po.kk
+                regDMC = regDMC.calculateControl(Y_k, po.Yzad(k, :));
+                U(k, :) = regDMC.getControl();
+                [X(k + 1, :), Y(k, :)] = getObjectOutputState(po.dA, po.dB,...
+                    po.dC, po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny,...
+                    po.InputDelay, k);
+                Y_k = Y(k, :);
+            end
+
+            if isPlotting
+                plotRun(Y, po.Yzad, U, po.st, po.ny, po.nu, 'DMC', po.algType);
+            end
+        end
+
         function [algType, varargin_] = resolveAlgType(c, varargin_)
             % Validation object with data validation functions
             v = Validation();
@@ -289,6 +363,15 @@ classdef Utilities
     end
 end
 
+%% getObjBinPath
+% Returns absolute path to obj/bin .mat file woth a given name
+function filePath = getObjBinFilePath(fileName)
+    c = Constants();
+    absPath = getAbsPathToLib();
+    relativePath = c.objBinPath;
+    filePath = join({absPath, relativePath, fileName}, filesep);
+end
+
 %% getAbsPathToLib
 % Returns absolute path to the library with system correct file
 % delimiters
@@ -296,7 +379,7 @@ function absLibPath = getAbsPathToLib()
     c = Constants();
     currentFile = mfilename('fullpath');
     splitted = split(currentFile, filesep);
-    
+
     % Find where library name folder is
     for i=1:length(splitted)
         if strcmp(splitted{i}, c.libName)
