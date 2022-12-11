@@ -6,6 +6,7 @@ ny = 2;  % Number of outputs
 nu = 2;  % Number of inputs
 nx = 4;  % Number of state variables
 InputDelay = [0; 0];
+osf = 1;  % Object sampling factor
 
 % Object model
 dA = [0.9048, 0, 0, 0;
@@ -38,12 +39,12 @@ reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, 'mi', mi, 'lambda', lambda,...
     'algType', algType);
 
 % Trajectory
-[YYzad, kk, ypp, upp, xpp] = getY2Trajectory();
+[YYzad, kk, ypp, upp, xpp] = getY2Trajectory(osf);
 
 % Variable initialisation
-XX = zeros(kk, nx);
-YY = zeros(kk, ny);
-UU = zeros(kk, nu);
+XX = ones(kk, nx) * xpp;
+YY = ones(kk, ny) * ypp;
+UU = ones(kk, nu) * upp;
 
 % Control loop
 for k=1:kk

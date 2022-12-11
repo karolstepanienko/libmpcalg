@@ -5,6 +5,7 @@ addpath('../libmpcalg/src')
 ny = 1;  % Number of outputs
 nu = 1;  % Number of inputs
 InputDelay = 0;
+osf = 1;  % Object sampling factor
 
 % Object model: difference equation
 %
@@ -17,8 +18,8 @@ A = {[1, -1.5990, 0.6323]};
 B = {[0, 0.0358, 0.0308]};
 
 % Regulator parameters
-D = 20;  % Dynamic horizon
-N = 8;  % Prediction horizon
+D = 80;  % Dynamic horizon
+N = 70;  % Prediction horizon
 Nu = 5;  % Moving horizon
 mi = ones(1, ny);  % Output importance
 lambda = ones(1, nu);  % Control weight
@@ -33,17 +34,19 @@ reg = GPC(D, N, Nu, ny, nu, InputDelay, A, B, 'mi', mi, 'lambda', lambda, 'uMin'
     'uMax', uMax, 'duMin', duMin, 'duMax', duMax, 'algType', algType);
 
 % Trajectory
-[Yzad, kk, ypp, upp, ~] = getY1Trajectory();
+[Yzad, kk, ypp, upp, ~] = getY1Trajectory(osf);
 
 % Variable initialisation
-Y = zeros(kk, ny);
-U = zeros(kk, nu);
+Y = ones(kk, ny) * ypp;
+U = ones(kk, nu) * ypp;
+Y_k_1 = ones(1, ny) * ypp;
 
 % Control loop
 for k=1:kk
-    Y(k, :) = getObjectOutputEq(A, B, Y, ypp, U, upp, ny, nu, InputDelay, k);
-    reg = reg.calculateControl(Y(k, :), Yzad(k, :));
+    reg = reg.calculateControl(Y_k_1, Yzad(k, :));
     U(k, :) = reg.getControl();
+    Y(k, :) = getObjectOutputEq(A, B, Y, ypp, U, upp, ny, nu, InputDelay, k);
+    Y_k_1 = Y(k, :);
 end
 
 % Plotting

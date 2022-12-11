@@ -5,6 +5,7 @@ addpath('../libmpcalg/src')
 ny = 2;  % Number of outputs
 nu = 2;  % Number of inputs
 InputDelay = [1; 1];
+osf = 1;  % Object sampling factor
 
 % Object model
 stepResponse = cell(nu, 1);
@@ -31,17 +32,19 @@ reg = DMC(D, N, Nu, ny, nu, stepResponse, 'mi', mi, 'lambda', lambda,...
     'algType', algType);
 
 % Trajectory
-[YYzad, kk, ypp, upp, ~] = getY2Trajectory();
+[YYzad, kk, ypp, upp, ~] = getY2Trajectory(osf);
 
 % Variable initialisation
-YY = zeros(kk, ny);
-UU = zeros(kk, nu);
+YY = ones(kk, ny) * ypp;
+UU = ones(kk, nu) * upp;
+YY_k_1 = ones(1, ny) * ypp;
 
 % Control loop
 for k=1:kk
-    YY(k, :) = simulateObjectDMC(ny, nu, InputDelay, YY, ypp, UU, upp, k);
-    reg = reg.calculateControl(YY(k, :), YYzad(k, :));
+    reg = reg.calculateControl(YY_k_1, YYzad(k, :));
     UU(k, :) = reg.getControl();
+    YY(k, :) = simulateObjectDMC(ny, nu, InputDelay, YY, ypp, UU, upp, k);
+    YY_k_1 = YY(k, :);
 end
 
 % Plotting

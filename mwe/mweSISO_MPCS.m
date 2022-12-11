@@ -6,6 +6,7 @@ ny = 1;  % Number of outputs
 nu = 1;  % Number of inputs
 nx = 2;  % Number of state variables
 InputDelay = 0;
+osf = 1;  % Object sampling factor
 
 % Object model
 dA = [1.5990, -0.6323; 1, 0];
@@ -14,8 +15,8 @@ dC = [0.1434, 0.1231];
 dD = 0;
 
 % Regulator parameters
-D = 20;  % Dynamic horizon
-N = 8;  % Prediction horizon
+D = 80;  % Dynamic horizon
+N = 70;  % Prediction horizon
 Nu = 5;  % Moving horizon
 mi = ones(1, ny);  % Output importance
 lambda = ones(1, nu);  % Control weight
@@ -33,12 +34,12 @@ reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, 'mi', mi, 'lambda', lambda,...
     'yMin', yMin, 'yMax', yMax, 'algType', algType);
 
 % Trajectory
-[Yzad, kk, ypp, upp, xpp] = getY1Trajectory();
+[Yzad, kk, ypp, upp, xpp] = getY1Trajectory(osf);
 
 % Variable initialisation
-X = zeros(kk, nx);
-Y = zeros(kk, ny);
-U = zeros(kk, nu);
+X = ones(kk, nx) * xpp;
+Y = ones(kk, ny) * ypp;
+U = ones(kk, nu) * upp;
 
 % Control loop
 for k=1:kk
