@@ -18,6 +18,7 @@ classdef Constants
         test  % (1, 4) char array
         testValidation  % (1,15) char array
         testAbsoluteControlError  % (1,24) char array
+        testAggregate  % (1,13) char array
         testRelativeControlError  % (1,24) char array
         testRelativeControlErrorStepResponse  % (1,36) char array
         testRelativeControlErrorDMC  % (1,27) char array
@@ -121,6 +122,10 @@ classdef Constants
                 {'test', 'absoluteControlError'}, filesep);
         end
 
+        function testAggregate = get.testAggregate(obj)
+            testAggregate = obj.u.join({'test', 'aggregate'}, filesep);
+        end
+
         function testRelativeControlError = get.testRelativeControlError(obj)
             testRelativeControlError = obj.u.join(...
                 {'test', 'relativeControlError'}, filesep);
@@ -164,6 +169,7 @@ classdef Constants
                 obj.test,
                 obj.testValidation,
                 obj.testAbsoluteControlError,
+                obj.testAggregate,
                 obj.testRelativeControlError,
                 obj.testRelativeControlErrorStepResponse,
                 obj.testRelativeControlErrorDMC,
