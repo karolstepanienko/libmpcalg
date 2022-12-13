@@ -32,10 +32,10 @@ classdef AnalyticalDMC < MPC & ValidateDMC
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
             
             % Get YY_0
-            YY_0 = YY_k + obj.Mp * obj.dUUp_k;
+            obj.YY_0 = YY_k + obj.Mp * obj.dUUp_k;
 
             % Get new control change value
-            obj.dUU_k = obj.K * (YYzad_k - YY_0);
+            obj.dUU_k = obj.K * (YYzad_k - obj.YY_0);
             
             % Limit control change values
             dU_k = obj.limitdU_k(obj.dUU_k(1:obj.nu));

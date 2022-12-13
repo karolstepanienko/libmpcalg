@@ -32,18 +32,23 @@ classdef AnalyticalMPCS < CoreMPCS & ValidateMPCS
         % @param Yzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, X_k, Yzad_k)
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
+            V_k = X_k - (obj.dA * obj.X_k_1' + obj.dB * obj.U_k)';
 
             % Get YY_0
-            YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V * (obj.dB * obj.U_k);
+            obj.YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V...
+                * (obj.dB * obj.U_k + V_k');
 
             % Get new control change value
-            dUU_k = obj.K * (YYzad_k - YY_0);
+            dUU_k = obj.K * (YYzad_k - obj.YY_0);
 
             % Limit control change values
             dUU_k = obj.limitdU_k(dUU_k(1:obj.nu));
 
             % Get new control value
             obj.U_k = obj.limitU_k(obj.U_k + dUU_k(1:obj.nu, 1));
+
+            % Remember previous state values
+            obj.X_k_1 = X_k;
         end
     end
 end

@@ -20,7 +20,7 @@ classdef (Abstract) MPC < MPCUtilities
         U_k  % Current control value
     end
 
-    properties (Access = protected)
+    properties (GetAccess = public, SetAccess = protected)
         Sp  % Sp cell of step response matrixes in p moment
         Mp  % Mp matrix used by DMC algorithm
         M   % M matrix used by DMC algorithm
@@ -29,18 +29,11 @@ classdef (Abstract) MPC < MPCUtilities
         K  % K matrix used by DMC algorithm
         dUU_k  % Vector containing current control value change
         dUUp_k  % DUUp vector containing past control value changes
+        % Debugging
+        YY_0  % (N*ny, 1) Object trajectory without further control changes
     end
 
     methods
-        %% Getters
-        function ny = get.ny(obj)
-            ny = obj.ny;
-        end
-
-        function nu = get.nu(obj)
-            nu = obj.nu;
-        end
-
         %% getControl
         % Returns horizontal vector of new control values
         function U_k = getControl(obj)
@@ -49,10 +42,10 @@ classdef (Abstract) MPC < MPCUtilities
     end
 
     methods (Access = protected)
-
         %% initMPC
         % Creates necessary matrices for MPC algorithms
         function obj = initMPC(obj)
+            obj.YY_0 = zeros(obj.N*obj.ny, 1);
             obj.dUU_k = obj.initdUU_k();
             obj.dUUp_k = obj.initdUUp_k();
             obj.U_k = obj.initU_k();

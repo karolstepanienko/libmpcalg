@@ -5,7 +5,7 @@ function runAllTestsOctaveParallel
     Utilities.loadPkgParallelInOctave();
     choosenTests = {'compareStepResponse', 'testDMC', 'testDMCParameters',...
         'testGPC', 'testMPCS', 'testMPCSParameters', 'compareDMC',...
-        'lambda0DMC', 'lambda0MPCS'};
+        'lambda0DMC', 'lambda0MPCS', 'compareMPCS'};
     vector_y = pararrayfun(nproc - nproc*0.1, @runTestsOctaveParallel,...
         choosenTests);
 
@@ -40,6 +40,9 @@ function result = runTestsOctaveParallel(choosenTest)
         result = 1;
     elseif strcmp(choosenTest, 'lambda0MPCS')
         test lambda0MPCS
+        result = 1;
+    elseif strcmp(choosenTest, 'compareMPCS')
+        test compareMPCS
         result = 1;
     end
 end

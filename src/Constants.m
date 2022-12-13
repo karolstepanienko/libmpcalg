@@ -18,8 +18,10 @@ classdef Constants
         test  % (1, 4) char array
         testValidation  % (1,15) char array
         testAbsoluteControlError  % (1,24) char array
+        testRelativeControlError  % (1,24) char array
         testRelativeControlErrorStepResponse  % (1,36) char array
         testRelativeControlErrorDMC  % (1,27) char array
+        testRelativeControlErrorMPCS  % (1,28) char array
         testLambda0   % (1,11) char array
         libFolders  % (1,7) cell
         % Constant numerical values
@@ -119,6 +121,11 @@ classdef Constants
                 {'test', 'absoluteControlError'}, filesep);
         end
 
+        function testRelativeControlError = get.testRelativeControlError(obj)
+            testRelativeControlError = obj.u.join(...
+                {'test', 'relativeControlError'}, filesep);
+        end
+
         function testRelativeControlErrorStepResponse =...
             get.testRelativeControlErrorStepResponse(obj)
             testRelativeControlErrorStepResponse = obj.u.join(...
@@ -129,6 +136,12 @@ classdef Constants
             get.testRelativeControlErrorDMC(obj)
             testRelativeControlErrorDMC = obj.u.join(...
                 {'test', 'relativeControlError', 'DMC'}, filesep);
+        end
+
+        function testRelativeControlErrorMPCS =...
+            get.testRelativeControlErrorMPCS(obj)
+            testRelativeControlErrorMPCS = obj.u.join(...
+                {'test', 'relativeControlError', 'MPCS'}, filesep);
         end
 
         function testLambda0 = get.testLambda0(obj)
@@ -151,8 +164,10 @@ classdef Constants
                 obj.test,
                 obj.testValidation,
                 obj.testAbsoluteControlError,
+                obj.testRelativeControlError,
                 obj.testRelativeControlErrorStepResponse,
                 obj.testRelativeControlErrorDMC,
+                obj.testRelativeControlErrorMPCS,
                 obj.testLambda0
             };
         end

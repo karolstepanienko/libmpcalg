@@ -265,7 +265,7 @@ classdef Utilities
 
             % Trajectory
             % Comparison tests do not include object sampling factor
-            osf = 1;
+            if osf > 1 osf = 1; end
             trajectoryGetterFunc = getTrajectory(object);
             [Yzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
 
@@ -294,36 +294,6 @@ classdef Utilities
             po.dB = dB;
             po.dC = dC;
             po.dD = dD;
-        end
-
-        function [regDMC, Y, U] = getDMC(isPlotting, po)
-            % Regulator parameters
-            mi = ones(1, po.ny);  % Output importance
-
-            % Regulator
-            regDMC = DMC(po.D, po.N, po.Nu, po.ny, po.nu, po.stepResponse,...
-                'mi', mi, 'lambda', po.lambda,...
-                'uMin', po.uMin, 'uMax', -po.uMin,...
-                'duMin', po.duMin, 'duMax', -po.duMin,'algType', po.algType);
-
-            % Variable initialisation
-            X = zeros(po.kk, po.nx) * po.xpp;
-            Y = zeros(po.kk, po.ny) * po.ypp;
-            U = zeros(po.kk, po.nu) * po.upp;
-
-            Y_k = ones(1, po.ny) * po.ypp;
-            for k=1:po.kk
-                regDMC = regDMC.calculateControl(Y_k, po.Yzad(k, :));
-                U(k, :) = regDMC.getControl();
-                [X(k + 1, :), Y(k, :)] = getObjectOutputState(po.dA, po.dB,...
-                    po.dC, po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny,...
-                    po.InputDelay, k);
-                Y_k = Y(k, :);
-            end
-
-            if isPlotting
-                plotRun(Y, po.Yzad, U, po.st, po.ny, po.nu, 'DMC', po.algType);
-            end
         end
 
         function [algType, varargin_] = resolveAlgType(c, varargin_)

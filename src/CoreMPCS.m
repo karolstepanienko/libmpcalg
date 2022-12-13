@@ -21,8 +21,9 @@ classdef (Abstract) CoreMPCS < MPCUtilities
         duMax  % Maximal control change value
     end
 
-    properties (Access = protected)
+    properties (GetAccess = public, SetAccess = protected)
         U_k  % (nu, 1) current control value
+        X_k_1  % (nx, 1) past state variable values
         Xi  % (N*ny, N*ny)
         Lambda  % (Nu*nu, Nu*nu)
         M  % (N, Nu)
@@ -31,11 +32,22 @@ classdef (Abstract) CoreMPCS < MPCUtilities
         Mx  % (N*nx, Nu*nu)
         V  % (N*nx, nx)
         CC  % (N*ny, N*nx) dC matrix on diagonal
+        % Debugging
+        YY_0  % (N*ny, 1) Object trajectory without further control changes
     end
 
-    methods (Access = public)
-        function obj = initMPCS(obj, D, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin)
+    methods
+        %% getControl
+        % Returns horizontal vector of new control values
+        function U_k = getControl(obj)
+            U_k = obj.U_k';
+        end
+    end
+
+    methods (Access = protected)
+        function obj = initMPCS(obj)
             obj.U_k = zeros(obj.nu, 1);
+            obj.X_k_1 = zeros(1, obj.nx);
             obj.Xi = obj.getXi();
             obj.Lambda = obj.getLambda();
             obj.AA = obj.getAA();
@@ -44,12 +56,7 @@ classdef (Abstract) CoreMPCS < MPCUtilities
             obj.CC = obj.getCC();
             obj.M = obj.CC*obj.Mx;
             obj.K = obj.getK(obj.M, obj.Xi, obj.Lambda);
-        end
-
-        %% getControl
-        % Returns horizontal vector of new control values
-        function U_k = getControl(obj)
-            U_k = obj.U_k';
+            obj.YY_0 = zeros(obj.N*obj.ny, 1);
         end
     end
 

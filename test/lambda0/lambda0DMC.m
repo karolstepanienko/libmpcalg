@@ -7,7 +7,7 @@ function controlErrDMC = lambda0DMC(isPlotting, lambda, object, algType)
     po = Utilities.prepareObjectStruct(lambda, object, algType);
 
     %% libmpcalg DMC
-    [regDMC, YDMC, UDMC] = Utilities.getDMC(isPlotting, po);
+    [regDMC, YDMC, UDMC] = getDebugLibmpcalgDMC(isPlotting, po);
     controlErrDMC = Utilities.calMatrixError(YDMC, po.Yzad);
 
     fprintf('Lambda0 DMC, (%s), control error: %s\n', object,...

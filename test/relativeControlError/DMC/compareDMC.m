@@ -20,7 +20,7 @@ function [controlErrRef, controlErrDMC] = compareDMC(isPlotting, lambda,...
     controlErrRef = Utilities.calMatrixError(YRef, po.Yzad);
 
     %% libmpcalg DMC
-    [regDMC, YDMC, UDMC] = Utilities.getDMC(isPlotting, po);
+    [regDMC, YDMC, UDMC] = getDebugLibmpcalgDMC(isPlotting, po);
     controlErrDMC = Utilities.calMatrixError(YDMC, po.Yzad);
     % Error difference DMC
     errDiffDMC = (controlErrRef - controlErrDMC)^2;

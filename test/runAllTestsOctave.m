@@ -39,6 +39,10 @@ function runAllTestsOctave()
     fprintf('Lambda0 MPCS:\n')
     test lambda0MPCS
 
+    % Compare MPCS algorithms
+    fprintf('Comparing MPCS regulator implementations:\n')
+    test compareMPCS
+
     % End time measurement
     toc
 end
