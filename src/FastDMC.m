@@ -40,13 +40,16 @@ classdef FastDMC < MPC & ValidateDMC
             
             % Limit control change values
             dU_k = obj.limitdU_k(obj.dUU_k);
-            
+            % Limit control values, U_k_1 = obj.U_k
+            U_k = obj.limitU_k(obj.U_k + dU_k);
+            % Limit control change value after limiting control value
+            dU_k = U_k - obj.U_k;
+
             % Shift dUUp values
             obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
             % Get new control value
-            % Here U_k = U_k_1 and is updated
-            obj.U_k = obj.limitU_k(obj.U_k + obj.dUU_k(1:obj.nu, 1));
+            obj.U_k = U_k;
         end
     end
 end

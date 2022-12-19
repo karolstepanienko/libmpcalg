@@ -1,42 +1,32 @@
 % Runs DMC relative/comparison tests and DMC lambda0 relative/comparison tests
 
-%!assert(compareDMC(false, 1.0, '1x1', 'analytical') < [40, 40])
-%!assert(compareDMC(false, 1.0, '1x1', 'numerical') < [40, 40])
-%!assert(compareDMC(false, 0, '1x1', 'analytical') < [130, 130])
-%!assert(compareDMC(false, 0, '1x1', 'numerical') < [130, 130])
+%!assert(compareDMC(false, 1.0, '1x1', 'analytical') < [power(10, -10), power(10, -10)])
+%!assert(compareDMC(false, 1.0, '1x1', 'numerical') < [power(10, -10), power(10, -10)])
+%!assert(compareDMC(false, 0, '1x1', 'analytical') < [power(10, -10), power(10, -10)])
+%!assert(compareDMC(false, 0, '1x1', 'numerical') < [power(10, -10), power(10, -10)])
 
-%!assert(compareDMC(false, 1.0, '1x1RelativeTest', 'analytical') < [135, 135])
-%!assert(compareDMC(false, 1.0, '1x1RelativeTest', 'numerical') < [135, 135])
-%!assert(compareDMC(false, 0, '1x1RelativeTest', 'analytical') < [30000, 30000])
-%!assert(compareDMC(false, 0, '1x1RelativeTest', 'numerical') < [30000, 30000])
+%!assert(compareDMC(false, 1.0, '1x1RelativeTest', 'analytical') < [power(10, -10), power(10, -10)])
+%!assert(compareDMC(false, 1.0, '1x1RelativeTest', 'numerical') < [power(10, -10), power(10, -10)])
+%!assert(compareDMC(false, 0, '1x1RelativeTest', 'analytical') < [power(10, -10), power(10, -10)])
+%!assert(compareDMC(false, 0, '1x1RelativeTest', 'numerical') < [power(10, -10), power(10, -10)])
 
 
-function [controlErrRef, controlErrDMC] = compareDMC(isPlotting, lambda,...
+function [outputDiffDMC, controlDiffDMC] = compareDMC(isPlotting, lambda,...
     object, algType)
     po = Utilities.prepareObjectStruct(lambda, object, algType);
 
     %% Reference DMC
     [regRef, YRef, URef] = getReferenceDMC(isPlotting, po);
-    controlErrRef = Utilities.calMatrixError(YRef, po.Yzad);
 
     %% libmpcalg DMC
     [regDMC, YDMC, UDMC] = getDebugLibmpcalgDMC(isPlotting, po);
-    controlErrDMC = Utilities.calMatrixError(YDMC, po.Yzad);
-    % Error difference DMC
-    errDiffDMC = (controlErrRef - controlErrDMC)^2;
+
     % Difference between control results DMC
-    controlDiffDMC = Utilities.calMatrixError(YRef, YDMC);
+    outputDiffDMC = Utilities.calMatrixError(YRef, YDMC);
+    controlDiffDMC = Utilities.calMatrixError(URef, UDMC);
 
-    if strcmp(object, '1x1')
-        assert(errDiffDMC < Constants.getAllowedNumericLimit);
-        assert(controlDiffDMC < Constants.getAllowedNumericLimit);
-    else
-        assert(errDiffDMC < power(10, -4));
-        assert(controlDiffDMC < power(10, -4));
-    end
-
-    fprintf('Reference error: %s, DMC error: %s\n',...
-        num2str(controlErrRef), num2str(controlErrDMC));
+    fprintf('Output %s and control %s difference in DMC algorithm comparison.\n',...
+        num2str(outputDiffDMC), num2str(controlDiffDMC));
 end
 
 

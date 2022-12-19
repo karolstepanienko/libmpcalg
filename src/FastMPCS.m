@@ -42,9 +42,11 @@ classdef FastMPCS < CoreMPCS & ValidateMPCS
 
             % Limit control change values
             dU_k = obj.limitdU_k(dU_k(1:obj.nu));
+            % Limit control values, U_k_1 = obj.U_k
+            U_k = obj.limitU_k(obj.U_k + dU_k);
 
             % Get new control value
-            obj.U_k = obj.limitU_k(obj.U_k + dU_k(1:obj.nu, 1));
+            obj.U_k = U_k;
         end
     end
 end

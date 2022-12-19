@@ -65,9 +65,6 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities & ValidateMPCS
             % New control change value
             dU_k = dUU_k(1:obj.nu);
 
-            % Shift dUUp values
-            % obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
-
             % New control value
             obj.U_k = obj.U_k + dUU_k(1:obj.nu, 1);
         end

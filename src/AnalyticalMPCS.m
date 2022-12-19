@@ -42,10 +42,12 @@ classdef AnalyticalMPCS < CoreMPCS & ValidateMPCS
             dUU_k = obj.K * (YYzad_k - obj.YY_0);
 
             % Limit control change values
-            dUU_k = obj.limitdU_k(dUU_k(1:obj.nu));
+            dU_k = obj.limitdU_k(dUU_k(1:obj.nu));
+            % Limit control values, U_k_1 = obj.U_k
+            U_k = obj.limitU_k(obj.U_k + dU_k);
 
             % Get new control value
-            obj.U_k = obj.limitU_k(obj.U_k + dUU_k(1:obj.nu, 1));
+            obj.U_k = U_k;
 
             % Remember previous state values
             obj.X_k_1 = X_k;

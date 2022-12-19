@@ -230,7 +230,7 @@ classdef Utilities
         % Calculates full quadratic error for every element in given matrices
         % Then adds all error values
         function squareError = calMatrixError(A, B)
-            tmp = abs(A-B).^2;
+            tmp = (A-B).^2;
             squareError = sum(tmp(:));
         end
 
