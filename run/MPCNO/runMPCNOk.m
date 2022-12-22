@@ -15,7 +15,9 @@ uMax = -uMin;
 algType = '';
 
 % Trajectory
-[YYzad, kk, ypp, upp, ~] = getY2Trajectory(osf);
+object = '2x3';
+trajectoryGetterFunc = getTrajectory(object);
+[YYzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
 initK = 3;
 
 % Variable initialisation

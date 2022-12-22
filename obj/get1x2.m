@@ -39,7 +39,11 @@ function obj = get1x2(st)
     %% MPC regulator parameters
     m.D = 250;  % Dynamic horizon
     m.N = 150;  % Prediction horizon
+    m.NNl = 4;  % Prediction horizon for nonlinear algorithm
+                % (purpose: decrease test time)
     m.Nu = 6;  % Moving horizon
+    m.NuNl = 1;  % Moving horizon for nonlinear algorithm
+                 % (purpose: decrease test time)
     m.mi = ones(1, m.ny);  % Output importance
     m.lambda = ones(1, m.nu);  % Control weight
     m.uMin = -0.5;

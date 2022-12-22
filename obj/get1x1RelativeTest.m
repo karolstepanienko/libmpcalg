@@ -32,7 +32,11 @@ function obj = get1x1RelativeTest(st)
     %% MPC regulator parameters
     m.D = 350;  % Dynamic horizon
     m.N = 300;  % Prediction horizon
+    m.NNl = 4;  % Prediction horizon for nonlinear algorithm
+                % (purpose: decrease test time)
     m.Nu = 2;  % Moving horizon
+    m.NuNl = 1;  % Moving horizon for nonlinear algorithm
+                 % (purpose: decrease test time)
     m.mi = ones(1, m.ny);  % Output importance
     m.lambda = ones(1, m.nu) * 6;  % Control weight
     m.uMin = -1.5;

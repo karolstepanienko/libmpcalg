@@ -15,7 +15,9 @@ uMax = -uMin;
 algType = '';
 
 % Trajectory
-[YYzad, kk, ypp, upp, ~] = getY2Trajectory(osf);
+object = '2x3';
+trajectoryGetterFunc = getTrajectory(object);
+[YYzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
 
 % Regulator
 reg = MPCNO(N, Nu, ny, nu, @getObjectOutputNl2x3, 'lambda', lambda,...

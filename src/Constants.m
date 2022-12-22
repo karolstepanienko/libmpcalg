@@ -46,6 +46,7 @@ classdef Constants
         algDMC  % (1, 3) char array
         algGPC  % (1, 3) char array
         algMPCS  % (1, 4) char array
+        algMPCNO  % (1, 5) char array
         % Constraints and default values
         defaultMi  % (1,1) double
         defaultLambda  % (1,1) double
@@ -257,6 +258,10 @@ classdef Constants
             algMPCS = 'MPCS';
         end
 
+        function algMPCNO = get.algMPCNO(obj)
+            algMPCNO = 'MPCNO';
+        end
+
         function defaultMi = get.defaultMi(obj)
             defaultMi = 1;
         end
@@ -309,7 +314,7 @@ classdef Constants
 
         function optimOptions = getFminconOptions(obj)
             optimOptions = optimset('Display','off','Algorithm','sqp',...
-                'TolFun',1e-10,'TolX',1e-10,'MaxIter',10000);
+                'TolFun',1e-10,'TolX',1e-10,'MaxIter',1000);
         end
     end
 end
