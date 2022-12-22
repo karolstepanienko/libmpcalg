@@ -15,6 +15,8 @@ classdef Validation
         validNum
         % Algorithm type
         validAlgType
+        % Function handle
+        validFunctionHandle
     end
 
     properties (Access = private)
@@ -114,11 +116,23 @@ classdef Validation
             end
         end
 
-        % Not tested
         function value = validateStateMatrix(obj, matrix, matrixName, nRows,...
             nColumns)
             if ~(size(matrix, 1) == nRows && size(matrix, 2) == nColumns)
                 Exceptions.throwMatrixInvalidSize(matrixName, nRows, nColumns);
+            else
+                value = matrix;
+            end
+        end
+
+        function value = validateInitialisationMatrix(obj, matrix,...
+            matrixName, nRows, nColumns)
+            % Matrix has more or equal rows than nRows and nColumns or matrix is
+            % empty
+            if ~((size(matrix, 1) >= nRows && size(matrix, 2) == nColumns)...
+                || (size(matrix, 1) == 0 && size(matrix, 1) == 0))
+                Exceptions.throwInvalidInitialisationMatrix(matrixName,...
+                nRows, nColumns);
             else
                 value = matrix;
             end
@@ -159,6 +173,11 @@ classdef Validation
         %---------------------------- algType ----------------------------------
         function validAlgType = get.validAlgType(obj)
             validAlgType = @(x) any(validatestring(x, obj.c.algTypes));
+        end
+
+        %------------------------ function handle ------------------------------
+        function validFunctionHandle = get.validFunctionHandle(obj)
+            validFunctionHandle = @(x) isa(x, 'function_handle');
         end
     end
 

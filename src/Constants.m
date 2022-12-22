@@ -7,13 +7,15 @@ classdef Constants
         srcPath  % (1,3) char array
         objPath  % (1,3) char array
         objBinPath  % (1,7) char array
+        objNonlinearPath  % (1,13) char array
         trajectoriesPath  % (1,14) char array
         plotPath  % (1,4) char array
         runPath  % (1,3) char array
-        runStepResponsePath  % (1,17) char array
-        runDMCPath  % (1,8) char array
-        runGPCPath  % (1,8) char array
-        runMPCSPath  % (1,9) char array
+        runStepResponsePath  % (1,16) char array
+        runDMCPath  % (1,7) char array
+        runGPCPath  % (1,7) char array
+        runMPCSPath  % (1,8) char array
+        runMPCNOPath  % (1,9) char array
         mwe  % (1, 3) char array
         test  % (1, 4) char array
         testValidation  % (1,15) char array
@@ -44,15 +46,17 @@ classdef Constants
         algDMC  % (1, 3) char array
         algGPC  % (1, 3) char array
         algMPCS  % (1, 4) char array
-        % Constraints
-        defaultMi  % (1,1) int8
-        defaultLambda  % (1,1) int8
+        % Constraints and default values
+        defaultMi  % (1,1) double
+        defaultLambda  % (1,1) double
         defaultuMin  % (1,1) double
         defaultuMax  % (1,1) double
         defaultduMin  % (1,1) double
         defaultduMax  % (1,1) double
         defaultyMin  % (1,1) double
         defaultyMax  % (1,1) double
+        defaultK  % (1,1) int8
+        defaultEmptyMatrix % (0, 0) double
     end
 
     properties (Access = private)
@@ -75,6 +79,10 @@ classdef Constants
 
         function objBinPath = get.objBinPath(obj)
             objBinPath = obj.u.join({'obj', 'bin'}, filesep);
+        end
+
+        function objNonlinearPath = get.objNonlinearPath(obj)
+            objNonlinearPath = obj.u.join({'obj', 'nonlinear'}, filesep);
         end
 
         function trajectoriesPath = get.trajectoriesPath(obj)
@@ -103,6 +111,10 @@ classdef Constants
 
         function runMPCSPath = get.runMPCSPath(obj)
             runMPCSPath = obj.u.join({'run', 'MPCS'}, filesep);
+        end
+
+        function runMPCNOPath = get.runMPCNOPath(obj)
+            runMPCNOPath = obj.u.join({'run', 'MPCNO'}, filesep);
         end
 
         function mwe = get.mwe(obj)
@@ -158,6 +170,7 @@ classdef Constants
                 obj.srcPath,
                 obj.objPath,
                 obj.objBinPath,
+                obj.objNonlinearPath,
                 obj.trajectoriesPath,
                 obj.plotPath,
                 obj.runPath,
@@ -165,6 +178,7 @@ classdef Constants
                 obj.runDMCPath,
                 obj.runGPCPath,
                 obj.runMPCSPath,
+                obj.runMPCNOPath,
                 obj.mwe,
                 obj.test,
                 obj.testValidation,
@@ -274,6 +288,14 @@ classdef Constants
         function defaultyMax = get.defaultyMax(obj)
             defaultyMax = Inf;
         end
+
+        function defaultK = get.defaultK(obj)
+            defaultK = 2;
+        end
+
+        function defaultEmptyMatrix = get.defaultEmptyMatrix(obj)
+            defaultEmptyMatrix = [];
+        end
     end
 
     methods (Access = public, Static)
@@ -281,8 +303,13 @@ classdef Constants
             allowedNumericError = power(10, -10);
         end
 
-        function optimOptions = getOptimOptions(obj)
+        function optimOptions = getQuadprogOptions(obj)
             optimOptions = optimset('Display', 'off');
+        end
+
+        function optimOptions = getFminconOptions(obj)
+            optimOptions = optimset('Display','off','Algorithm','sqp',...
+                'TolFun',1e-10,'TolX',1e-10,'MaxIter',10000);
         end
     end
 end

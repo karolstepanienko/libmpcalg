@@ -60,7 +60,7 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities & ValidateMPCS
             beq = [];
             x0 = [];
             dUU_k = quadprog(obj.H, f, obj.A, b, Aeq, beq, obj.duuMin,...
-                obj.duuMax, x0, Constants.getOptimOptions());
+                obj.duuMax, x0, Constants.getQuadprogOptions());
 
             % New control change value
             dU_k = dUU_k(1:obj.nu);

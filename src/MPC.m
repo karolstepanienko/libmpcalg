@@ -15,9 +15,6 @@ classdef (Abstract) MPC < MPCUtilities
         uMax  % Maximal control value
         duMin  % Minimal control change value
         duMax  % Maximal control change value
-
-        % Calculated internally
-        U_k  % Current control value
     end
 
     properties (GetAccess = public, SetAccess = protected)
@@ -29,6 +26,7 @@ classdef (Abstract) MPC < MPCUtilities
         K  % K matrix used by DMC algorithm
         dUU_k  % Vector containing current control value change
         dUUp_k  % DUUp vector containing past control value changes
+        U_k  % Current control value
         % Debugging
         YY_0  % (N*ny, 1) Object trajectory without further control changes
     end

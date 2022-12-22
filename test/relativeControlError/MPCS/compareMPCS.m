@@ -1,4 +1,4 @@
-%!assert(compareMPCS(false, 1.0, '1x1', 'analytical') < [10^-20, 10^-20])
+%!assert(compareMPCS(false) < [10^-20, 10^-20])
 
 
 %% compareMPCS
