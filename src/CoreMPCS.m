@@ -90,7 +90,7 @@ classdef (Abstract) CoreMPCS < MPCUtilities
         end
 
         %% getPowerSum
-        % Returns matrix that is a sum of n matrices raised to the consecutive 
+        % Returns matrix that is a sum of n matrices raised to the consecutive
         % power: m^n + m(n-1) + ... + m^(1) + I
         function r = getPowerSum(obj, m, n)
             r = eye(size(m, 1));

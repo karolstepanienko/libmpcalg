@@ -233,11 +233,11 @@ classdef Constants
         function analytical = get.analyticalAlgType(obj)
             analytical = 'analytical';
         end
- 
+
         function fast = get.fastAlgType(obj)
             fast = 'fast';
         end
- 
+
         function numerical = get.numericalAlgType(obj)
             numerical = 'numerical';
         end

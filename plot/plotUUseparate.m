@@ -5,10 +5,10 @@ function plotUUseparate(UU, st, ny, ynPlot, unPlot)
     %% Get simulation length (length of vectors in matrix)
     % and number of input vectors
     [K, nu] = size(UU);
-    
+
     %% Time range for plot
     x_t = 0:st:(K - 1)*st;
-    
+
     %% Defining plot settings
     line_width = 1.5;
     legend_location = 'northeast';
@@ -26,7 +26,7 @@ function plotUUseparate(UU, st, ny, ynPlot, unPlot)
         ylabel('u');
         legend(['u_', num2str(i)], 'location', legend_location,...
             'Orientation', 'horizontal');
-        
+
         maxUValues(i) = max(abs(UU(:, i)));
     end
     if nu > 1

@@ -6,7 +6,7 @@ function runAllStepResponses()
     runStepResponse('1x1.mat', 10, 'state');
 
     runStepResponse('1x2.mat', 25, 'Eq');
-    runStepResponse('1x2.mat', 25, 'state');    
+    runStepResponse('1x2.mat', 25, 'state');
 
     runStepResponse('2x2.mat', 30, 'Eq');
     runStepResponse('2x2.mat', 30, 'state');

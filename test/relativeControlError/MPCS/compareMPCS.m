@@ -7,7 +7,7 @@ function [errorYY_MPCS_JMatlab, errorUU_MPCS_JMatlab] =...
     compareMPCS(varargin)
     if size(varargin, 1) == 0 isPlotting = false;
     else isPlotting = varargin{1}; end
-    
+
     % Object
     obj = get2x2Compare();
 
@@ -44,7 +44,7 @@ function [errorYY_MPCS_JMatlab, errorUU_MPCS_JMatlab] =...
         num2str(errorYY_MPCS_JMatlab));
     fprintf("Control difference for JMatlab and libmpcalg MPCS: %s\n",...
         num2str(errorUU_MPCS_JMatlab));
-    
+
     if isPlotting
         plotRun(YY_MPCS, YY_JMatlab, UU_MPCS, obj.st, obj.ny, obj.nu,...
         'Comparison of MPCS', algType);

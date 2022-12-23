@@ -4,7 +4,7 @@ function plotRun(YY, Yzad, UU, st, ny, nu, algName, algType)
     plotTitle = Utilities.getPlotTitle(algName, algType);
 
     fig = figure;
-    
+
     ynPlot = max(ny, nu);
     % For 1x1 object number of plots has to be 2
     if ynPlot == 1

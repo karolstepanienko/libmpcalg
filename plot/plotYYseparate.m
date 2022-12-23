@@ -5,10 +5,10 @@ function plotYYseparate(YY, YY_zad, st, ynPlot, unPlot)
     %% Get simulation length (length of vectors in matrix)
     % and number of output vectors
     [K, ny] = size(YY);
-    
+
     %% Time range for plot
     x_t = 0:st:(K - 1)*st;
-    
+
     %% Defining plot settings
     line_width = 1.5;
     legend_location = 'northeast';

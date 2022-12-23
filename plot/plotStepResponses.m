@@ -22,7 +22,7 @@ function plotStepResponses(stepResponses, st)
             hold off
             title(['y', num2str(iy), ', u', num2str(ju)]);
             xlabel(['From: In(', num2str(ju), ')']);
-            ylabel(['To: Out(', num2str(iy), ')']); 
+            ylabel(['To: Out(', num2str(iy), ')']);
             % set(gca,'xaxisLocation','top');
             xt = get(gca, 'XTick');  % 'XTick' Values
             % Relabel 'XTick' With 'XTickLabel' Values

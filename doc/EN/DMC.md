@@ -38,7 +38,7 @@
     reg = reg.calculateControl(Y_k, Yzad_k);
     u = reg.getControl();
 ```
-Method ```calculateControl()``` returns updated regulator object with new 
+Method ```calculateControl()``` returns updated regulator object with new
 control value, which is accessible with ```getControl()``` method.
 ### Parameters
 - Y_k - output values in current moment k

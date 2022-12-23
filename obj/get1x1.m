@@ -23,7 +23,7 @@ function obj = get1x1(st)
     InputDelay = 0;
 
     Gs = tf(cNum, cDen, 'InputDelay', InputDelay);
-    
+
     obj = MIMOObj(Gs, st);
     % figure;
     % step(Gs);
