@@ -24,6 +24,7 @@ classdef Constants
         testRelativeControlError  % (1,24) char array
         testRelativeControlErrorStepResponse  % (1,36) char array
         testRelativeControlErrorDMC  % (1,27) char array
+        testRelativeControlErrorMPCNO  % (1,29) char array
         testRelativeControlErrorMPCS  % (1,28) char array
         testLambda0   % (1,11) char array
         libFolders  % (1,7) cell
@@ -156,6 +157,12 @@ classdef Constants
                 {'test', 'relativeControlError', 'DMC'}, filesep);
         end
 
+        function testRelativeControlErrorMPCNO =...
+            get.testRelativeControlErrorMPCNO(obj)
+            testRelativeControlErrorMPCNO = obj.u.join(...
+                {'test', 'relativeControlError', 'MPCNO'}, filesep);
+        end
+
         function testRelativeControlErrorMPCS =...
             get.testRelativeControlErrorMPCS(obj)
             testRelativeControlErrorMPCS = obj.u.join(...
@@ -188,6 +195,7 @@ classdef Constants
                 obj.testRelativeControlError,
                 obj.testRelativeControlErrorStepResponse,
                 obj.testRelativeControlErrorDMC,
+                obj.testRelativeControlErrorMPCNO,
                 obj.testRelativeControlErrorMPCS,
                 obj.testLambda0
             };
@@ -305,7 +313,7 @@ classdef Constants
 
     methods (Access = public, Static)
         function allowedNumericError = getAllowedNumericLimit(obj)
-            allowedNumericError = power(10, -10);
+            allowedNumericError = power(10, -7);
         end
 
         function optimOptions = getQuadprogOptions(obj)
