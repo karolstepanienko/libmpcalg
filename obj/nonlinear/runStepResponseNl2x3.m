@@ -8,7 +8,8 @@ function runStepResponseNl2x3()
         uStep = cStep;
         % uStep = 1;
         for chosenU=1:nu
-            [stepResponsesMultiStep{chosenU, cStep}, UU] = getStepResponseNl2x3(ypp, upp, uStep, chosenU, kk);
+            [stepResponsesMultiStep{chosenU, cStep}, UU] = ...
+                getStepResponseNl2x3(ypp, upp, uStep, chosenU, kk);
         end
     end
 
