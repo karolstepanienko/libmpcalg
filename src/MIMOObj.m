@@ -204,14 +204,10 @@ classdef MIMOObj
         function otherDenominators = getOtherDenominators(obj, cy, cu)
             % Returns other denominators except for the one for current
             % combination of input and output
-            otherDenominators = 0;
+            otherDenominators = {};
             for ccu=1:obj.nu
                 if ccu ~= cu
-                    if otherDenominators == 0
-                        otherDenominators = {obj.numDen{cy, ccu}{obj.c.denIdx}};
-                    else
-                        otherDenominators = {otherDenominators; obj.numDen{cy, ccu}{obj.c.denIdx}};
-                    end
+                    otherDenominators{size(otherDenominators, 1) + 1} = obj.numDen{cy, ccu}{obj.c.denIdx};
                 end
             end
         end
