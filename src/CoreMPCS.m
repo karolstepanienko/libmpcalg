@@ -1,4 +1,4 @@
-classdef (Abstract) CoreMPCS < MPCUtilities
+classdef (Abstract) CoreMPCS < MPC
     properties (Access = public)
         % Required
         D  % Dynamic horizon

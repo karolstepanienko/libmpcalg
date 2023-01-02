@@ -1,6 +1,6 @@
 %% AnalyticalDMC
 % Analytical DMC also called classicDMC
-classdef AnalyticalDMC < MPC & ValidateDMC
+classdef AnalyticalDMC < CoreDMC & ValidateDMC
     methods
         %% AnalyticalDMC
         % Creates DMC regulator object
@@ -19,7 +19,7 @@ classdef AnalyticalDMC < MPC & ValidateDMC
         function obj = AnalyticalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
             obj = obj.validateDMCParams(D, N, Nu, ny, nu, stepResponses,...
                 varargin);
-            obj = obj.initMPC();
+            obj = obj.initCoreDMC();
         end
 
         %% calculateControl

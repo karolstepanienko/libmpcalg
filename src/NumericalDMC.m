@@ -1,7 +1,7 @@
 %% NumericalDMC
 % DMC algorithm that uses quadprog - a quadratic equations solver to calculate
 % control value changes
-classdef NumericalDMC < MPC & NumericalUtilities & ValidateDMC
+classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
     methods
         %% NumericalDMC
         % Creates NumericalDMC regulator object
@@ -22,7 +22,7 @@ classdef NumericalDMC < MPC & NumericalUtilities & ValidateDMC
         function obj = NumericalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
             obj = obj.validateNumericalDMCParams(D, N, Nu, ny, nu,...
                 stepResponses, varargin);
-            obj = obj.initMPC();
+            obj = obj.initCoreDMC();
             obj = obj.initNumerical(obj.M, obj.Xi, obj.Lambda);
         end
 
