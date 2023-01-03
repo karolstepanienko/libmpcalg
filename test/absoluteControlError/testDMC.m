@@ -15,3 +15,7 @@
 %!assert(runAlg('2x2', @DMC, 'analytical', false) < 25)
 %!assert(runAlg('2x2', @DMC, 'fast', false) < 25)
 %!assert(runAlg('2x2', @DMC, 'numerical', false) < 25)
+
+%!assert(runAlg('2x3', @DMC, 'analytical', false) < 4)
+%!assert(runAlg('2x3', @DMC, 'fast', false) < 4)
+%!assert(runAlg('2x3', @DMC, 'numerical', false) < 4)

@@ -15,3 +15,7 @@
 %!assert(runAlg('2x2', @MPCS, 'analytical', false) < 36)
 %!assert(runAlg('2x2', @MPCS, 'fast', false) < 36)
 %!assert(runAlg('2x2', @MPCS, 'numerical', false) < 36)
+
+%!assert(runAlg('2x3', @MPCS, 'analytical', false) < 4)
+%!assert(runAlg('2x3', @MPCS, 'fast', false) < 4)
+%!assert(runAlg('2x3', @MPCS, 'numerical', false) < 4)
