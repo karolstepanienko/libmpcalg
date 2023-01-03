@@ -1,15 +1,13 @@
 %% GPC - Generalized Predictive Control
-
 % A, B - object model: discrete differential equations (input and output)
-% A (ny, ny) cell containing nA sized vectors describing relation
-% between output value(s) and past output value(s)
-
-% B (nu, nu) cell containing nB sized vectors describing relation
-% between current control value(s) and past control value(s)
-
-function obj = GPC(D, N, Nu, ny, nu, InputDelay, A, B, varargin)
+% Allows choosing GPC algorithm type thanks to 'algType' parameter
+% Returns an object of proper GPC algorithm
+function obj = GPC(N, Nu, ny, nu, A, B, varargin)
     init();  % Adding necessary paths
-    kk = D;
-    stepResponses = getStepResponsesEq(ny, nu, InputDelay, A, B, kk);
-    obj = DMC(D, N, Nu, ny, nu, stepResponses, varargin{:});
+    c = Constants();  % Constant values
+
+    [algType, varargin] = Utilities.resolveAlgType(c, varargin);
+
+    chosenConstructorFunc = Utilities.chooseAlgorithm(c, c.algGPC, algType);
+    obj = chosenConstructorFunc(N, Nu, ny, nu, A, B, varargin{:});
 end

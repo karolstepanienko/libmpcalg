@@ -19,7 +19,8 @@ classdef Utilities
         end
 
         %% sym2tf
-        % Creates continuous-time transfer function model from symbolic expression.
+        % Creates continuous-time transfer function model from symbolic
+        % expression
         function Gs = sym2tf(symGs)
             [ny, nu] = size(symGs);
             Gs = tf('s');
@@ -101,7 +102,7 @@ classdef Utilities
         end
 
         %% getObjBinFilePath
-        % Wrapper 
+        % Wrapper
         function filePath = getObjBinFilePath(fileName)
             filePath = getObjBinFilePath(fileName);
         end
@@ -203,22 +204,31 @@ classdef Utilities
             end
         end
 
-        function choosenConstructorFunc = chooseAlgorithm(c, algorithm, algType)
+        function chosenConstructorFunc = chooseAlgorithm(c, algorithm, algType)
             if strcmp(algorithm, c.algDMC)
                 if strcmp(algType, c.analyticalAlgType)
-                    choosenConstructorFunc = @AnalyticalDMC;
+                    chosenConstructorFunc = @AnalyticalDMC;
                 elseif strcmp(algType, c.fastAlgType)
-                    choosenConstructorFunc = @FastDMC;
+                    chosenConstructorFunc = @FastDMC;
                 elseif strcmp(algType, c.numericalAlgType)
-                    choosenConstructorFunc = @NumericalDMC;
+                    chosenConstructorFunc = @NumericalDMC;
+                end
+            elseif strcmp(algorithm, c.algGPC)
+                if strcmp(algType, c.analyticalAlgType)
+                    chosenConstructorFunc = @AnalyticalGPC;
+
+                elseif strcmp(algType, c.fastAlgType)
+                    chosenConstructorFunc = @FastGPC;
+                elseif strcmp(algType, c.numericalAlgType)
+                    chosenConstructorFunc = @NumericalGPC;
                 end
             elseif strcmp(algorithm, c.algMPCS)
                 if strcmp(algType, c.analyticalAlgType)
-                    choosenConstructorFunc = @AnalyticalMPCS;
+                    chosenConstructorFunc = @AnalyticalMPCS;
                 elseif strcmp(algType, c.fastAlgType)
-                    choosenConstructorFunc = @FastMPCS;
+                    chosenConstructorFunc = @FastMPCS;
                 elseif strcmp(algType, c.numericalAlgType)
-                    choosenConstructorFunc = @NumericalMPCS;
+                    chosenConstructorFunc = @NumericalMPCS;
                 end
             end
         end

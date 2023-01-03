@@ -24,6 +24,7 @@ classdef Constants
         testRelativeControlError  % (1,24) char array
         testRelativeControlErrorStepResponse  % (1,36) char array
         testRelativeControlErrorDMC  % (1,27) char array
+        testRelativeControlErrorGPC  % (1,28) char array
         testRelativeControlErrorMPCNO  % (1,29) char array
         testRelativeControlErrorMPCS  % (1,28) char array
         testLambda0   % (1,11) char array
@@ -49,6 +50,7 @@ classdef Constants
         algMPCS  % (1, 4) char array
         algMPCNO  % (1, 5) char array
         % Constraints and default values
+        defaultInputDelay  % (1,1) int8
         defaultMi  % (1,1) double
         defaultLambda  % (1,1) double
         defaultuMin  % (1,1) double
@@ -157,6 +159,12 @@ classdef Constants
                 {'test', 'relativeControlError', 'DMC'}, filesep);
         end
 
+        function testRelativeControlErrorGPC =...
+            get.testRelativeControlErrorGPC(obj)
+            testRelativeControlErrorGPC = obj.u.join(...
+                {'test', 'relativeControlError', 'GPC'}, filesep);
+        end
+
         function testRelativeControlErrorMPCNO =...
             get.testRelativeControlErrorMPCNO(obj)
             testRelativeControlErrorMPCNO = obj.u.join(...
@@ -195,6 +203,7 @@ classdef Constants
                 obj.testRelativeControlError,
                 obj.testRelativeControlErrorStepResponse,
                 obj.testRelativeControlErrorDMC,
+                obj.testRelativeControlErrorGPC,
                 obj.testRelativeControlErrorMPCNO,
                 obj.testRelativeControlErrorMPCS,
                 obj.testLambda0
@@ -268,6 +277,10 @@ classdef Constants
 
         function algMPCNO = get.algMPCNO(obj)
             algMPCNO = 'MPCNO';
+        end
+
+        function defaultInputDelay= get.defaultInputDelay(obj)
+            defaultInputDelay = 0;
         end
 
         function defaultMi = get.defaultMi(obj)

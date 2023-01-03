@@ -45,5 +45,12 @@ classdef Exceptions
                 sprintf('Matrix %s should have %s rows or more and %s columns',...
                 matrixName, num2str(nRow), num2str(nColumn)));
         end
+
+        %----------------------------- cell ------------------------------------
+        function throwCellInvalidSize(cellName, nRow, nColumn)
+            error('cell:CellInvalidSize',...
+                sprintf('Cell %s should have %s rows and %s columns',...
+                cellName, num2str(nRow), num2str(nColumn)));
+        end
     end
 end

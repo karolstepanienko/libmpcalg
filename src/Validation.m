@@ -32,9 +32,9 @@ classdef Validation
             validScalarIntGreaterThan0Num = @(x) isnumeric(x) && isscalar(x)...
             && x == round(x) && mod(x, 1) == 0 && obj.isPositive(x);
         end
-        
+
         %--------------------------- double ------------------------------------
-        
+
         %% get.validScalarDoubleNum
         % Returns function for validating doubles
         function validScalarDoubleNum = get.validScalarDoubleNum(obj)
@@ -66,26 +66,23 @@ classdef Validation
         end
 
         function value = validateArray(obj, arrayName, array, n)
-            if obj.validateArraySize(arrayName, array, n)...
-                && obj.validateArrayIsHorizontal(arrayName, array)
+            value = obj.validateArraySize(arrayName, array, n);
+            value = obj.validateArrayIsHorizontal(arrayName, array);
+        end
+
+        function value = validateArraySize(obj, arrayName, array, n)
+            if length(array) ~= n
+                Exceptions.throwArrayInvalidSize(arrayName, n);
+            else
                 value = array;
             end
         end
 
-        function isValid = validateArraySize(obj, arrayName, array, n)
-            isValid = false;
-            if size(array, 1) == 1 && size(array, 2) ~= n
-                Exceptions.throwArrayInvalidSize(arrayName, n);
-            else
-                isValid = true;
-            end
-        end
-
-        function isValid = validateArrayIsHorizontal(obj, arrayName, array)
-            isValid = false;
+        function value = validateArrayIsHorizontal(obj, arrayName, array)
             if size(array, 1) ~= 1
                 Exceptions.throwArrayNotHorizontal(arrayName);
             else
+                value = array;
                 isValid = true;
             end
         end
@@ -139,6 +136,10 @@ classdef Validation
         end
 
         %--------------------------- cell --------------------------------------
+        function validCell = get.validCell(obj)
+            validCell = @(x) iscell(x) && ~isempty(x);
+        end
+
         function stepResponses = validateStepResponses(obj, stepResponses,...
             ny, nu, D)
             % Check number of inputs
@@ -166,8 +167,20 @@ classdef Validation
             end
         end
 
-        function validCell = get.validCell(obj)
-            validCell = @(x) iscell(x) && ~isempty(x);
+        function A = validateA(obj, A, ny)
+            if size(A, 1) == ny && size(A, 2) == ny
+                A = A;
+            else
+                Exceptions.throwCellInvalidSize('A', ny, ny);
+            end
+        end
+
+        function B = validateB(obj, B, ny, nu)
+            if size(B, 1) == ny && size(B, 2) == nu
+                B = B;
+            else
+                Exceptions.throwCellInvalidSize('B', ny, nu);
+            end
         end
 
         %---------------------------- algType ----------------------------------
