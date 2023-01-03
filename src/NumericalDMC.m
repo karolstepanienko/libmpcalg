@@ -34,7 +34,7 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
         function obj = calculateControl(obj, Y_k, Yzad_k)
             YY_k = obj.stackVectorNTimes(Y_k);
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
-            
+
             % Get YY_0
             YY_0 = YY_k + obj.Mp * obj.dUUp_k;
 
@@ -42,7 +42,7 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
             f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
             % Most recent control values
-            UU_k_1 = Utilities.stackVector(obj.U_k, obj.Nu);
+            UU_k_1 = Utilities.stackVector(obj.UU_k, obj.Nu);
 
             % Quadprog optimisation problem equations
             b = [
@@ -56,7 +56,7 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
             Aeq = [];
             beq = [];
             x0 = [];
-            obj.dUU_k = quadprog(obj.H, f, obj.A, b, Aeq, beq, obj.duuMin,...
+            obj.dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
                 obj.duuMax, x0, Constants.getQuadprogOptions());
 
             % New control change value
@@ -66,7 +66,7 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
             obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
             % New control value
-            obj.U_k = obj.U_k + obj.dUU_k(1:obj.nu, 1);
+            obj.UU_k = obj.UU_k + dU_k';
         end
     end
 end

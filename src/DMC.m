@@ -7,7 +7,7 @@ function obj = DMC(D, N, Nu, ny, nu, stepResponses, varargin)
 
     [algType, varargin] = Utilities.resolveAlgType(c, varargin);
 
-    choosenConstructorFunc = Utilities.chooseAlgorithm(c, c.algDMC, algType);
-    obj = choosenConstructorFunc(D, N, Nu, ny, nu, stepResponses,...
+    chosenConstructorFunc = Utilities.chooseAlgorithm(c, c.algDMC, algType);
+    obj = chosenConstructorFunc(D, N, Nu, ny, nu, stepResponses,...
         varargin{:});
 end

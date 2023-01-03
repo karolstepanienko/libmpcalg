@@ -7,7 +7,7 @@ classdef (Abstract) NumericalUtilities
     properties (Access = protected)
         H  % Matrix used by quadprog function
         J  % Matrix used to impose control value limits
-        A  % Matrix describing linear inequality constraints
+        AMatrix  % Matrix describing linear inequality constraints
         UUmin  % (nu * Nu, 1) vector of uMin values
         UUmax  % (nu * Nu, 1) vector of uMax values
         YYmin  % (ny * N, 1) vector of yMin values
@@ -20,7 +20,7 @@ classdef (Abstract) NumericalUtilities
         function obj = initNumerical(obj, M, Xi, Lambda)
             obj.H = obj.getH(M, Xi, Lambda);
             obj.J = obj.getJ();
-            obj.A = obj.getA(M);
+            obj.AMatrix = obj.getAMatrix(M);
             obj.UUmin = ones(obj.nu * obj.Nu, 1) * obj.uMin;
             obj.UUmax = ones(obj.nu * obj.Nu, 1) * obj.uMax;
             obj.YYmin = ones(obj.ny * obj.N, 1) * obj.yMin;
@@ -57,10 +57,10 @@ classdef (Abstract) NumericalUtilities
             end
         end
 
-        %% getA
-        % Creates static A matrix describing linear inequality constraints
-        function A = getA(obj, M)
-            A = [-obj.J; obj.J; -M; M];
+        %% getAMatrix
+        % Creates static AMatrix matrix describing linear inequality constraints
+        function AMatrix = getAMatrix(obj, M)
+            AMatrix = [-obj.J; obj.J; -M; M];
         end
     end
 end

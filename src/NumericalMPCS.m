@@ -39,13 +39,14 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities & ValidateMPCS
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
 
             % Get YY_0
-            YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V * (obj.dB * obj.U_k);
+            YY_0 = obj.CC * obj.AA * X_k'...
+                + obj.CC * obj.V * (obj.dB * obj.UU_k);
 
             % f vector used by quadprog
             f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
             % Most recent control values
-            UU_k_1 = Utilities.stackVector(obj.U_k, obj.Nu);
+            UU_k_1 = Utilities.stackVector(obj.UU_k, obj.Nu);
 
             % Quadprog optimisation problem equations
             b = [
@@ -59,14 +60,11 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities & ValidateMPCS
             Aeq = [];
             beq = [];
             x0 = [];
-            dUU_k = quadprog(obj.H, f, obj.A, b, Aeq, beq, obj.duuMin,...
+            dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
                 obj.duuMax, x0, Constants.getQuadprogOptions());
 
-            % New control change value
-            dU_k = dUU_k(1:obj.nu);
-
             % New control value
-            obj.U_k = obj.U_k + dUU_k(1:obj.nu, 1);
+            obj.UU_k = obj.UU_k + dUU_k(1:obj.nu, 1);
         end
     end
 end

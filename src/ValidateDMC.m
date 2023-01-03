@@ -29,25 +29,25 @@ classdef (Abstract) ValidateDMC
             % Optional parameters
             addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
             addParameter(p, 'lambda', obj.c.defaultLambda, obj.v.validNum);
-            
+
             addParameter(p, 'uMin', obj.c.defaultuMin,...
                 obj.v.validScalarDoubleNum);
-            
+
             addParameter(p, 'uMax', obj.c.defaultuMax,...
                 obj.v.validScalarDoubleNum);
-            
+
             addParameter(p, 'duMin', obj.c.defaultduMin,...
                 obj.v.validScalarDoubleLessThan0Num);
-            
+
             addParameter(p, 'duMax', obj.c.defaultduMax,...
                 obj.v.validScalarDoubleGreaterThan0Num);
-            
+
             addParameter(p, 'algType', obj.c.analyticalAlgType,...
                 obj.v.validAlgType);
 
             % Parsing values
-            parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});            
-            
+            parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});
+
             % Assign required parameters
             obj.D = p.Results.D;
             obj.N = p.Results.N;
@@ -113,7 +113,7 @@ classdef (Abstract) ValidateDMC
                 obj.v.validAlgType);
 
             % Parsing values
-            parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});            
+            parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});
 
             % Assign required parameters
             obj.D = p.Results.D;

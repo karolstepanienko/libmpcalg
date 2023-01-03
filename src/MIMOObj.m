@@ -119,7 +119,7 @@ classdef MIMOObj
                 exit;
             end
         end
-        
+
         function savePath = getSavePath(obj, fileName)
             % Returns object data full save path with file name
             absLibPath = obj.u.getAbsPathToLib();
@@ -127,14 +127,14 @@ classdef MIMOObj
             savePath = join([absLibPath, relativePath, fileName], filesep);
             savePath = savePath{1,1}; % Extract string from cell
         end
-        
+
         function obj = getDiscreteTransmittance(obj)
             % Returns object's discrete transmittance
             obj.Gz = c2d(obj.Gs, obj.st);
         end
 
         function obj = getNumDen(obj)
-            % Returns numerators and denumerators cell for every transmittance 
+            % Returns numerators and denumerators cell for every transmittance
             % for every combination of output and input
             % numDen{current y, current u}{1 for nominator / 2 for denominator}
             obj.numDen = cell(obj.ny, obj.nu);
@@ -143,7 +143,7 @@ classdef MIMOObj
                     num = obj.Gz(i,j).Num{1}(1:end);
                     % value in front of y(k) is always 1
                     % therefore it is not needed
-                    den = obj.Gz(i,j).Den{1}(1:end); 
+                    den = obj.Gz(i,j).Den{1}(1:end);
                     obj.numDen{i, j} = {num; den};
                 end
             end

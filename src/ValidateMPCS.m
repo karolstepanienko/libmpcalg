@@ -50,7 +50,7 @@ classdef (Abstract) ValidateMPCS
                 obj.v.validAlgType);
 
             % Parsing values
-            parse(p, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_{:});            
+            parse(p, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_{:});
 
             % Assign required parameters
             obj.N = p.Results.N;
@@ -126,7 +126,7 @@ classdef (Abstract) ValidateMPCS
                 obj.v.validAlgType);
 
             % Parsing values
-            parse(p, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_{:});            
+            parse(p, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_{:});
 
             % Assign required parameters
             obj.N = p.Results.N;

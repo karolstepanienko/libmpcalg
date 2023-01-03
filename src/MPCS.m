@@ -8,7 +8,7 @@ function obj = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin)
 
     [algType, varargin] = Utilities.resolveAlgType(c, varargin);
 
-    choosenConstructorFunc = Utilities.chooseAlgorithm(c, c.algMPCS, algType);
-    obj = choosenConstructorFunc(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+    chosenConstructorFunc = Utilities.chooseAlgorithm(c, c.algMPCS, algType);
+    obj = chosenConstructorFunc(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
         varargin{:});
 end

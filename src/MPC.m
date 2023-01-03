@@ -68,10 +68,10 @@ classdef (Abstract) MPC
         %% limitU_k
         function U_k = limitU_k(obj, U_k)
             for i=1:obj.nu
-                if U_k(i, 1) < obj.uMin
-                    U_k(i, 1) = obj.uMin;
-                elseif U_k(i, 1) > obj.uMax
-                    U_k(i, 1) = obj.uMax;
+                if U_k(i) < obj.uMin
+                    U_k(i) = obj.uMin;
+                elseif U_k(i) > obj.uMax
+                    U_k(i) = obj.uMax;
                 end
             end
         end
@@ -79,10 +79,10 @@ classdef (Abstract) MPC
         %% limitdU_k
         function dU_k = limitdU_k(obj, dU_k)
             for i=1:obj.nu
-                if dU_k(i, 1) < obj.duMin
-                    dU_k(i, 1) = obj.duMin;
-                elseif dU_k(i, 1) > obj.duMax
-                    dU_k(i, 1) = obj.duMax;
+                if dU_k(i) < obj.duMin
+                    dU_k(i) = obj.duMin;
+                elseif dU_k(i) > obj.duMax
+                    dU_k(i) = obj.duMax;
                 end
             end
         end

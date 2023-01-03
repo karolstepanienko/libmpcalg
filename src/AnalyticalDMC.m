@@ -39,16 +39,16 @@ classdef AnalyticalDMC < CoreDMC & ValidateDMC
 
             % Limit control change values
             dU_k = obj.limitdU_k(obj.dUU_k(1:obj.nu));
-            % Limit control values, U_k_1 = obj.U_k
-            U_k = obj.limitU_k(obj.U_k + dU_k);
+            % Limit control values, UU_k_1 = obj.UU_k
+            UU_k = obj.limitU_k(obj.UU_k + dU_k');
             % Limit control change value after limiting control value
-            dU_k = U_k - obj.U_k;
+            dU_k = UU_k - obj.UU_k;
 
             % Shift dUUp values
-            obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
+            obj.dUUp_k = [dU_k'; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
             % Get new control value
-            obj.U_k = U_k;
+            obj.UU_k = UU_k;
         end
     end
 end

@@ -9,7 +9,7 @@ classdef Exceptions
                 sprintf("Malformed step responses cell. Number of inputs (%s) doesn't match the number of inputs (%s) in provided step responses cell",...
                 num2str(nu), num2str(s_nu)));
         end
-        
+
         function throwStepResponsesInvalidNumberOfOutputs(ny, s_ny)
             error('stepResponses:InvalidNumberOfOutputs',...
                 sprintf("Malformed step responses cell. Number of outputs (%s) doesn't match the number of outputs (%s) in provided step responses cell",...
@@ -22,7 +22,7 @@ classdef Exceptions
                 sprintf('Array %s should have (%s) elements',...
                 arrayName, num2str(n)));
         end
-    
+
         function throwArrayNotHorizontal(arrayName)
             error('array:ArrayInvalidSize',...
                 sprintf('Array %s should be horizontal', arrayName));

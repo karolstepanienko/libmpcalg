@@ -13,7 +13,7 @@ classdef MPCNO < ValidateMPCNO
         lambda  % Control weight
         uMin  % Minimal control value
         uMax  % Maximal control value
-        ypp  % Output initial value 
+        ypp  % Output initial value
         upp  % Control initial value
         YY  % Output values
         UU  % Control values

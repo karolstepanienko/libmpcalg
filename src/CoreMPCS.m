@@ -22,7 +22,7 @@ classdef (Abstract) CoreMPCS < MPC
     end
 
     properties (GetAccess = public, SetAccess = protected)
-        U_k  % (nu, 1) current control value
+        UU_k  % (nu, 1) current control value
         X_k_1  % (nx, 1) past state variable values
         Xi  % (N*ny, N*ny)
         Lambda  % (Nu*nu, Nu*nu)
@@ -39,14 +39,14 @@ classdef (Abstract) CoreMPCS < MPC
     methods
         %% getControl
         % Returns horizontal vector of new control values
-        function U_k = getControl(obj)
-            U_k = obj.U_k';
+        function UU_k = getControl(obj)
+            UU_k = obj.UU_k';
         end
     end
 
     methods (Access = protected)
         function obj = initMPCS(obj)
-            obj.U_k = zeros(obj.nu, 1);
+            obj.UU_k = zeros(obj.nu, 1);
             obj.X_k_1 = zeros(1, obj.nx);
             obj.Xi = obj.getXi();
             obj.Lambda = obj.getLambda();

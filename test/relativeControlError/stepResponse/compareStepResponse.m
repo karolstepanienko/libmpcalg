@@ -24,7 +24,7 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
     stepResponseRef = Utilities.stepResponseMatrix2Cell(stepResponseMatrix, nu);
 
     %% Differential equation step response
-    stepResponseEq = getStepResponsesEq(ny, nu, InputDelay, A, B, kk);    
+    stepResponseEq = getStepResponsesEq(ny, nu, InputDelay, A, B, kk);
 
     %% State system step response
     stepResponseState = getStepResponsesState(nx, ny, nu, InputDelay,...

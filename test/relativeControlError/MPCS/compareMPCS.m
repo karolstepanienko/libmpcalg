@@ -13,9 +13,6 @@ function [errorYY_MPCS_JMatlab, errorUU_MPCS_JMatlab] =...
 
     [YYzad, kk, ypp, upp, xpp] = getY2CompareTrajectory(obj.osf);
 
-    stepResponse = getStepResponsesState(obj.nx, obj.ny, obj.nu,...
-        obj.InputDelay, obj.dA, obj.dB, obj.dC, obj.dD, obj.D);
-
     % Regulator MPCS
     algType = 'analytical';
     regMPCS = MPCS(obj.N, obj.Nu, obj.ny, obj.nu, obj.nx, obj.dA, obj.dB,...
