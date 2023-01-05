@@ -34,18 +34,15 @@ classdef FastMPCS < CoreMPCS & ValidateMPCS
         function obj = calculateControl(obj, X_k, Yzad_k)
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
 
-            % Get YY_0
-            YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V * (obj.dB * obj.UU_k);
+            YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V *...
+                (obj.dB * obj.UU_k);
 
-            % Get new control change value
             dU_k = obj.K(1:obj.nu, :) * (YYzad_k - YY_0);
 
-            % Limit control change values
             dU_k = obj.limitdU_k(dU_k(1:obj.nu));
-            % Limit control values, U_k_1 = obj.UU_k
+            % UU_k_1 = obj.UU_k
             UU_k = obj.limitU_k(obj.UU_k + dU_k);
 
-            % Get new control value
             obj.UU_k = UU_k;
         end
     end

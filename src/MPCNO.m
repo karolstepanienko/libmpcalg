@@ -53,7 +53,6 @@ classdef MPCNO < ValidateMPCNO
             UUopt = fmincon(f, UU_k0, [], [], [], [], obj.uMinVec,...
                 obj.uMaxVec, [], Constants.getFminconOptions());
 
-            % First set of control values from Nu length vector
             obj.UU(obj.k, :) = UUopt(1, :);
             obj.UU_k = obj.UU(obj.k, :);
             obj.k = obj.k + 1;

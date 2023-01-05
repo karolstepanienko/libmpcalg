@@ -34,22 +34,17 @@ classdef AnalyticalMPCS < CoreMPCS & ValidateMPCS
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
             V_k = X_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k)';
 
-            % Get YY_0
             obj.YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V...
                 * (obj.dB * obj.UU_k + V_k');
 
-            % Get new control change value
             dUU_k = obj.K * (YYzad_k - obj.YY_0);
 
-            % Limit control change values
             dU_k = obj.limitdU_k(dUU_k(1:obj.nu));
-            % Limit control values, U_k_1 = obj.UU_k
+            % UU_k_1 = obj.UU_k
             UU_k = obj.limitU_k(obj.UU_k + dU_k);
 
-            % Get new control value
             obj.UU_k = UU_k;
 
-            % Remember previous state values
             obj.X_k_1 = X_k;
         end
     end

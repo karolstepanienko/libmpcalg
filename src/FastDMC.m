@@ -26,29 +26,23 @@ classdef FastDMC < CoreDMC & ValidateDMC
         %% calculateControl
         % Calculates new, current object control values
         % Should be run in a loop
-        % @param Y_k        horizontal vector of current output values
+        % @param YY_k_1        horizontal vector of most recent output values
         % @param Yzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, Y_k, Yzad_k)
-            YY_k = obj.stackVectorNTimes(Y_k);
+        function obj = calculateControl(obj, YY_k_1, Yzad_k)
+            YY_k_1 = obj.stackVectorNTimes(YY_k_1);
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
 
-            % Get YY_0
-            YY_0 = YY_k + obj.Mp * obj.dUUp_k;
+            YY_0 = YY_k_1 + obj.Mp * obj.dUUp_k;
 
-            % Get new control change value
             obj.dUU_k = obj.K(1:obj.nu, :) * (YYzad_k - YY_0);
 
-            % Limit control change values
             dU_k = obj.limitdU_k(obj.dUU_k);
-            % Limit control values, U_k_1 = obj.UU_k
+            % UU_k_1 = obj.UU_k
             UU_k = obj.limitU_k(obj.UU_k + dU_k');
-            % Limit control change value after limiting control value
             dU_k = UU_k - obj.UU_k;
 
-            % Shift dUUp values
             obj.dUUp_k = [dU_k'; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
-            % Get new control value
             obj.UU_k = UU_k;
         end
     end

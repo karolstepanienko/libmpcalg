@@ -58,7 +58,6 @@ classdef (Abstract) CoreDMC < MPC
         %% getMp
         % Creates Mp matrix used by DMC algorithm
         function Mp = getMp(obj)
-            % Variable initialisation
             Mp = zeros(obj.ny*obj.N, obj.nu*(obj.D - 1));
             for i=1:obj.N
                 for j=1:obj.D-1

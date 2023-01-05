@@ -29,19 +29,17 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
         %% calculateControl
         % Calculates new, current object control values
         % Should be run in a loop
-        % @param Y_k        horizontal vector of current output values
+        % @param YY_k_1     horizontal vector of most recent output values
         % @param Yzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, Y_k, Yzad_k)
-            YY_k = obj.stackVectorNTimes(Y_k);
+        function obj = calculateControl(obj, YY_k_1, Yzad_k)
+            YY_k_1 = obj.stackVectorNTimes(YY_k_1);
             YYzad_k = obj.stackVectorNTimes(Yzad_k);
 
-            % Get YY_0
-            YY_0 = YY_k + obj.Mp * obj.dUUp_k;
+            YY_0 = YY_k_1 + obj.Mp * obj.dUUp_k;
 
-            % f vector used by quadprog
             f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
-            % Most recent control values
+            % UU_k_1 = obj.UU_k
             UU_k_1 = Utilities.stackVector(obj.UU_k, obj.Nu);
 
             % Quadprog optimisation problem equations
@@ -52,20 +50,16 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
                 obj.YYmax - YY_0
             ];
 
-            % Run quadprog function to calculate control change values
             Aeq = [];
             beq = [];
             x0 = [];
             obj.dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
                 obj.duuMax, x0, Constants.getQuadprogOptions());
 
-            % New control change value
             dU_k = obj.dUU_k(1:obj.nu);
 
-            % Shift dUUp values
             obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
-            % New control value
             obj.UU_k = obj.UU_k + dU_k';
         end
     end

@@ -33,16 +33,13 @@ classdef NumericalGPC < CoreGPC & NumericalUtilities & ValidateGPC
         % @param YYzad_k     horizontal vector of target trajectory values
         function obj = calculateControl(obj, YY_k_1, YYzad_k)
             obj.YY(obj.k - 1, :) = YY_k_1;
-            YY_k = obj.stackVectorNTimes(YY_k_1);
-            YYYzad_k = obj.stackVectorNTimes(YYzad_k);
+            YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
-            % Get YY_0
             YY_0 = obj.getYY_0();
 
-            % f vector used by quadprog
-            f = -2 * obj.M' * obj.Xi * (YYYzad_k - YY_0);
+            f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
-            % Most recent control values
+            % UU_k_1 = obj.UU_k
             UU_k_1 = Utilities.stackVector(obj.UU_k, obj.Nu);
 
             % Quadprog optimisation problem equations
@@ -53,14 +50,12 @@ classdef NumericalGPC < CoreGPC & NumericalUtilities & ValidateGPC
                 obj.YYmax - YY_0
             ];
 
-            % Run quadprog function to calculate control change values
             Aeq = [];
             beq = [];
             x0 = [];
             dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq,...
                 obj.duuMin, obj.duuMax, x0, Constants.getQuadprogOptions());
 
-            % New control value
             obj.UU(obj.k, :) = obj.UU_k + dUU_k(1:obj.nu, 1)';
             obj.UU_k = obj.UU(obj.k, :);
 
