@@ -17,7 +17,9 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
     Gz = Utilities.getGzFromNumDen(numDen, st);
 
     %% Reference step response (k, ny, nu)
+    w = warning('off', 'all');
     stepResponseMatrix = step(Gz, seconds);
+    warning(w);
     % Removing first element of step response
     stepResponseMatrix = stepResponseMatrix(2:end, :, :);
     % Adjust to step response format used in libmpcalg
