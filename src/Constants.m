@@ -29,6 +29,7 @@ classdef Constants
         testRelativeControlErrorMPCS  % (1,28) char array
         testLambda0   % (1,11) char array
         libFolders  % (1,7) cell
+        needlesPaths  % cell
         % Constant numerical values
         plotWaitSec  % (1,1) int8
         testSimulationLength  % (1,1) int8
@@ -207,6 +208,13 @@ classdef Constants
                 obj.testRelativeControlErrorMPCNO,
                 obj.testRelativeControlErrorMPCS,
                 obj.testLambda0
+            };
+        end
+
+        function needlesPaths = get.needlesPaths(obj)
+            needlesPaths = {
+                './src',
+                './libmpcalg/src'
             };
         end
 

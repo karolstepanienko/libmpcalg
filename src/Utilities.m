@@ -92,6 +92,15 @@ classdef Utilities
             end
         end
 
+        function removeNeedlesPaths()
+            c = Constants();
+            needlesPaths = c.needlesPaths;
+            for iPath=1:length(needlesPaths)
+                pathToRemove = needlesPaths{iPath};
+                rmpath(pathToRemove);
+            end
+        end
+
         %% cdf
         % Create destination folder if it does not exist
         function cdf(savePath)
