@@ -1,16 +1,17 @@
-%!assert(compareGPC(false) < [10^-9, 10^-7])
+%!assert(compareGPC('1x1Unstable', false) < [10^-19, 10^-19])
+%!assert(compareGPC('2x3', false) < [10^-20, 10^-20])
 
 
 %% compareGPC
 % Comparison of GPC and MPCS algorithms from libmpcalg library
-function [errorYY_GPC_MPCS, errorUU_GPC_MPCS] = compareGPC(varargin)
+function [errorYY_GPC_MPCS, errorUU_GPC_MPCS] = compareGPC(object, varargin)
     if size(varargin, 1) == 0 isPlotting = false;
     else isPlotting = varargin{1}; end
 
     % Object
-    object = '2x3';
     load(Utilities.getObjBinFilePath(Utilities.joinText(object, '.mat')));
-    [YYzad, kk, ypp, upp, xpp] = getY2Trajectory(osf);
+    trajectoryGetterFunc = getTrajectory(object);
+    [YYzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
 
     % Regulator GPC
     algType = 'analytical';
