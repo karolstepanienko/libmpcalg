@@ -1,14 +1,16 @@
 % Runs step response relative/comparison tests
 
-%!assert(compareStepResponse('1x1RelativeTest', false) < [Constants.getAllowedNumericLimit(), Constants.getAllowedNumericLimit()])
-%!assert(compareStepResponse('1x1', false) < [Constants.getAllowedNumericLimit(), Constants.getAllowedNumericLimit()])
-%!assert(compareStepResponse('1x2', false) < [Constants.getAllowedNumericLimit(), Constants.getAllowedNumericLimit()])
-%!assert(compareStepResponse('2x2', false) < [Constants.getAllowedNumericLimit(), Constants.getAllowedNumericLimit()])
+%!assert(compareStepResponse('1x1RelativeTest', false) < [10^-20, 10^-20])
+%!assert(compareStepResponse('1x1', false) < [10^-20, 10^-20])
+%!assert(compareStepResponse('1x2', false) < [10^-20, 10^-20])
+%!assert(compareStepResponse('2x2', false) < [10^-20, 10^-20])
 
 
 function [errEq, errState] = compareStepResponse(object, isPlotting)
     Utilities.loadPkgControlInOctave();
     load(Utilities.getObjBinFilePath(Utilities.joinText(object, '.mat')));
+
+    c = Constants();
 
     % Test parameters
     kk = D;
@@ -40,6 +42,9 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
 
     fprintf('Differential equation step response error: %s\n', num2str(errEq));
     fprintf('State space step response error: %s\n', num2str(errState));
+
+    assert(errEq < c.allowedNumericLimit);
+    assert(errState < c.allowedNumericLimit);
 
     %% Plotting
     % Prepare data structure

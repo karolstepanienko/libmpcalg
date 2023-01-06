@@ -54,7 +54,7 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities & ValidateDMC
             beq = [];
             x0 = [];
             obj.dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
-                obj.duuMax, x0, Constants.getQuadprogOptions());
+                obj.duuMax, x0, obj.c.quadprogOptions);
 
             dU_k = obj.dUU_k(1:obj.nu);
 

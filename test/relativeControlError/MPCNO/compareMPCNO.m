@@ -8,6 +8,7 @@ function [errorYY_MPCNO_JMatlab, errorUU_MPCNO_JMatlab] = compareMPCNO(varargin)
     if size(varargin, 1) == 0 isPlotting = false;
     else isPlotting = varargin{1}; end
 
+    c = Constants();
     % Object
     obj = get2x2Compare();
 
@@ -39,8 +40,8 @@ function [errorYY_MPCNO_JMatlab, errorUU_MPCNO_JMatlab] = compareMPCNO(varargin)
     fprintf("Control difference for JMatlab MPCS and libmpcalg MPCNO: %s\n",...
         num2str(errorUU_MPCNO_JMatlab));
 
-    assert(errorYY_MPCNO_JMatlab < Constants.getAllowedNumericLimit());
-    assert(errorUU_MPCNO_JMatlab < Constants.getAllowedNumericLimit());
+    assert(errorYY_MPCNO_JMatlab < c.allowedNumericLimit);
+    assert(errorUU_MPCNO_JMatlab < c.allowedNumericLimit);
 
     if isPlotting
         algType = '';

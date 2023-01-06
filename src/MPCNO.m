@@ -51,7 +51,7 @@ classdef MPCNO < ValidateMPCNO
 
             % x = fmincon(fun,x0,A,b,Aeq,beq,lb,ub,nonlcon,options)
             UUopt = fmincon(f, UU_k0, [], [], [], [], obj.uMinVec,...
-                obj.uMaxVec, [], Constants.getFminconOptions());
+                obj.uMaxVec, [], obj.c.fminconOptions);
 
             obj.UU(obj.k, :) = UUopt(1, :);
             obj.UU_k = obj.UU(obj.k, :);

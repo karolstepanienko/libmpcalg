@@ -38,6 +38,7 @@ classdef Constants
         testXInitVal  % (1,1) int8
         numIdx  % (1,1) int8
         denIdx  % (1,1) int8
+        allowedNumericLimit  % (1, 1) double
         % Algorithm types
         analyticalAlgType  % (1,10) char array
         fastAlgType  % (1,4) char array
@@ -61,7 +62,9 @@ classdef Constants
         defaultyMin  % (1,1) double
         defaultyMax  % (1,1) double
         defaultK  % (1,1) int8
-        defaultEmptyMatrix % (0, 0) double
+        defaultEmptyMatrix  % (0, 0) double
+        quadprogOptions  % struct
+        fminconOptions  % struct
     end
 
     properties (Access = private)
@@ -247,6 +250,10 @@ classdef Constants
             denIdx = 2;
         end
 
+        function allowedNumericError = get.allowedNumericLimit(obj)
+            allowedNumericError = power(10, -7);
+        end
+
         function analytical = get.analyticalAlgType(obj)
             analytical = 'analytical';
         end
@@ -330,18 +337,12 @@ classdef Constants
         function defaultEmptyMatrix = get.defaultEmptyMatrix(obj)
             defaultEmptyMatrix = [];
         end
-    end
 
-    methods (Access = public, Static)
-        function allowedNumericError = getAllowedNumericLimit(obj)
-            allowedNumericError = power(10, -7);
+        function quadprogOptions = get.quadprogOptions(obj)
+            quadprogOptions = optimset('Display', 'off');
         end
 
-        function optimOptions = getQuadprogOptions(obj)
-            optimOptions = optimset('Display', 'off');
-        end
-
-        function optimOptions = getFminconOptions(obj)
+        function optimOptions = get.fminconOptions(obj)
             optimOptions = optimset('Display','off','Algorithm','sqp',...
                 'TolFun',1e-10,'TolX',1e-10,'MaxIter',1000);
         end

@@ -54,7 +54,7 @@ classdef NumericalGPC < CoreGPC & NumericalUtilities & ValidateGPC
             beq = [];
             x0 = [];
             dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq,...
-                obj.duuMin, obj.duuMax, x0, Constants.getQuadprogOptions());
+                obj.duuMin, obj.duuMax, x0, obj.c.quadprogOptions);
 
             obj.UU(obj.k, :) = obj.UU_k + dUU_k(1:obj.nu, 1)';
             obj.UU_k = obj.UU(obj.k, :);
