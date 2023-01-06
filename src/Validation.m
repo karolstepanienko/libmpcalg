@@ -1,5 +1,5 @@
 classdef Validation
-    properties  %(Access = public)
+    properties
         % Int
         validScalarIntGreaterThan0Num
         % Double
@@ -19,8 +19,8 @@ classdef Validation
         validFunctionHandle
     end
 
-    properties (Access = private)
-        c = Constants();  % Constant values
+    properties (Constant)
+        c = Constants()  % Constant values
     end
 
     methods

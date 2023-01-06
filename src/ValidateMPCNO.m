@@ -6,7 +6,6 @@ classdef (Abstract) ValidateMPCNO
             getOutput, varargin_)
             % Runs MPCNO algorithm parameter validation
             v = Validation();
-            c = Constants();
 
             %% Input parser settings
             p = inputParser;
@@ -24,22 +23,22 @@ classdef (Abstract) ValidateMPCNO
 
 
             % Optional parameters
-            addParameter(p, 'lambda', c.defaultLambda, v.validNum);
+            addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
-            addParameter(p, 'ypp', c.testYInitVal,...
+            addParameter(p, 'ypp', v.c.testYInitVal,...
                 v.validScalarDoubleNum);
-            addParameter(p, 'upp', c.testUInitVal,...
-                v.validScalarDoubleNum);
-
-            addParameter(p, 'uMin', c.defaultuMin,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'uMax', c.defaultuMax,...
+            addParameter(p, 'upp', v.c.testUInitVal,...
                 v.validScalarDoubleNum);
 
-            addParameter(p, 'k', c.defaultK,...
+            addParameter(p, 'uMin', v.c.defaultuMin,...
+                v.validScalarDoubleNum);
+            addParameter(p, 'uMax', v.c.defaultuMax,...
+                v.validScalarDoubleNum);
+
+            addParameter(p, 'k', v.c.defaultK,...
                 v.validScalarIntGreaterThan0Num);
-            addParameter(p, 'YY', c.defaultEmptyMatrix, v.validNum);
-            addParameter(p, 'UU', c.defaultEmptyMatrix, v.validNum);
+            addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
+            addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
 
             % Parsing values
             parse(p, N, Nu, ny, nu, getOutput, varargin_{:});
