@@ -23,6 +23,7 @@ classdef (Abstract) CoreGPC < MPC
     end
 
     properties (GetAccess = public, SetAccess = protected)
+        c  % Constants object
         Xi  % Xi matrix used by GPC algorithm
         Lambda  % Lambda matrix used by GPC algorithm
         stepResponses  % Cell of control object step response
@@ -42,6 +43,7 @@ classdef (Abstract) CoreGPC < MPC
 
     methods (Access = protected)
         function obj = initCoreGPC(obj)
+            obj.c = Constants();
             obj.stepResponses = getStepResponsesEq(obj.ny, obj.nu,...
                 obj.InputDelay, obj.A, obj.B, obj.N);
             obj.Sp = obj.getSp(obj.stepResponses, obj.N);

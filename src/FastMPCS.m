@@ -1,7 +1,7 @@
 %% FastMPCS
 % Analytical MPCS that only calculates one set of nu control values
 % Also called fast MPCS
-classdef FastMPCS < CoreMPCS & ValidateMPCS
+classdef FastMPCS < CoreMPCS
     methods
         %% FastMPCS
         % Creates FastMPCS regulator object
@@ -21,8 +21,8 @@ classdef FastMPCS < CoreMPCS & ValidateMPCS
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
         function obj = FastMPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin)
-            obj = obj.validateMPCSParams(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
-                varargin);
+            obj = ValidateMPCS.validateMPCSParams(obj, N, Nu, ny, nu, nx,...
+                dA, dB, dC, dD, varargin);
             obj = obj.initMPCS();
         end
 

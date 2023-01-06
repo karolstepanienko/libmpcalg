@@ -1,7 +1,7 @@
 %% NumericalMPCS
 % MPCS algorithm that uses quadprog - a quadratic equations solver to calculate
 % control value changes
-classdef NumericalMPCS < CoreMPCS & NumericalUtilities & ValidateMPCS
+classdef NumericalMPCS < CoreMPCS & NumericalUtilities
     methods
         %% NumericalMPCS
         % Creates NumericalMPCS regulator object
@@ -24,8 +24,8 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities & ValidateMPCS
         % @param yMax Maximal output value
         function obj = NumericalMPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
             varargin)
-            obj = obj.validateNumericalMPCSParams(N, Nu, ny, nu, nx, dA, dB,...
-                dC, dD, varargin);
+            obj = ValidateMPCS.validateNumericalMPCSParams(obj, N, Nu,...
+                ny, nu, nx, dA, dB, dC, dD, varargin);
             obj = obj.initMPCS();
             obj = obj.initNumerical(obj.M, obj.Xi, obj.Lambda);
         end

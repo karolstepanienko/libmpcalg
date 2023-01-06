@@ -1,15 +1,12 @@
 %% ValidateMPCS
 % Abstract class responsible for validation of MPCS parameters
 classdef (Abstract) ValidateMPCS
-    properties (Access = protected, Constant)
-        v = Validation();  % Validation object with data validation functions
-        c = Constants();  % Constant values
-    end
-
-    methods (Access = protected)
+    methods (Static)
         function obj = validateMPCSParams(obj, N, Nu, ny, nu, nx, dA, dB, dC,...
             dD, varargin_)
             % Runs Analytical and Fast MPCS algorithm parameter validation
+            c = Constants();
+            v = Validation();
 
             %% Input parser settings
             p = inputParser;
@@ -17,37 +14,37 @@ classdef (Abstract) ValidateMPCS
             p.FunctionName = 'MPCS';
 
             % Required parameters
-            addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'N', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfOutputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfStateVariables',...
-                obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'dA', obj.v.validSquareMatrix);
-            addRequired(p, 'dB', obj.v.validMatrix);
-            addRequired(p, 'dC', obj.v.validMatrix);
-            addRequired(p, 'dD', obj.v.validMatrix);
+                v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'dA', v.validSquareMatrix);
+            addRequired(p, 'dB', v.validMatrix);
+            addRequired(p, 'dC', v.validMatrix);
+            addRequired(p, 'dD', v.validMatrix);
 
             % Optional parameters
-            addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
-            addParameter(p, 'lambda', obj.c.defaultLambda, obj.v.validNum);
+            addParameter(p, 'mi', c.defaultMi, v.validNum);
+            addParameter(p, 'lambda', c.defaultLambda, v.validNum);
 
-            addParameter(p, 'uMin', obj.c.defaultuMin,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMin', c.defaultuMin,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'uMax', obj.c.defaultuMax,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMax', c.defaultuMax,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'duMin', obj.c.defaultduMin,...
-                obj.v.validScalarDoubleLessThan0Num);
+            addParameter(p, 'duMin', c.defaultduMin,...
+                v.validScalarDoubleLessThan0Num);
 
-            addParameter(p, 'duMax', obj.c.defaultduMax,...
-                obj.v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'duMax', c.defaultduMax,...
+                v.validScalarDoubleGreaterThan0Num);
 
-            addParameter(p, 'algType', obj.c.analyticalAlgType,...
-                obj.v.validAlgType);
+            addParameter(p, 'algType', c.analyticalAlgType,...
+                v.validAlgType);
 
             % Parsing values
             parse(p, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_{:});
@@ -58,17 +55,17 @@ classdef (Abstract) ValidateMPCS
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
             obj.nx = p.Results.numberOfStateVariables;
-            obj.dA = obj.v.validateAStateMatrix(p.Results.dA, obj.nx);
-            obj.dB = obj.v.validateStateMatrix(p.Results.dB, 'dB', obj.nx,...
+            obj.dA = v.validateAStateMatrix(p.Results.dA, obj.nx);
+            obj.dB = v.validateStateMatrix(p.Results.dB, 'dB', obj.nx,...
                 obj.nu);
-            obj.dC = obj.v.validateStateMatrix(p.Results.dC, 'dC', obj.ny,...
+            obj.dC = v.validateStateMatrix(p.Results.dC, 'dC', obj.ny,...
                 obj.nx);
-            obj.dD = obj.v.validateStateMatrix(p.Results.dD, 'dD', obj.ny,...
+            obj.dD = v.validateStateMatrix(p.Results.dD, 'dD', obj.ny,...
                 obj.nu);
 
             % Assign optional parameters
-            obj.mi = obj.v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = obj.v.validateArray('lambda', p.Results.lambda,...
+            obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
+            obj.lambda = v.validateArray('lambda', p.Results.lambda,...
                 obj.nu);
             obj.uMin = p.Results.uMin;
             obj.uMax = p.Results.uMax;
@@ -80,6 +77,8 @@ classdef (Abstract) ValidateMPCS
         function obj = validateNumericalMPCSParams(obj, N, Nu, ny, nu, nx, dA, dB, dC,...
             dD, varargin_)
             % Runs Numerical MPCS algorithm parameter validation
+            c = Constants();
+            v = Validation();
 
             %% Input parser settings
             p = inputParser;
@@ -87,43 +86,43 @@ classdef (Abstract) ValidateMPCS
             p.FunctionName = 'MPCS';
 
             % Required parameters
-            addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'N', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfOutputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfStateVariables',...
-                obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'dA', obj.v.validSquareMatrix);
-            addRequired(p, 'dB', obj.v.validMatrix);
-            addRequired(p, 'dC', obj.v.validMatrix);
-            addRequired(p, 'dD', obj.v.validMatrix);
+                v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'dA', v.validSquareMatrix);
+            addRequired(p, 'dB', v.validMatrix);
+            addRequired(p, 'dC', v.validMatrix);
+            addRequired(p, 'dD', v.validMatrix);
 
             % Optional parameters
-            addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
-            addParameter(p, 'lambda', obj.c.defaultLambda, obj.v.validNum);
+            addParameter(p, 'mi', c.defaultMi, v.validNum);
+            addParameter(p, 'lambda', c.defaultLambda, v.validNum);
 
-            addParameter(p, 'uMin', obj.c.defaultuMin,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMin', c.defaultuMin,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'uMax', obj.c.defaultuMax,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMax', c.defaultuMax,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'duMin', obj.c.defaultduMin,...
-                obj.v.validScalarDoubleLessThan0Num);
+            addParameter(p, 'duMin', c.defaultduMin,...
+                v.validScalarDoubleLessThan0Num);
 
-            addParameter(p, 'duMax', obj.c.defaultduMax,...
-                obj.v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'duMax', c.defaultduMax,...
+                v.validScalarDoubleGreaterThan0Num);
 
-            addParameter(p, 'yMin', obj.c.defaultyMin,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'yMin', c.defaultyMin,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'yMax', obj.c.defaultyMax,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'yMax', c.defaultyMax,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'algType', obj.c.analyticalAlgType,...
-                obj.v.validAlgType);
+            addParameter(p, 'algType', c.analyticalAlgType,...
+                v.validAlgType);
 
             % Parsing values
             parse(p, N, Nu, ny, nu, nx, dA, dB, dC, dD, varargin_{:});
@@ -134,17 +133,17 @@ classdef (Abstract) ValidateMPCS
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
             obj.nx = p.Results.numberOfStateVariables;
-            obj.dA = obj.v.validateAStateMatrix(p.Results.dA, obj.nx);
-            obj.dB = obj.v.validateStateMatrix(p.Results.dB, 'dB', obj.nx,...
+            obj.dA = v.validateAStateMatrix(p.Results.dA, obj.nx);
+            obj.dB = v.validateStateMatrix(p.Results.dB, 'dB', obj.nx,...
                 obj.nu);
-            obj.dC = obj.v.validateStateMatrix(p.Results.dC, 'dC', obj.ny,...
+            obj.dC = v.validateStateMatrix(p.Results.dC, 'dC', obj.ny,...
                 obj.nx);
-            obj.dD = obj.v.validateStateMatrix(p.Results.dD, 'dD', obj.ny,...
+            obj.dD = v.validateStateMatrix(p.Results.dD, 'dD', obj.ny,...
                 obj.nu);
 
             % Assign optional parameters
-            obj.mi = obj.v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = obj.v.validateArray('lambda', p.Results.lambda,...
+            obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
+            obj.lambda = v.validateArray('lambda', p.Results.lambda,...
                 obj.nu);
             obj.uMin = p.Results.uMin;
             obj.uMax = p.Results.uMax;

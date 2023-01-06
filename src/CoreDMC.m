@@ -18,6 +18,7 @@ classdef (Abstract) CoreDMC < MPC
     end
 
     properties (GetAccess = public, SetAccess = protected)
+        c  % Constants object
         Sp  % Sp cell of step response matrices in p moment
         Mp  % Mp matrix used by DMC algorithm
         M   % M matrix used by DMC algorithm
@@ -43,6 +44,7 @@ classdef (Abstract) CoreDMC < MPC
         %% initCoreDMC
         % Creates necessary matrices for MPC algorithms
         function obj = initCoreDMC(obj)
+            obj.c = Constants();
             obj.YY_0 = zeros(obj.N*obj.ny, 1);
             obj.dUU_k = obj.initdUU_k();
             obj.dUUp_k = obj.initdUUp_k();

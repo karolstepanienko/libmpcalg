@@ -1,6 +1,6 @@
 %% AnalyticalDMC
 % Analytical DMC also called classicDMC
-classdef AnalyticalDMC < CoreDMC & ValidateDMC
+classdef AnalyticalDMC < CoreDMC
     methods
         %% AnalyticalDMC
         % Creates DMC regulator object
@@ -17,8 +17,8 @@ classdef AnalyticalDMC < CoreDMC & ValidateDMC
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
         function obj = AnalyticalDMC(D, N, Nu, ny, nu, stepResponses, varargin)
-            obj = obj.validateDMCParams(D, N, Nu, ny, nu, stepResponses,...
-                varargin);
+            obj = ValidateDMC.validateDMCParams(obj, D, N, Nu, ny, nu,...
+                stepResponses, varargin);
             obj = obj.initCoreDMC();
         end
 

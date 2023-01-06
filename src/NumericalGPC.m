@@ -1,7 +1,7 @@
 %% NumericalGPC
 % GPC algorithm that uses quadprog - a quadratic equations solver to calculate
 % control value changes
-classdef NumericalGPC < CoreGPC & NumericalUtilities & ValidateGPC
+classdef NumericalGPC < CoreGPC & NumericalUtilities
     methods
         %% NumericalGPC
         % Creates NumericalGPC regulator object
@@ -21,7 +21,8 @@ classdef NumericalGPC < CoreGPC & NumericalUtilities & ValidateGPC
         % @param yMin Minimal output value
         % @param yMax Maximal output value
         function obj = NumericalGPC(N, Nu, ny, nu, A, B, varargin)
-            obj = obj.validateNumericalGPCParams(N, Nu, ny, nu, A, B, varargin);
+            obj = ValidateGPC.validateNumericalGPCParams(obj, N, Nu, ny, nu,...
+                A, B, varargin);
             obj = obj.initCoreGPC();
             obj = obj.initNumerical(obj.M, obj.Xi, obj.Lambda);
         end

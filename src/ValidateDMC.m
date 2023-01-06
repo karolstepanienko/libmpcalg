@@ -1,15 +1,12 @@
 %% ValidateDMC
 % Abstract class responsible for validation of DMC parameters
 classdef (Abstract) ValidateDMC
-    properties (Access = protected, Constant)
-        v = Validation();  % Validation object with data validation functions
-        c = Constants();  % Constant values
-    end
-
-    methods (Access = protected)
+    methods (Static)
         function obj = validateDMCParams(obj, D, N, Nu, ny, nu,...
             stepResponses, varargin_)
             % Runs Analytical and Fast DMC algorithm parameter validation
+            c = Constants();
+            v = Validation();
 
             %% Input parser settings
             p = inputParser;
@@ -17,33 +14,33 @@ classdef (Abstract) ValidateDMC
             p.FunctionName = 'DMC';
 
             % Required parameters
-            addRequired(p, 'D', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'stepResponses', obj.v.validCell);
+            addRequired(p, 'D', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'N', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'stepResponses', v.validCell);
             addRequired(p, 'numberOfOutputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
 
             % Optional parameters
-            addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
-            addParameter(p, 'lambda', obj.c.defaultLambda, obj.v.validNum);
+            addParameter(p, 'mi', c.defaultMi, v.validNum);
+            addParameter(p, 'lambda', c.defaultLambda, v.validNum);
 
-            addParameter(p, 'uMin', obj.c.defaultuMin,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMin', c.defaultuMin,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'uMax', obj.c.defaultuMax,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMax', c.defaultuMax,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'duMin', obj.c.defaultduMin,...
-                obj.v.validScalarDoubleLessThan0Num);
+            addParameter(p, 'duMin', c.defaultduMin,...
+                v.validScalarDoubleLessThan0Num);
 
-            addParameter(p, 'duMax', obj.c.defaultduMax,...
-                obj.v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'duMax', c.defaultduMax,...
+                v.validScalarDoubleGreaterThan0Num);
 
-            addParameter(p, 'algType', obj.c.analyticalAlgType,...
-                obj.v.validAlgType);
+            addParameter(p, 'algType', c.analyticalAlgType,...
+                v.validAlgType);
 
             % Parsing values
             parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});
@@ -54,13 +51,12 @@ classdef (Abstract) ValidateDMC
             obj.Nu = p.Results.Nu;
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
-            obj.stepResponses = obj.v.validateStepResponses(...
+            obj.stepResponses = v.validateStepResponses(...
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
-            obj.mi = obj.v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = obj.v.validateArray('lambda', p.Results.lambda,...
-                obj.nu);
+            obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
+            obj.lambda = v.validateArray('lambda', p.Results.lambda, obj.nu);
             obj.uMin = p.Results.uMin;
             obj.uMax = p.Results.uMax;
             obj.duMin = p.Results.duMin;
@@ -71,6 +67,8 @@ classdef (Abstract) ValidateDMC
         function obj = validateNumericalDMCParams(obj, D, N, Nu, ny, nu,...
             stepResponses, varargin_)
             % Runs Numerical DMC algorithm parameter validation
+            c = Constants();
+            v = Validation();
 
             %% Input parser settings
             p = inputParser;
@@ -78,39 +76,39 @@ classdef (Abstract) ValidateDMC
             p.FunctionName = 'DMC';
 
             % Required parameters
-            addRequired(p, 'D', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'N', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'Nu', obj.v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'stepResponses', obj.v.validCell);
+            addRequired(p, 'D', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'N', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'stepResponses', v.validCell);
             addRequired(p, 'numberOfOutputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs',...
-                obj.v.validScalarIntGreaterThan0Num);
+                v.validScalarIntGreaterThan0Num);
 
             % Optional parameters
-            addParameter(p, 'mi', obj.c.defaultMi, obj.v.validNum);
-            addParameter(p, 'lambda', obj.c.defaultLambda, obj.v.validNum);
+            addParameter(p, 'mi', c.defaultMi, v.validNum);
+            addParameter(p, 'lambda', c.defaultLambda, v.validNum);
 
-            addParameter(p, 'uMin', obj.c.defaultuMin,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMin', c.defaultuMin,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'uMax', obj.c.defaultuMax,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'uMax', c.defaultuMax,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'duMin', obj.c.defaultduMin,...
-                obj.v.validScalarDoubleLessThan0Num);
+            addParameter(p, 'duMin', c.defaultduMin,...
+                v.validScalarDoubleLessThan0Num);
 
-            addParameter(p, 'duMax', obj.c.defaultduMax,...
-                obj.v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'duMax', c.defaultduMax,...
+                v.validScalarDoubleGreaterThan0Num);
 
-            addParameter(p, 'yMin', obj.c.defaultyMin,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'yMin', c.defaultyMin,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'yMax', obj.c.defaultyMax,...
-                obj.v.validScalarDoubleNum);
+            addParameter(p, 'yMax', c.defaultyMax,...
+                v.validScalarDoubleNum);
 
-            addParameter(p, 'algType', obj.c.analyticalAlgType,...
-                obj.v.validAlgType);
+            addParameter(p, 'algType', c.analyticalAlgType,...
+                v.validAlgType);
 
             % Parsing values
             parse(p, D, N, Nu, stepResponses, ny, nu, varargin_{:});
@@ -121,13 +119,12 @@ classdef (Abstract) ValidateDMC
             obj.Nu = p.Results.Nu;
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
-            obj.stepResponses = obj.v.validateStepResponses(...
+            obj.stepResponses = v.validateStepResponses(...
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
-            obj.mi = obj.v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = obj.v.validateArray('lambda', p.Results.lambda,...
-                obj.nu);
+            obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
+            obj.lambda = v.validateArray('lambda', p.Results.lambda, obj.nu);
             obj.uMin = p.Results.uMin;
             obj.uMax = p.Results.uMax;
             obj.duMin = p.Results.duMin;

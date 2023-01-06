@@ -1,6 +1,6 @@
 %% AnalyticalGPC
 % Analytical GPC also called classicGPC
-classdef AnalyticalGPC < CoreGPC & ValidateGPC
+classdef AnalyticalGPC < CoreGPC
     methods
         %% AnalyticalGPC
         % Creates AnalyticalGPC regulator object
@@ -18,7 +18,8 @@ classdef AnalyticalGPC < CoreGPC & ValidateGPC
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
         function obj = AnalyticalGPC(N, Nu, ny, nu, A, B, varargin)
-            obj = obj.validateGPCParams(N, Nu, ny, nu, A, B, varargin);
+            obj = ValidateGPC.validateGPCParams(obj, N, Nu, ny, nu, A, B,...
+                varargin);
             obj = obj.initCoreGPC();
         end
 

@@ -22,6 +22,7 @@ classdef (Abstract) CoreMPCS < MPC
     end
 
     properties (GetAccess = public, SetAccess = protected)
+        c  % Constants object
         UU_k  % (nu, 1) current control value
         X_k_1  % (nx, 1) past state variable values
         Xi  % (N*ny, N*ny)
@@ -46,6 +47,7 @@ classdef (Abstract) CoreMPCS < MPC
 
     methods (Access = protected)
         function obj = initMPCS(obj)
+            obj.c = Constants();
             obj.UU_k = zeros(obj.nu, 1);
             obj.X_k_1 = zeros(1, obj.nx);
             obj.Xi = obj.getXi();

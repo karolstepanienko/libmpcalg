@@ -1,6 +1,6 @@
 %% MPCNO
 % Nonlinear Model Predictive Control algorithm
-classdef MPCNO < ValidateMPCNO
+classdef MPCNO
     properties
         N  % Prediction horizon
         Nu  % Moving horizon
@@ -21,6 +21,7 @@ classdef MPCNO < ValidateMPCNO
     end
 
     properties (GetAccess = public, SetAccess = protected)
+        c  % Constants object
         uMinVec  % Used by fmincon
         uMaxVec  % Used by fmincon
         UU_k  % Current calculated control value
@@ -28,12 +29,14 @@ classdef MPCNO < ValidateMPCNO
 
     methods
         function obj = MPCNO(N, Nu, ny, nu, getOutput, varargin)
-            obj = obj.validateMPCNOParams(N, Nu, ny, nu, getOutput, varargin);
+            obj = ValidateMPCNO.validateMPCNOParams(obj, N, Nu, ny, nu,...
+                getOutput, varargin);
             obj = obj.initMPCNO();
             Utilities.loadPkgOptimInOctave();
         end
 
         function obj = initMPCNO(obj)
+            obj.c = Constants();
             obj.uMinVec = obj.uMin * ones(obj.Nu, obj.nu);
             obj.uMaxVec = obj.uMax * ones(obj.Nu, obj.nu);
             obj.UU_k = obj.upp * ones(1, obj.nu);

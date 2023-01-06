@@ -1,7 +1,7 @@
 %% FastDMC
 % Analytical DMC that only calculates one set of nu control values
 % Also called fast DMC
-classdef FastDMC < CoreDMC & ValidateDMC
+classdef FastDMC < CoreDMC
     methods
         %% FastDMC
         % Creates FastDMC regulator object
@@ -18,8 +18,8 @@ classdef FastDMC < CoreDMC & ValidateDMC
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
         function obj = FastDMC(D, N, Nu, ny, nu, stepResponses, varargin)
-            obj = obj.validateDMCParams(D, N, Nu, ny, nu, stepResponses,...
-                varargin);
+            obj = ValidateDMC.validateDMCParams(obj, D, N, Nu, ny, nu,...
+                stepResponses, varargin);
             obj = obj.initCoreDMC();
         end
 

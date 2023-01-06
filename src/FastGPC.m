@@ -1,7 +1,7 @@
 %% FastGPC
 % Analytical GPC that only calculates one set of nu control values
 % Also called fast GPC
-classdef FastGPC < CoreGPC & ValidateGPC
+classdef FastGPC < CoreGPC
     methods
         %% FastGPC
         % Creates FastGPC regulator object
@@ -19,7 +19,8 @@ classdef FastGPC < CoreGPC & ValidateGPC
         % @param duMin Minimal control change value
         % @param duMax Maximal control change value
         function obj = FastGPC(N, Nu, ny, nu, A, B, varargin)
-            obj = obj.validateGPCParams(N, Nu, ny, nu, A, B, varargin);
+            obj = ValidateGPC.validateGPCParams(obj, N, Nu, ny, nu, A, B,...
+                varargin);
             obj = obj.initCoreGPC();
         end
 
