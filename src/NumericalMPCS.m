@@ -33,18 +33,18 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
         %% calculateControl
         % Calculates new, current object control values
         % Should be run in a loop
-        % @param X_k        horizontal vector of current state values
-        % @param Yzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, X_k, Yzad_k)
-            YYzad_k = obj.stackVectorNTimes(Yzad_k);
+        % @param XX_k        horizontal vector of current state values
+        % @param YYzad_k     horizontal vector of target trajectory values
+        function obj = calculateControl(obj, XX_k, YYzad_k)
+            YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
-            YY_0 = obj.CC * obj.AA * X_k'...
-                + obj.CC * obj.V * (obj.dB * obj.UU_k);
+            YY_0 = obj.CC * obj.AA * XX_k'...
+                + obj.CC * obj.V * (obj.dB * obj.UU_k');
 
             f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
             % UU_k_1 = obj.UU_k
-            UU_k_1 = Utilities.stackVector(obj.UU_k, obj.Nu);
+            UU_k_1 = Utilities.stackVector(obj.UU_k', obj.Nu);
 
             % Quadprog optimisation problem equations
             b = [
@@ -60,7 +60,7 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
             dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
                 obj.duuMax, x0, obj.c.quadprogOptions);
 
-            obj.UU_k = obj.UU_k + dUU_k(1:obj.nu, 1);
+            obj.UU_k = obj.UU_k + dUU_k(1:obj.nu, 1)';
         end
     end
 end

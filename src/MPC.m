@@ -1,4 +1,37 @@
 classdef (Abstract) MPC
+    properties
+        N  % Prediction horizon
+        Nu  % Moving horizon
+        ny  % Number of outputs
+        nu  % Number of inputs
+
+        % Optional
+        mi  % Output importance
+        lambda  % Control weight
+        uMin  % Minimal control value
+        uMax  % Maximal control value
+        duMin  % Minimal control change value
+        duMax  % Maximal control change value
+    end
+
+    properties (GetAccess = public, SetAccess = protected)
+        c  % Constants object
+        Sp  % Sp cell of step response matrices in p moment
+        M   % M (ny*N, ny*Nu) dynamic matrix
+        Xi  % Xi (ny*N, ny*N) output importance matrix
+        Lambda  % Lambda (nu*Nu, nu*Nu) input importance matrix
+        K  % K (nu*Nu, ny*N) feedback coefficients matrix
+        UU_k  % (1, nu) Current control value
+    end
+
+    methods
+        %% getControl
+        % Returns horizontal vector of new control values
+        function UU_k = getControl(obj)
+            UU_k = obj.UU_k;
+        end
+    end
+
     methods (Access = protected)
         %% getSp
         % Creates Sp matrix from step response data in cell format

@@ -26,16 +26,16 @@ classdef AnalyticalDMC < CoreDMC
         % Calculates new, current object control values
         % Should be run in a loop
         % @param YY_k_1     horizontal vector of most recent output values
-        % @param Yzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, YY_k_1, Yzad_k)
+        % @param YYzad_k    horizontal vector of target trajectory values
+        function obj = calculateControl(obj, YY_k_1, YYzad_k)
             YY_k_1 = obj.stackVectorNTimes(YY_k_1);
-            YYzad_k = obj.stackVectorNTimes(Yzad_k);
+            YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
-            obj.YY_0 = YY_k_1 + obj.Mp * obj.dUUp_k;
+            YY_0 = YY_k_1 + obj.Mp * obj.dUUp_k;
 
-            obj.dUU_k = obj.K * (YYzad_k - obj.YY_0);
+            dUU_k = obj.K * (YYzad_k - YY_0);
 
-            dU_k = obj.limitdU_k(obj.dUU_k(1:obj.nu));
+            dU_k = obj.limitdU_k(dUU_k(1:obj.nu));
             % UU_k_1 = obj.UU_k
             UU_k = obj.limitU_k(obj.UU_k + dU_k');
             dU_k = UU_k - obj.UU_k;

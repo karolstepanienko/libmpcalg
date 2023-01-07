@@ -66,7 +66,6 @@ classdef (Abstract) ValidateDMC
         function obj = validateNumericalDMCParams(obj, D, N, Nu, ny, nu,...
             stepResponses, varargin_)
             % Runs Numerical DMC algorithm parameter validation
-            c = Constants();
             v = Validation();
 
             %% Input parser settings

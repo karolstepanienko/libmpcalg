@@ -11,7 +11,6 @@ function [regDMC, Y, U, debug] = getDebugLibmpcalgDMC(isPlotting, po)
     % Variable initialisation
     X = ones(po.kk, po.nx) * po.xpp;
     Y = ones(po.kk, po.ny) * po.ypp;
-    Y_0 = ones(po.kk, po.N * po.ny) * po.ypp;
     U = ones(po.kk, po.nu) * po.upp;
 
     Y_k = ones(1, po.ny) * po.ypp;
@@ -22,12 +21,7 @@ function [regDMC, Y, U, debug] = getDebugLibmpcalgDMC(isPlotting, po)
             po.dC, po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny,...
             po.InputDelay, k);
         Y_k = Y(k, :);
-        % Debugging
-        Y_0(k, :) = regDMC.YY_0;
     end
-
-    % Save debugging variables
-    debug.Y_0 = Y_0;
 
     if isPlotting
         plotRun(Y, po.Yzad, U, po.st, po.ny, po.nu, 'DMC', po.algType);

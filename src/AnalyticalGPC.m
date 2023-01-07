@@ -27,7 +27,7 @@ classdef AnalyticalGPC < CoreGPC
         % Calculates new, current object control values
         % Should be run in a loop
         % @param YY_k_1     horizontal vector of most recent output values
-        % @param Yzad_k     horizontal vector of target trajectory values
+        % @param YYzad_k    horizontal vector of target trajectory values
         function obj = calculateControl(obj, YY_k_1, YYzad_k)
             obj.YY(obj.k - 1, :) = YY_k_1;
             YYzad_k = obj.stackVectorNTimes(YYzad_k);

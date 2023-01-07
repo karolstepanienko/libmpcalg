@@ -30,10 +30,10 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities
         % Calculates new, current object control values
         % Should be run in a loop
         % @param YY_k_1     horizontal vector of most recent output values
-        % @param Yzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, YY_k_1, Yzad_k)
+        % @param YYzad_k     horizontal vector of target trajectory values
+        function obj = calculateControl(obj, YY_k_1, YYzad_k)
             YY_k_1 = obj.stackVectorNTimes(YY_k_1);
-            YYzad_k = obj.stackVectorNTimes(Yzad_k);
+            YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
             YY_0 = YY_k_1 + obj.Mp * obj.dUUp_k;
 
@@ -53,10 +53,10 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities
             Aeq = [];
             beq = [];
             x0 = [];
-            obj.dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
+            dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
                 obj.duuMax, x0, obj.c.quadprogOptions);
 
-            dU_k = obj.dUU_k(1:obj.nu);
+            dU_k = dUU_k(1:obj.nu);
 
             obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 

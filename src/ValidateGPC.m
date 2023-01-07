@@ -86,7 +86,6 @@ classdef (Abstract) ValidateGPC
             varargin_)
             % Runs Numerical GPC algorithm parameter validation
             v = Validation();
-            c = Constants();
 
             %% Input parser settings
             p = inputParser;

@@ -76,7 +76,6 @@ classdef (Abstract) ValidateMPCS
         function obj = validateNumericalMPCSParams(obj, N, Nu, ny, nu, nx, dA, dB, dC,...
             dD, varargin_)
             % Runs Numerical MPCS algorithm parameter validation
-            c = Constants();
             v = Validation();
 
             %% Input parser settings

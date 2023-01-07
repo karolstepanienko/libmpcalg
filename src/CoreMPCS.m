@@ -1,54 +1,25 @@
 classdef (Abstract) CoreMPCS < MPC
-    properties (Access = public)
+    properties
         % Required
-        D  % Dynamic horizon
-        N  % Prediction horizon
-        Nu  % Moving horizon
         dA % Discrete-time relation between internal process variables
         dB % Discrete-time relation between internal process variables and inputs
         dC % Discrete-time relation between outputs and internal process variables
         dD % Discrete-time relation between outputs and inputs
-        ny  % Number of outputs
-        nu  % Number of inputs
         nx  % Number of state variables
-
-        % Optional
-        mi  % Output importance
-        lambda  % Control weight
-        uMin  % Minimal control value
-        uMax  % Maximal control value
-        duMin  % Minimal control change value
-        duMax  % Maximal control change value
     end
 
     properties (GetAccess = public, SetAccess = protected)
-        c  % Constants object
-        UU_k  % (nu, 1) current control value
         X_k_1  % (nx, 1) past state variable values
-        Xi  % (N*ny, N*ny)
-        Lambda  % (Nu*nu, Nu*nu)
-        M  % (N, Nu)
-        K  % (Nu*nu, N*ny)
         AA  % (N*nx, nx)
         Mx  % (N*nx, Nu*nu)
         V  % (N*nx, nx)
         CC  % (N*ny, N*nx) dC matrix on diagonal
-        % Debugging
-        YY_0  % (N*ny, 1) Object trajectory without further control changes
-    end
-
-    methods
-        %% getControl
-        % Returns horizontal vector of new control values
-        function UU_k = getControl(obj)
-            UU_k = obj.UU_k';
-        end
     end
 
     methods (Access = protected)
         function obj = initMPCS(obj)
             obj.c = Constants();
-            obj.UU_k = zeros(obj.nu, 1);
+            obj.UU_k = zeros(1, obj.nu);
             obj.X_k_1 = zeros(1, obj.nx);
             obj.Xi = obj.getXi();
             obj.Lambda = obj.getLambda();
@@ -58,7 +29,6 @@ classdef (Abstract) CoreMPCS < MPC
             obj.CC = obj.getCC();
             obj.M = obj.CC*obj.Mx;
             obj.K = obj.getK(obj.M, obj.Xi, obj.Lambda);
-            obj.YY_0 = zeros(obj.N*obj.ny, 1);
         end
     end
 
