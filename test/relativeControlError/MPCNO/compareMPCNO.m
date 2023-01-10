@@ -12,28 +12,30 @@ function [errorYY_MPCNO_JMatlab, errorUU_MPCNO_JMatlab] = compareMPCNO(varargin)
     % Object
     obj = get2x2Compare();
 
-    [YYzad, kk, ypp, upp, ~] = getY2CompareTrajectory(obj.osf);
+    [YYzad, kk, dataMPCNO.ypp, dataMPCNO.upp, ~] = getY2CompareTrajectory(obj.osf);
 
     % Regulator
-    reg = MPCNO(obj.N+1, obj.Nu, obj.ny, obj.nu, obj.getOutput, 'lambda', obj.lambda,...
-        'ypp', ypp, 'upp', upp, 'uMin', obj.uMin, 'uMax', -obj.uMin);
+    reg = MPCNO(obj.N+1, obj.Nu, obj.ny, obj.nu, obj.getOutput,...
+        'lambda', obj.lambda, 'ypp', dataMPCNO.ypp, 'upp', dataMPCNO.upp,...
+        'uMin', obj.uMin, 'uMax', -obj.uMin);
 
     % Variable initialisation
-    YY_MPCNO = ones(kk, obj.ny) * ypp;
-    UU_MPCNO = ones(kk, obj.nu) * upp;
-    YY_k_1_MPCNO = ones(1, obj.ny) * ypp;
+    dataMPCNO.data = struct;
+    dataMPCNO.YY = ones(kk, obj.ny) * dataMPCNO.ypp;
+    dataMPCNO.UU = ones(kk, obj.nu) * dataMPCNO.upp;
+    YY_k_1_MPCNO = ones(1, obj.ny) * dataMPCNO.ypp;
 
     % Control loop
     for k=1:kk
         reg = reg.calculateControl(YY_k_1_MPCNO, YYzad(k, :));
-        UU_MPCNO(k, :) = reg.getControl();
-        YY_MPCNO(k, :) = obj.getOutput(ypp, YY_MPCNO, upp, UU_MPCNO, k);
-        YY_k_1_MPCNO = YY_MPCNO(k, :);
+        dataMPCNO.UU(k, :) = reg.getControl();
+        dataMPCNO.YY(k, :) = obj.getOutput(dataMPCNO, k);
+        YY_k_1_MPCNO = dataMPCNO.YY(k, :);
     end
 
     MPCSOutputJMatlab;  % Get variables from JMatlab library
-    errorYY_MPCNO_JMatlab = Utilities.calMatrixError(YY_MPCNO, YY_JMatlab);
-    errorUU_MPCNO_JMatlab = Utilities.calMatrixError(UU_MPCNO, UU_JMatlab);
+    errorYY_MPCNO_JMatlab = Utilities.calMatrixError(dataMPCNO.YY, YY_JMatlab);
+    errorUU_MPCNO_JMatlab = Utilities.calMatrixError(dataMPCNO.UU, UU_JMatlab);
 
     fprintf("Output difference for JMatlab MPCS and libmpcalg MPCNO: %s\n",...
         num2str(errorYY_MPCNO_JMatlab));
@@ -45,7 +47,7 @@ function [errorYY_MPCNO_JMatlab, errorUU_MPCNO_JMatlab] = compareMPCNO(varargin)
 
     if isPlotting
         algType = '';
-        plotRun(YY_MPCNO, YY_JMatlab, UU_MPCNO, obj.st, obj.ny, obj.nu,...
-        'Comparison of MPCNO', algType);
+        plotRun(dataMPCNO.YY, YY_JMatlab, dataMPCNO.UU, obj.st, obj.ny,...
+        obj.nu, 'Comparison of MPCNO', algType);
     end
 end

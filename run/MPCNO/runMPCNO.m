@@ -1,47 +1,52 @@
-%% Script used to manually test MPCNO algorithm implementation
+function err = runMPCNO(object, varargin)
+    if size(varargin, 1) == 0 isPlotting = false;
+    else isPlotting = varargin{1}; end
 
-% Object parameters
-ny = 2;  % Number of outputs
-nu = 3;  % Number of inputs
-InputDelay = 0;
-osf = 1;  % Object sampling factor
+    % Object parameters
+    ny = str2num(object(1));  % Number of outputs
+    nu = str2num(object(3));  % Number of inputs
+    InputDelay = 0;
+    osf = 1;  % Object sampling factor
 
-% Regulator parameters
-N = 4;  % Prediction horizon
-Nu = 2;  % Moving horizon
-lambda = ones(1, nu);  % Control weight
-uMin = -100;
-uMax = -uMin;
-algType = '';
+    % Regulator parameters
+    N = 4;  % Prediction horizon
+    Nu = 2;  % Moving horizon
+    lambda = ones(1, nu);  % Control weight
+    uMin = -100;
+    uMax = -uMin;
+    algType = '';
 
-% Trajectory
-object = '2x3';
-trajectoryGetterFunc = getTrajectory(object);
-[YYzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
+    % Trajectory
+    trajectoryGetterFunc = getTrajectory(object);
+    [YYzad, kk, data.ypp, data.upp, xpp] = trajectoryGetterFunc(osf);
 
-% Regulator
-reg = MPCNO(N, Nu, ny, nu, @getObjectOutputNl2x3, 'lambda', lambda,...
-    'ypp', ypp, 'upp', upp, 'uMin', uMin, 'uMax', uMax);
+    % Object
+    getOutput = getObjectNlFunc(object);
 
-% Variable initialisation
-YY = ones(kk, ny) * ypp;
-UU = ones(kk, nu) * upp;
-YY_k_1 = ones(1, ny) * ypp;
+    % Regulator
+    reg = MPCNO(N, Nu, ny, nu, getOutput, 'lambda', lambda,...
+        'ypp', data.ypp, 'upp', data.upp, 'uMin', uMin, 'uMax', uMax);
 
-% Control loop
-for k=1:kk
-    reg = reg.calculateControl(YY_k_1, YYzad(k, :));
-    UU(k, :) = reg.getControl();
-    YY(k, :) = getObjectOutputNl2x3(ypp, YY, upp, UU, k);
-    YY_k_1 = YY(k, :);
-    % disp("loop")
-    % k
-    % YY(1:k+1, :)
-    % pause
+    % Variable initialisation
+    data.data = struct;
+    data.YY = ones(kk, ny) * data.ypp;
+    data.UU = ones(kk, nu) * data.upp;
+    YY_k_1 = ones(1, ny) * data.ypp;
+
+    % Control loop
+    for k=1:kk
+        reg = reg.calculateControl(YY_k_1, YYzad(k, :));
+        data.UU(k, :) = reg.getControl();
+        % Using custom data structure, reg.k ~ k
+        data.YY(k, :) = getOutput(data, k);
+        YY_k_1 = data.YY(k, :);
+    end
+
+    % Plotting
+    if isPlotting
+        plotRun(data.YY, YYzad, data.UU, 1, ny, nu, 'MPCNO', algType);
+    end
+
+    % Control error
+    err = Utilities.calculateError(data.YY, YYzad);
 end
-
-% Plotting
-plotRun(YY, YYzad, UU, 1, ny, nu, 'MPCNO', algType);
-
-% Control error
-err = Utilities.calculateError(YY, YYzad)

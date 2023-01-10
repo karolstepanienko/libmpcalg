@@ -6,3 +6,9 @@
 %!assert(runAlg('1x2', @MPCNO, '', false) < 33)
 %!assert(runAlg('2x2', @MPCNO, '', false) < 51)
 %!assert(runAlg('2x3', @MPCNO, '', false) < 4)
+
+% Nonlinear objects
+%!assert(runMPCNO('1x1', false) < 17)
+%!assert(runMPCNO('2x3', false) < 4)
+%!assert(runMPCNOk('1x1', false) < 17)
+%!assert(runMPCNOk('2x3', false) < 4)

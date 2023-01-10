@@ -63,6 +63,7 @@ classdef Constants
         defaultyMax  % (1,1) double
         defaultK  % (1,1) int8
         defaultEmptyMatrix  % (0, 0) double
+        defaultEmptyStruct  % (0, 0) struct
         quadprogOptions  % struct
         fminconOptions  % struct
     end
@@ -336,6 +337,10 @@ classdef Constants
 
         function defaultEmptyMatrix = get.defaultEmptyMatrix(obj)
             defaultEmptyMatrix = [];
+        end
+
+        function defaultEmptyStruct = get.defaultEmptyStruct(obj)
+            defaultEmptyStruct = struct;
         end
 
         function quadprogOptions = get.quadprogOptions(obj)

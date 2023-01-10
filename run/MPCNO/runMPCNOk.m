@@ -1,52 +1,57 @@
-%% Script used to manually test MPCNO algorithm implementation
+function err = runMPCNOk(object, varargin)
+    if size(varargin, 1) == 0 isPlotting = false;
+    else isPlotting = varargin{1}; end
 
-% Object parameters
-ny = 2;  % Number of outputs
-nu = 3;  % Number of inputs
-InputDelay = 0;
-osf = 1;  % Object sampling factor
+    % Object parameters
+    ny = str2num(object(1));  % Number of outputs
+    nu = str2num(object(3));  % Number of inputs
+    InputDelay = 0;
+    osf = 1;  % Object sampling factor
 
-% Regulator parameters
-N = 4;  % Prediction horizon
-Nu = 2;  % Moving horizon
-lambda = ones(1, nu);  % Control weight
-uMin = -100;
-uMax = -uMin;
-algType = '';
+    % Regulator parameters
+    N = 4;  % Prediction horizon
+    Nu = 2;  % Moving horizon
+    lambda = ones(1, nu);  % Control weight
+    uMin = -100;
+    uMax = -uMin;
+    algType = '';
 
-% Trajectory
-object = '2x3';
-trajectoryGetterFunc = getTrajectory(object);
-[YYzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
-initK = 3;
+    % Trajectory
+    trajectoryGetterFunc = getTrajectory(object);
+    [YYzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
 
-% Variable initialisation
-YY = ones(kk, ny) * ypp;
-UU = ones(kk, nu) * upp;
-% YY(1, :) = [1, 2];
-% YY(2, :) = [3, 4];
+    % Object
+    getOutput = getObjectNlFunc(object);
 
-% UU(1, :) = [1, 2, 3];
-% UU(2, :) = [4, 5, 6];
+    initK = 3;
 
-% Regulator
-reg = MPCNO(N, Nu, ny, nu, @getObjectOutputNl2x3, 'lambda', lambda,...
-    'ypp', ypp, 'upp', upp, 'uMin', uMin, 'uMax', uMax,...
-    'k', initK, 'YY', YY, 'UU', UU);
+    % Variable initialisation
+    YY = ones(kk, ny) * ypp;
+    UU = ones(kk, nu) * upp;
+    % YY(1, :) = [1, 2];
+    % YY(2, :) = [3, 4];
 
-% Control loop
-for k=initK:kk
-    reg = reg.calculateControl(YY(k - 1, :), YYzad(k, :));
-    UU(k, :) = reg.getControl();
-    YY(k, :) = getObjectOutputNl2x3(ypp, YY, upp, UU, k);
-    % disp("loop")
-    % k
-    % YY(1:k+1, :)
-    % pause
+    % UU(1, :) = [1, 2, 3];
+    % UU(2, :) = [4, 5, 6];
+
+    % Regulator
+    reg = MPCNO(N, Nu, ny, nu, getOutput, 'lambda', lambda,...
+        'ypp', ypp, 'upp', upp, 'uMin', uMin, 'uMax', uMax,...
+        'k', initK, 'YY', YY, 'UU', UU);
+
+    % Control loop
+    for k=initK:kk
+        reg = reg.calculateControl(YY(k - 1, :), YYzad(k, :));
+        UU(k, :) = reg.getControl();
+        % Using reg data, reg.k == k
+        YY(k, :) = getOutput(reg, k);
+    end
+
+    % Plotting
+    if isPlotting
+        plotRun(YY, YYzad, UU, 1, ny, nu, 'MPCNO', algType);
+    end
+
+    % Control error
+    err = Utilities.calculateError(YY, YYzad);
 end
-
-% Plotting
-plotRun(YY, YYzad, UU, 1, ny, nu, 'MPCNO', algType);
-
-% Control error
-err = Utilities.calculateError(YY, YYzad)

@@ -25,16 +25,19 @@ function obj = get2x2Compare()
     obj.getOutput = @getOutput2x2Compare;
 end
 
-function YY_k = getOutput2x2Compare(ypp, YY, upp, UU, k)
+function [YY_k, varargout] = getOutput2x2Compare(data, k)
     ny = 2; nu = 2;
     YY_k = ones(1, ny);
     if k == 1
-        YY_k(1, 1) = 0.9684 * ypp + 0.03278 * upp + 0.00198 * upp;
-        YY_k(1, 2) = 0.9684 * ypp + 0.00198 * upp + 0.03278 * upp;
+        YY_k(1, 1) = 0.9684 * data.ypp + 0.03278 * data.upp...
+            + 0.00198 * data.upp;
+        YY_k(1, 2) = 0.9684 * data.ypp + 0.00198 * data.upp...
+            + 0.03278 * data.upp;
     else
-        YY_k(1, 1) = 0.9684 * YY(k - 1, 1)...
-            + 0.03278 * UU(k - 1, 1) + 0.00198 * UU(k - 1, 2);
-        YY_k(1, 2) = 0.9684 * YY(k - 1, 2)...
-            + 0.00198 * UU(k - 1, 1) + 0.03278 * UU(k - 1, 2);
+        YY_k(1, 1) = 0.9684 * data.YY(k - 1, 1)...
+            + 0.03278 * data.UU(k - 1, 1) + 0.00198 * data.UU(k - 1, 2);
+        YY_k(1, 2) = 0.9684 * data.YY(k - 1, 2)...
+            + 0.00198 * data.UU(k - 1, 1) + 0.03278 * data.UU(k - 1, 2);
     end
+    varargout{1} = data.data;
 end

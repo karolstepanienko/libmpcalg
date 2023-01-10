@@ -40,6 +40,8 @@ classdef (Abstract) ValidateMPCNO
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
             addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
 
+            addParameter(p, 'data', v.c.defaultEmptyMatrix, v.validStruct);
+
             % Parsing values
             parse(p, N, Nu, ny, nu, getOutput, varargin_{:});
 
@@ -64,6 +66,7 @@ classdef (Abstract) ValidateMPCNO
                 obj.k - 2, obj.ny);
             obj.UU = v.validateInitialisationMatrix(p.Results.UU, 'UU',...
                 obj.k - 2, obj.nu);
+            obj.data = p.Results.data;
         end
     end
 end

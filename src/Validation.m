@@ -6,13 +6,15 @@ classdef Validation
         validScalarDoubleNum
         validScalarDoubleLessThan0Num
         validScalarDoubleGreaterThan0Num
+        % Double or array
+        validNum
         % Matrix
         validMatrix
         validSquareMatrix
         % Cell
         validCell
-        % Double or array
-        validNum
+        % Struct
+        validStruct
         % Algorithm type
         validAlgType
         % Function handle
@@ -181,6 +183,11 @@ classdef Validation
             else
                 Exceptions.throwCellInvalidSize('B', ny, nu);
             end
+        end
+
+        %---------------------------- struct -----------------------------------
+        function validStruct = get.validStruct(obj)
+            validStruct = @(x) isstruct(x);
         end
 
         %---------------------------- algType ----------------------------------

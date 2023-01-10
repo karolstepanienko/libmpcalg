@@ -18,6 +18,7 @@ classdef MPCNO
         YY  % Output values
         UU  % Control values
         k  % Control loop iterator
+        data  % Custom not validated parameter passed to getOutput function
     end
 
     properties (GetAccess = public, SetAccess = protected)
@@ -88,8 +89,8 @@ classdef MPCNO
 
             % Predicting object output values for N elements ahead
             for p=0:obj.N-1
-                obj.YY(obj.k + p, :) = obj.getOutput(obj.ypp, obj.YY,...
-                    obj.upp, obj.UU, obj.k + p);
+                [obj.YY(obj.k + p, :), data] = obj.getOutput(obj, obj.k + p);
+                obj.data = data;
             end
 
             % Trajectory constant on prediction horizon
