@@ -21,6 +21,7 @@ B = {[0, 0.0358, 0.0308]};
 D = 80;  % Dynamic horizon
 N = 70;  % Prediction horizon
 Nu = 5;  % Moving horizon
+InputDelay = zeros(1, nu);
 mi = ones(1, ny);  % Output importance
 lambda = ones(1, nu);  % Control weight
 uMin = -2;
@@ -30,7 +31,7 @@ duMax = -duMin;
 algType = 'fast';
 
 % Regulator
-reg = GPC(D, N, Nu, ny, nu, InputDelay, A, B, 'mi', mi, 'lambda', lambda, 'uMin', uMin,...
+reg = GPC(N, Nu, ny, nu, A, B, 'InputDelay', InputDelay, 'mi', mi, 'lambda', lambda, 'uMin', uMin,...
     'uMax', uMax, 'duMin', duMin, 'duMax', duMax, 'algType', algType);
 
 % Trajectory

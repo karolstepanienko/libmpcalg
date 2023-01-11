@@ -36,6 +36,7 @@ B = { [0, 0.0952, -0.0905], [0, 0.0975, -0.0883];
 D = 200;  % Dynamic horizon
 N = 100;  % Prediction horizon
 Nu = 8;  % Moving horizon
+InputDelay = zeros(1, nu);
 mi = ones(1, ny);  % Output importance
 lambda = ones(1, nu);  % Control weight
 uMin = -2;
@@ -45,8 +46,9 @@ duMax = -duMin;
 algType = 'fast';
 
 % Regulator
-reg = GPC(D, N, Nu, ny, nu, InputDelay, A, B, 'mi', mi, 'lambda', lambda,...
-    'uMin', uMin,'uMax', uMax, 'duMin', duMin, 'duMax', duMax,...
+reg = GPC(N, Nu, ny, nu, A, B, 'InputDelay', InputDelay, 'mi', mi,...
+    'lambda', lambda, 'uMin', uMin,'uMax', uMax,...
+    'duMin', duMin, 'duMax', duMax,...
     'algType', algType);
 
 % Trajectory
@@ -61,7 +63,7 @@ YY_k_1 = ones(1, ny) * ypp;
 for k=1:kk
     reg = reg.calculateControl(YY_k_1, YYzad(k, :));
     UU(k, :) = reg.getControl();
-    YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k);
+    YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, reg.InputDelay, k);
     YY_k_1 = YY(k, :);
 end
 
