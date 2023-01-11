@@ -64,7 +64,7 @@ classdef (Abstract) ValidateMPCS
 
             % Assign optional parameters
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = v.validateArray('lambda', p.Results.lambda, obj.nu);
+            obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.uMin = p.Results.uMin;
             obj.uMax = p.Results.uMax;
             obj.duMin = p.Results.duMin;
@@ -140,7 +140,7 @@ classdef (Abstract) ValidateMPCS
 
             % Assign optional parameters
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = v.validateArray('lambda', p.Results.lambda,...
+            obj.lambda = v.validateLambda('lambda', p.Results.lambda,...
                 obj.nu);
             obj.uMin = p.Results.uMin;
             obj.uMax = p.Results.uMax;

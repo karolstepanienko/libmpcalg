@@ -97,6 +97,9 @@
 
 
 %------------------------------------ lambda -----------------------------------
+% lambda = 0
+%!warning <Lambda value set to 0. Regulator might be unstable.> testDMCParameters('lambda', [0, 0])
+
 % stretch single element
 %!warning <Assumed array lambda consists of 2 elements with a value of 1> testDMCParameters('lambda', 1)
 

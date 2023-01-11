@@ -65,7 +65,7 @@ classdef (Abstract) ValidateGPC
             obj.InputDelay = v.validateArraySize('InputDelay',...
                 p.Results.InputDelay, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = v.validateArray('lambda', p.Results.lambda, obj.nu);
+            obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.ypp = p.Results.ypp;
             obj.upp = p.Results.upp;
             obj.uMin = p.Results.uMin;
@@ -151,7 +151,7 @@ classdef (Abstract) ValidateGPC
             obj.InputDelay = v.validateArraySize('InputDelay',...
                 p.Results.InputDelay, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
-            obj.lambda = v.validateArray('lambda', p.Results.lambda, obj.nu);
+            obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.ypp = p.Results.ypp;
             obj.upp = p.Results.upp;
             obj.uMin = p.Results.uMin;

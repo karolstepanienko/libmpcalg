@@ -67,6 +67,13 @@ classdef Validation
             validNum = @isnumeric;
         end
 
+        function value = validateLambda(obj, arrayName, array, n)
+            if ismember(0, array)
+                Warnings.showLambda0();
+            end
+            value = obj.validateArray(arrayName, array, n);
+        end
+
         function value = validateArray(obj, arrayName, array, n)
             value = obj.stretchValueToArray(arrayName, array, n);
             value = obj.validateArraySize(arrayName, value, n);

@@ -53,7 +53,7 @@ classdef (Abstract) ValidateMPCNO
             obj.getOutput = p.Results.getOutput;
 
             % Assign optional parameters
-            obj.lambda = v.validateArray('lambda', p.Results.lambda, obj.nu);
+            obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.ypp = p.Results.ypp;
             obj.upp = p.Results.upp;
             obj.uMin = p.Results.uMin;
