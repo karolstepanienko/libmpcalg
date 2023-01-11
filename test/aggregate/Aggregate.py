@@ -13,7 +13,7 @@ class Aggregate:
         self.FILE_NAME_PREFIX = 'libmpcalg_'
         # List of files containing tests short enough that creating a thread for
         # them is slower than simply executing them
-        self.FILES_NO_SEPARATE_TESTS = ['testDMCParameters', 'testMPCSParameters']
+        self.FILES_NO_SEPARATE_TESTS = ['testDMCParameters', 'testMPCSParameters', 'testGPCParameters']
 
     def get_m_files(self, start_path):
         m_files = []

@@ -14,41 +14,32 @@ classdef (Abstract) ValidateGPC
             % Required parameters
             addRequired(p, 'N', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'numberOfOutputs',...
-                v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'numberOfInputs',...
-                v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfOutputs', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfInputs', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'A', v.validCell)
             addRequired(p, 'B', v.validCell)
 
             % Optional parameters
-            addParameter(p, 'InputDelay', v.c.defaultInputDelay,...
-                v.validNum);
+            addParameter(p, 'InputDelay', v.c.defaultInputDelay, v.validNum);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
-            addParameter(p, 'ypp', v.c.testYInitVal,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'upp', v.c.testUInitVal,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'ypp', v.c.testYInitVal, v.validScalarDoubleNum);
+            addParameter(p, 'upp', v.c.testUInitVal, v.validScalarDoubleNum);
 
-            addParameter(p, 'uMin', v.c.defaultuMin,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'uMax', v.c.defaultuMax,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'uMin', v.c.defaultuMin, v.validScalarDoubleNum);
+            addParameter(p, 'uMax', v.c.defaultuMax, v.validScalarDoubleNum);
 
             addParameter(p, 'duMin', v.c.defaultduMin,...
                 v.validScalarDoubleLessThan0Num);
             addParameter(p, 'duMax', v.c.defaultduMax,...
                 v.validScalarDoubleGreaterThan0Num);
 
-            addParameter(p, 'k', v.c.defaultK,...
-                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan0Num);
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
             addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
 
-            addParameter(p, 'algType', v.c.analyticalAlgType,...
-                v.validAlgType);
+            addParameter(p, 'algType', v.c.analyticalAlgType, v.validAlgType);
 
             % Parsing values
             parse(p, N, Nu, ny, nu, A, B, varargin_{:});
@@ -62,7 +53,7 @@ classdef (Abstract) ValidateGPC
             obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
-            obj.InputDelay = v.validateArraySize('InputDelay',...
+            obj.InputDelay = v.validateInputDelay('InputDelay',...
                 p.Results.InputDelay, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
@@ -95,46 +86,35 @@ classdef (Abstract) ValidateGPC
             % Required parameters
             addRequired(p, 'N', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'numberOfOutputs',...
-                v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'numberOfInputs',...
-                v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfOutputs', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfInputs', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'A', v.validCell)
             addRequired(p, 'B', v.validCell)
 
             % Optional parameters
-            addParameter(p, 'InputDelay', v.c.defaultInputDelay,...
-                v.validNum);
+            addParameter(p, 'InputDelay', v.c.defaultInputDelay, v.validNum);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
-            addParameter(p, 'ypp', v.c.testYInitVal,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'upp', v.c.testUInitVal,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'ypp', v.c.testYInitVal, v.validScalarDoubleNum);
+            addParameter(p, 'upp', v.c.testUInitVal, v.validScalarDoubleNum);
 
-            addParameter(p, 'uMin', v.c.defaultuMin,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'uMax', v.c.defaultuMax,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'uMin', v.c.defaultuMin, v.validScalarDoubleNum);
+            addParameter(p, 'uMax', v.c.defaultuMax, v.validScalarDoubleNum);
 
             addParameter(p, 'duMin', v.c.defaultduMin,...
                 v.validScalarDoubleLessThan0Num);
             addParameter(p, 'duMax', v.c.defaultduMax,...
                 v.validScalarDoubleGreaterThan0Num);
 
-            addParameter(p, 'yMin', v.c.defaultyMin,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'yMax', v.c.defaultyMax,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'yMin', v.c.defaultyMin, v.validScalarDoubleNum);
+            addParameter(p, 'yMax', v.c.defaultyMax, v.validScalarDoubleNum);
 
-            addParameter(p, 'k', v.c.defaultK,...
-                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan0Num);
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
             addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
 
-            addParameter(p, 'algType', v.c.analyticalAlgType,...
-                v.validAlgType);
+            addParameter(p, 'algType', v.c.analyticalAlgType, v.validAlgType);
 
             % Parsing values
             parse(p, N, Nu, ny, nu, A, B, varargin_{:});
@@ -148,7 +128,7 @@ classdef (Abstract) ValidateGPC
             obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
-            obj.InputDelay = v.validateArraySize('InputDelay',...
+            obj.InputDelay = v.validateInputDelay('InputDelay',...
                 p.Results.InputDelay, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);

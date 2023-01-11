@@ -74,6 +74,11 @@ classdef Validation
             value = obj.validateArray(arrayName, array, n);
         end
 
+        function value = validateInputDelay(obj, arrayName, array, n)
+            value = obj.stretchValueToArray(arrayName, array, n);
+            value = obj.validateArraySize(arrayName, value, n);
+        end
+
         function value = validateArray(obj, arrayName, array, n)
             value = obj.stretchValueToArray(arrayName, array, n);
             value = obj.validateArraySize(arrayName, value, n);
@@ -145,8 +150,9 @@ classdef Validation
             matrixName, nRows, nColumns)
             % Matrix has more or equal rows than nRows and nColumns or matrix is
             % empty
-            if ~((size(matrix, 1) >= nRows && size(matrix, 2) == nColumns)...
-                || (size(matrix, 1) == 0 && size(matrix, 1) == 0))
+            if isempty(matrix)
+                value = matrix;
+            elseif ~(size(matrix, 1) >= nRows && size(matrix, 2) == nColumns)
                 Exceptions.throwInvalidInitialisationMatrix(matrixName,...
                 nRows, nColumns);
             else

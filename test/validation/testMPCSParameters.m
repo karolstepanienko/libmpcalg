@@ -144,7 +144,7 @@
 % stretch single element
 %!warning <Assumed array lambda consists of 2 elements with a value of 1> testMPCSParameters('lambda', 1)
 
-% has ny Elements
+% has nu Elements
 %!error <Array lambda should have \(2\) elements> testMPCSParameters('lambda', [1, 1, 1])
 
 % is Horizontal
