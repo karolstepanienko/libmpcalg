@@ -86,19 +86,25 @@
 
 
 %-------------------------------------- mi -------------------------------------
+% stretch single element
+%!warning <Assumed array mi consists of 2 elements with a value of 1> testDMCParameters('mi', 1)
+
+% has ny Elements
+%!error <Array mi should have \(2\) elements> testDMCParameters('mi', [1, 1, 1])
+
 % is Horizontal
 %!error <Array mi should be horizontal> testDMCParameters('mi', [1; 1])
 
-% has ny Elements
-%!error <Array mi should have \(2\) elements> testDMCParameters('mi', [1])
-
 
 %------------------------------------ lambda -----------------------------------
-% is Horizontal
-%!error <Array lambda should be horizontal> testDMCParameters('lambda', [1; 1])
+% stretch single element
+%!warning <Assumed array lambda consists of 2 elements with a value of 1> testDMCParameters('lambda', 1)
 
 % has ny Elements
-%!error <Array lambda should have \(2\) elements> testDMCParameters('lambda', [1])
+%!error <Array lambda should have \(2\) elements> testDMCParameters('lambda', [1, 1, 1])
+
+% is Horizontal
+%!error <Array lambda should be horizontal> testDMCParameters('lambda', [1; 1])
 
 
 %-------------------------------------- uMin -----------------------------------

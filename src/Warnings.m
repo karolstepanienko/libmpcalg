@@ -9,5 +9,10 @@ classdef Warnings
                 num2str(s_len),...
                 num2str(D)));
         end
+
+        function showValueStretchedToArray(arrayName, value, n)
+            warning(sprintf('Assumed array %s consists of %s elements with a value of %s',...
+                arrayName, num2str(n), num2str(value)));
+        end
     end
 end
