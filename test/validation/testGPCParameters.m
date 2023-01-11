@@ -272,13 +272,12 @@ function testGPCParameters(valueName, testValue)
 
     c = Constants();
 
-    algType = c.numericalAlgType;
-
     ypp = c.testYInitVal;
     upp = c.testUInitVal;
     k = 5;
     YY = ypp * ones(k - 2, ny);
     UU = upp * ones(k - 2, nu);
+    algType = c.numericalAlgType;
 
     % Assign test values
     if strcmp(valueName, 'N')

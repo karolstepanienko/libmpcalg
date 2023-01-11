@@ -13,30 +13,22 @@ classdef (Abstract) ValidateMPCNO
             p.FunctionName = 'MPCNO';
 
             % Required parameters
-            addRequired(p, 'N', v.validScalarIntGreaterThan0Num); % TODO
+            addRequired(p, 'N', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'numberOfOutputs',...
-                v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'numberOfInputs',...
-                v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfOutputs', v.validScalarIntGreaterThan0Num);
+            addRequired(p, 'numberOfInputs', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'getOutput', v.validFunctionHandle);
-
 
             % Optional parameters
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
-            addParameter(p, 'ypp', v.c.testYInitVal,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'upp', v.c.testUInitVal,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'ypp', v.c.testYInitVal, v.validScalarDoubleNum);
+            addParameter(p, 'upp', v.c.testUInitVal, v.validScalarDoubleNum);
 
-            addParameter(p, 'uMin', v.c.defaultuMin,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'uMax', v.c.defaultuMax,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'uMin', v.c.defaultuMin, v.validScalarDoubleNum);
+            addParameter(p, 'uMax', v.c.defaultuMax, v.validScalarDoubleNum);
 
-            addParameter(p, 'k', v.c.defaultK,...
-                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan0Num);
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
             addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
 
