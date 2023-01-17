@@ -4,7 +4,7 @@ function stepResponses = getStepResponsesEq(ny, nu, InputDelay, A, B, kk)
     for i=1:nu % for every input
         % kk + 1 because first element does not belong to step response
         stepResponses{i, 1} = getStepResponse(ny, nu, InputDelay, A, B, i,...
-            kk+1);
+            kk);
     end
 end
 
@@ -26,5 +26,4 @@ function YY = getStepResponse(ny, nu, InputDelay, A, B, chosenU, kk)
         YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu,...
             InputDelay, k);
     end
-    YY = YY(2:end, :); % First element does not belong to the step response
 end

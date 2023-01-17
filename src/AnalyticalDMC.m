@@ -31,7 +31,8 @@ classdef AnalyticalDMC < CoreDMC
             YY_k_1 = obj.stackVectorNTimes(YY_k_1);
             YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
-            YY_0 = YY_k_1 + obj.Mp * obj.dUUp_k;
+            YY_k = obj.Mp * obj.dUUp_k;
+            YY_0 = YY_k_1 + YY_k(obj.ny*obj.ny + 1:end);
 
             dUU_k = obj.K * (YYzad_k - YY_0);
 

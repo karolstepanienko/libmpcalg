@@ -2,11 +2,11 @@ classdef (Abstract) CoreDMC < MPC
     properties
         D  % Dynamic horizon
         stepResponses  % Cell of control object step response
+        dUUp_k  % DUUp vector containing past control value changes
     end
 
     properties (GetAccess = public, SetAccess = protected)
         Mp  % Mp matrix used by DMC algorithm
-        dUUp_k  % DUUp vector containing past control value changes
     end
 
     methods (Access = protected)
@@ -28,11 +28,11 @@ classdef (Abstract) CoreDMC < MPC
         % Creates Mp matrix used by DMC algorithm
         function Mp = getMp(obj)
             Mp = zeros(obj.ny*obj.N, obj.nu*(obj.D - 1));
-            for i=1:obj.N
+            for i=1:obj.N+obj.ny
                 for j=1:obj.D-1
                     Mp((i - 1)*obj.ny + 1:i*obj.ny,...
                         (j - 1)*obj.nu + 1:j*obj.nu) = ...
-                        obj.Sp{ min(obj.D, i+j), 1} - obj.Sp{j, 1};
+                        obj.Sp{min(obj.D, i+j), 1} - obj.Sp{j, 1};
                 end
             end
         end

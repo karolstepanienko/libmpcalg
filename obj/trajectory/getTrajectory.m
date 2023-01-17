@@ -6,5 +6,7 @@ function func = getTrajectory(object)
         func = @getY2Trajectory;
     elseif strcmp(object, '1x1RelativeTest')
         func = @getY1RelativeTestTrajectory;
+    elseif strcmp(object, '1x1SingleInertial')
+        func = @getY1CompareTrajectory;
     end
 end

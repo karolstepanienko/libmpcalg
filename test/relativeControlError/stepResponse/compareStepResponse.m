@@ -14,7 +14,9 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
 
     % Test parameters
     kk = D;
-    seconds = kk * st;
+    % Step assumes that first element will not be used and extends step response
+    % by one element
+    seconds = (kk - 1) * st;
 
     Gz = Utilities.getGzFromNumDen(numDen, st);
 
@@ -22,8 +24,6 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
     w = warning('off', 'all');
     stepResponseMatrix = step(Gz, seconds);
     warning(w);
-    % Removing first element of step response
-    stepResponseMatrix = stepResponseMatrix(2:end, :, :);
     % Adjust to step response format used in libmpcalg
     stepResponseRef = Utilities.stepResponseMatrix2Cell(stepResponseMatrix, nu);
 

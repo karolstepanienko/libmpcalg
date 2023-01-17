@@ -12,6 +12,7 @@ function plotYYseparate(YY, YY_zad, st, ynPlot, unPlot)
     %% Defining plot settings
     line_width = 1.5;
     legend_location = 'northeast';
+    orientation = 'vertical';
     axesList = zeros(1, ny);
 
     % Max value for every Y
@@ -28,8 +29,8 @@ function plotYYseparate(YY, YY_zad, st, ynPlot, unPlot)
         hold off
         xlabel('t[s]');
         ylabel('y');
-        legend(['y_', num2str(i)], 'Y^{zad}', 'location', legend_location,...
-            'Orientation', 'horizontal');
+        legend(['y_', num2str(i)], 'y^{zad}', 'location', legend_location,...
+            'Orientation', orientation);
 
         maxYValues(i) = max(max(abs(YY(:, i)), abs(YY_zad(:, i))));
     end

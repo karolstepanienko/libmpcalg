@@ -9,9 +9,13 @@
 function controlErrMPCS = lambda0MPCS(isPlotting, lambda, object, algType)
     po = Utilities.prepareObjectStruct(lambda, object, algType);
 
+    % Turn off lambda = 0 warnings
+    w = warning('off', 'all');
     %% libmpcalg MPCS
     [regMPCS, YMPCS, UMPCS] = getDebugLibmpcalgMPCS(isPlotting, po);
     controlErrMPCS = Utilities.calMatrixError(YMPCS, po.Yzad);
+    % Turn warnings on
+    warning(w);
 
     fprintf('Lambda0 MPCS, (%s), control error: %s\n', object,...
         num2str(controlErrMPCS));

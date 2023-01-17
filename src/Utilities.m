@@ -324,6 +324,14 @@ classdef Utilities
             po.dD = dD;
         end
 
+        % Used in wrapping the differential equation output calculation function
+        % into function that can be used by MPCNO algorithm
+        function [YY_k, data] = getOutputWrapper(A, B, ny, nu, InputDelay,...
+            data, k)
+            YY_k = getObjectOutputEq(A, B, data.YY, data.ypp, data.UU,...
+                data.upp, ny, nu, InputDelay, k);
+        end
+
         function [algType, varargin_] = resolveAlgType(c, varargin_)
             % Validation object with data validation functions
             v = Validation();

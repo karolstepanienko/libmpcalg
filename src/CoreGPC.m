@@ -22,15 +22,17 @@ classdef (Abstract) CoreGPC < MPC
         function obj = initCoreGPC(obj)
             obj.c = Constants();
             obj.stepResponses = getStepResponsesEq(obj.ny, obj.nu,...
-                obj.InputDelay, obj.A, obj.B, obj.N);
-            obj.Sp = obj.getSp(obj.stepResponses, obj.N);
+                obj.InputDelay, obj.A, obj.B, obj.N + 1);
+            obj.Sp = obj.getSp(obj.stepResponses, obj.N + 1);
             obj.M = obj.getM();
             obj.Xi = obj.getXi();
             obj.Lambda = obj.getLambda();
             obj.K = obj.getK(obj.M, obj.Xi, obj.Lambda);
             obj.UU_k = obj.upp * ones(1, obj.nu);
         end
+    end
 
+    methods
         function YY_0 = getYY_0(obj)
             YY_0_tmp = zeros(obj.N + 1, obj.ny);
             UU_tmp = obj.UU;
