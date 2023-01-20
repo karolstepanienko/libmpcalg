@@ -44,9 +44,9 @@ function obj = get2x2(st)
     %% MPC regulator parameters
     m.D = 300;  % Dynamic horizon
     m.N = 200;  % Prediction horizon
-    m.NNl = 8;  % Prediction horizon for nonlinear algorithm
+    m.NNl = 20;  % Prediction horizon for nonlinear algorithm
                 % (purpose: decrease test time)
-    m.Nu = 8;  % Moving horizon
+    m.Nu = 10;  % Moving horizon
     m.NuNl = 1;  % Moving horizon for nonlinear algorithm
                  % (purpose: decrease test time)
     m.mi = ones(1, m.ny);  % Output importance
@@ -57,5 +57,5 @@ function obj = get2x2(st)
     m.duMax = -m.duMin;
     m.yMin = -1;
     m.yMax = -m.yMin;
-    m.osf = 2;  % Object Sampling Factor
+    m.osf = 1;  % Object Sampling Factor
 end

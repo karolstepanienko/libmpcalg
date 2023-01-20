@@ -1,6 +1,6 @@
 %% MPCNO
 % Nonlinear Model Predictive Control algorithm
-classdef MPCNO
+classdef MPCNO < handle
     properties
         N  % Prediction horizon
         Nu  % Moving horizon
@@ -25,6 +25,9 @@ classdef MPCNO
         c  % Constants object
         uMinVec  % Used by fmincon
         uMaxVec  % Used by fmincon
+        YY_k_1_m  % Last output value predicted using object model
+        ym  % Temporary variable with last output value predicted using object
+            % model
         UU_k  % Current calculated control value
     end
 
@@ -41,6 +44,18 @@ classdef MPCNO
             obj.uMinVec = obj.uMin * ones(obj.Nu, obj.nu);
             obj.uMaxVec = obj.uMax * ones(obj.Nu, obj.nu);
             obj.UU_k = obj.upp * ones(1, obj.nu);
+            UUlength = size(obj.UU, 1);
+            % Hot start
+            if UUlength == 0
+                obj.UU = obj.upp * ones(obj.Nu + obj.k, obj.nu);
+            % Stretch last element for hot start purpose
+            elseif UUlength < obj.Nu + obj.k
+                for i=UUlength+1:obj.Nu + obj.k
+                    obj.UU(i, :) = obj.UU(UUlength, :);
+                end
+            end
+            obj.YY_k_1_m = obj.ypp * ones(1, obj.ny);
+            obj.ym = obj.ypp * ones(1, obj.ny);
         end
 
         function obj = calculateControl(obj, YY_k_1, YYzad_k)
@@ -48,7 +63,8 @@ classdef MPCNO
             % in algorithm class
             obj.YY(obj.k - 1, :) = YY_k_1;
 
-            UU_k0 = obj.upp * ones(obj.Nu, obj.nu);  % Optimisation start point
+            % Hot start of optimisation start point
+            UU_k0 = [obj.UU(obj.k:obj.k + obj.Nu - 2, :); obj.UU(obj.k + obj.Nu - 2, :)];
 
             % Prepare target function filled with necessary parameters
             f = @(x)obj.targetFunc(x, YYzad_k);
@@ -56,6 +72,7 @@ classdef MPCNO
             % x = fmincon(fun,x0,A,b,Aeq,beq,lb,ub,nonlcon,options)
             UUopt = fmincon(f, UU_k0, [], [], [], [], obj.uMinVec,...
                 obj.uMaxVec, [], obj.c.fminconOptions);
+            obj.YY_k_1_m = obj.ym;
 
             obj.UU(obj.k, :) = UUopt(1, :);
             obj.UU_k = obj.UU(obj.k, :);
@@ -81,6 +98,7 @@ classdef MPCNO
                 - obj.UU(obj.k:obj.k + obj.Nu - 2, :);
             % Above same as:
             % for p=1:Nu-1 du(k + p, :) = UU(k + p, :) - UU(k + p - 1, :); end
+            % duLimits
 
             % Assuming control values constant between Nu and N
             obj.UU(obj.k + obj.Nu:obj.k + obj.N, :) =...
@@ -88,10 +106,13 @@ classdef MPCNO
                 obj.UU(obj.k + obj.Nu - 1, :), obj.N - obj.Nu + 1);
 
             % Predicting object output values for N elements ahead
+            d_k = obj.YY(obj.k - 1, :) - obj.YY_k_1_m;
             for p=0:obj.N-1
                 [obj.YY(obj.k + p, :), data] = obj.getOutput(obj, obj.k + p);
+                obj.YY(obj.k + p, :) = obj.YY(obj.k + p, :) + d_k;
                 obj.data = data;
             end
+            obj.ym = obj.YY(obj.k, :);
 
             % Trajectory constant on prediction horizon
             e = 0;
