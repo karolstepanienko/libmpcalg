@@ -31,7 +31,7 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities
         % Should be run in a loop
         % @param YY_k_1     horizontal vector of most recent output values
         % @param YYzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, YY_k_1, YYzad_k)
+        function UU_k = calculateControl(obj, YY_k_1, YYzad_k)
             YY_k_1 = obj.stackVectorNTimes(YY_k_1);
             YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
@@ -61,7 +61,8 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities
 
             obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 
-            obj.UU_k = obj.UU_k + dU_k';
+            UU_k = obj.UU_k + dU_k';
+            obj.UU_k = UU_k;
         end
     end
 end

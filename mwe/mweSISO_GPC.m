@@ -44,8 +44,7 @@ Y_k_1 = ones(1, ny) * ypp;
 
 % Control loop
 for k=1:kk
-    reg = reg.calculateControl(Y_k_1, Yzad(k, :));
-    U(k, :) = reg.getControl();
+    U(k, :) = reg.calculateControl(Y_k_1, Yzad(k, :));
     Y(k, :) = getObjectOutputEq(A, B, Y, ypp, U, upp, ny, nu, InputDelay, k);
     Y_k_1 = Y(k, :);
 end

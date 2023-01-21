@@ -26,8 +26,7 @@ function [errorYY_MPCS_JMatlab, errorUU_MPCS_JMatlab] =...
 
     % MPCS control loop
     for k=1:kk
-        regMPCS = regMPCS.calculateControl(XX_MPCS(k, :), YYzad(k, :));
-        UU_MPCS(k, :) = regMPCS.getControl();
+        UU_MPCS(k, :) = regMPCS.calculateControl(XX_MPCS(k, :), YYzad(k, :));
         [XX_MPCS(k + 1, :), YY_MPCS(k, :)] = getObjectOutputState(...
             obj.dA, obj.dB, obj.dC, obj.dD, XX_MPCS, xpp, obj.nx, UU_MPCS,...
             upp, obj.nu, obj.ny, obj.InputDelay, k);

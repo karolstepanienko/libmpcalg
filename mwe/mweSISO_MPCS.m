@@ -43,8 +43,7 @@ U = ones(kk, nu) * upp;
 
 % Control loop
 for k=1:kk
-    reg = reg.calculateControl(X(k, :), Yzad(k, :));
-    U(k, :) = reg.getControl();
+    U(k, :) = reg.calculateControl(X(k, :), Yzad(k, :));
     [X(k + 1, :), Y(k, :)] = getObjectOutputState(dA, dB, dC, dD, X, xpp, nx,...
         U, upp, nu, ny, InputDelay, k);
 end

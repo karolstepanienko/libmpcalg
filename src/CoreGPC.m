@@ -1,4 +1,4 @@
-classdef (Abstract) CoreGPC < MPC
+classdef (Abstract) CoreGPC < MPC & handle
     properties
         A  % (ny, ny) cell containing nA sized vectors describing relation
            % between output value(s) and past output value(s)

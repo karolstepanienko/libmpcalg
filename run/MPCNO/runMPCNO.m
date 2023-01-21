@@ -41,8 +41,7 @@ function err = runMPCNO(object, varargin)
 
     % Control loop
     for k=1:kk
-        reg = reg.calculateControl(YY_k_1, YYzad(k, :));
-        data.UU(k, :) = reg.getControl();
+        data.UU(k, :) = reg.calculateControl(YY_k_1, YYzad(k, :));
         % Using custom data structure, reg.k ~ k
         data.YY(k, :) = getOutput(data, k);
         YY_k_1 = data.YY(k, :);

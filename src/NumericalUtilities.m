@@ -1,4 +1,4 @@
-classdef (Abstract) NumericalUtilities
+classdef (Abstract) NumericalUtilities < handle
     properties
         yMin  % Minimal output value
         yMax  % Maximal output value

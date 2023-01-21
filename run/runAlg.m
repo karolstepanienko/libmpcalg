@@ -54,10 +54,9 @@ function e = runSingleAlg(D, N, NNl, Nu, NuNl, mi, lambda, uMin, uMax,...
     for k=1:kk/osf
         % MPCS
         if strcmp(func2str(alg), func2str(@MPCS))
-            reg = reg.calculateControl(XX(k*osf + osf - 1, :), Yzad(k*osf, :));
+            U_k = reg.calculateControl(XX(k*osf + osf - 1, :), Yzad(k*osf, :));
             % Assign control values (row will not be stretched over multiple
             % rows)
-            U_k = reg.getControl();
             for cu = 1:nu
                 UU(k * osf:(k + 1)* osf - 1, cu) = U_k(cu);
             end
@@ -70,10 +69,9 @@ function e = runSingleAlg(D, N, NNl, Nu, NuNl, mi, lambda, uMin, uMax,...
         elseif (strcmp(func2str(alg), func2str(@DMC))...
             || strcmp(func2str(alg), func2str(@GPC))...
             || strcmp(func2str(alg), func2str(@MPCNO)))
-            reg = reg.calculateControl(YY_k_1, Yzad(k*osf, :));
+            U_k = reg.calculateControl(YY_k_1, Yzad(k*osf, :));
             % Assign control values (row will not be stretched over multiple
             % rows)
-            U_k = reg.getControl();
             for cu = 1:nu
                 UU(k*osf:(k + 1)* osf - 1, cu) = U_k(cu);
             end

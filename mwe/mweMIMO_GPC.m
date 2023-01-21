@@ -61,8 +61,7 @@ YY_k_1 = ones(1, ny) * ypp;
 
 % Control loop
 for k=1:kk
-    reg = reg.calculateControl(YY_k_1, YYzad(k, :));
-    UU(k, :) = reg.getControl();
+    UU(k, :) = reg.calculateControl(YY_k_1, YYzad(k, :));
     YY(k, :) = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, reg.InputDelay, k);
     YY_k_1 = YY(k, :);
 end

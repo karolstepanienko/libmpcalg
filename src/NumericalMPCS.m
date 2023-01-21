@@ -35,7 +35,7 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
         % Should be run in a loop
         % @param XX_k        horizontal vector of current state values
         % @param YYzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, XX_k, YYzad_k)
+        function UU_k = calculateControl(obj, XX_k, YYzad_k)
             YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
             YY_0 = obj.CC * obj.AA * XX_k'...
@@ -60,7 +60,8 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
             dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
                 obj.duuMax, x0, obj.c.quadprogOptions);
 
-            obj.UU_k = obj.UU_k + dUU_k(1:obj.nu, 1)';
+            UU_k = obj.UU_k + dUU_k(1:obj.nu, 1)';
+            obj.UU_k = UU_k;
         end
     end
 end

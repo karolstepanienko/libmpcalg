@@ -47,8 +47,7 @@ function err = runMPCNOk(object, varargin)
 
     % Control loop
     for k=initK:kk
-        reg = reg.calculateControl(YY(k - 1, :), YYzad(k, :));
-        UU(k, :) = reg.getControl();
+        UU(k, :) = reg.calculateControl(YY(k - 1, :), YYzad(k, :));
         % Using reg data, reg.k == k
         YY(k, :) = getOutput(reg, k);
     end

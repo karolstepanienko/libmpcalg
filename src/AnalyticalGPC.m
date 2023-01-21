@@ -28,7 +28,7 @@ classdef AnalyticalGPC < CoreGPC
         % Should be run in a loop
         % @param YY_k_1     horizontal vector of most recent output values
         % @param YYzad_k    horizontal vector of target trajectory values
-        function obj = calculateControl(obj, YY_k_1, YYzad_k)
+        function UU_k = calculateControl(obj, YY_k_1, YYzad_k)
             obj.YY(obj.k - 1, :) = YY_k_1;
             YYzad_k = obj.stackVectorNTimes(YYzad_k);
 
@@ -39,7 +39,8 @@ classdef AnalyticalGPC < CoreGPC
             dU_k = obj.limitdU_k(dUU_k(1:obj.nu));
             % UU_k_1 = obj.UU_k
             obj.UU(obj.k, :) = obj.limitU_k(obj.UU_k' + dU_k);
-            obj.UU_k = obj.UU(obj.k, :);
+            UU_k = obj.UU(obj.k, :);
+            obj.UU_k = UU_k;
 
             obj.k = obj.k + 1;
         end

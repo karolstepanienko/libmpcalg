@@ -70,7 +70,7 @@ classdef MPCNO < handle
             obj.ym = obj.ypp * ones(1, obj.ny);
         end
 
-        function obj = calculateControl(obj, YY_k_1, YYzad_k)
+        function UU_k = calculateControl(obj, YY_k_1, YYzad_k)
             % Variables with necessary past values are kept in vectors defined
             % in algorithm class
             obj.YY(obj.k - 1, :) = YY_k_1;
@@ -108,7 +108,7 @@ classdef MPCNO < handle
                     catch
                         Warnings.removedUConstraints();
                         obj.uMin = obj.c.defaultuMin;
-                        obj.uMin = obj.c.defaultuMin;
+                        obj.uMax = obj.c.defaultuMax;
                         obj.uMinVec = obj.uMin * ones(obj.Nu, obj.nu);
                         obj.uMaxVec = obj.uMax * ones(obj.Nu, obj.nu);
                         UUopt = fmincon(f, UU_k0, [], [], [], [],...
@@ -120,12 +120,8 @@ classdef MPCNO < handle
             obj.YY_k_1_m = obj.ym;
 
             obj.UU(obj.k, :) = UUopt(1, :);
-            obj.UU_k = obj.UU(obj.k, :);
+            UU_k = obj.UU(obj.k, :);
             obj.k = obj.k + 1;
-        end
-
-        function UU_k = getControl(obj)
-            UU_k = obj.UU_k;
         end
     end
 
@@ -163,6 +159,7 @@ classdef MPCNO < handle
             end
 
             % y limits
+            obj.stretchUUtoN();
             YYVec = zeros(obj.N * obj.ny, 1);
             obj.runPrediction();
             for p=0:obj.N-1

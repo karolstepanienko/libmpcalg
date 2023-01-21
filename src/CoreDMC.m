@@ -1,4 +1,4 @@
-classdef (Abstract) CoreDMC < MPC
+classdef (Abstract) CoreDMC < MPC & handle
     properties
         D  % Dynamic horizon
         stepResponses  % Cell of control object step response

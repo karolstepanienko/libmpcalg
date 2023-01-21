@@ -28,7 +28,7 @@ classdef FastDMC < CoreDMC
         % Should be run in a loop
         % @param YY_k_1      horizontal vector of most recent output values
         % @param YYzad_k     horizontal vector of target trajectory values
-        function obj = calculateControl(obj, YY_k_1, YYzad_k)
+        function UU_k = calculateControl(obj, YY_k_1, YYzad_k)
             YY_k_1 = obj.stackVectorNTimes(YY_k_1);
             YYzad_k = obj.stackVectorNTimes(YYzad_k);
 

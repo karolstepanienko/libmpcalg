@@ -37,13 +37,11 @@ function [errorYY_GPC_MPCS, errorUU_GPC_MPCS] = compareGPC(object, varargin)
 
     % GPC control loop
     for k=1:kk
-        regMPCS = regMPCS.calculateControl(XX_MPCS(k, :), YYzad(k, :));
-        UU_MPCS(k, :) = regMPCS.getControl();
+        UU_MPCS(k, :) = regMPCS.calculateControl(XX_MPCS(k, :), YYzad(k, :));
         [XX_MPCS(k + 1, :), YY_MPCS(k, :)] = getObjectOutputState(dA, dB,...
             dC, dD, XX_MPCS, xpp, nx, UU_MPCS, upp, nu, ny, InputDelay, k);
 
-        regGPC = regGPC.calculateControl(YY_k_1_GPC, YYzad(k, :));
-        UU_GPC(k, :) = regGPC.getControl();
+        UU_GPC(k, :) = regGPC.calculateControl(YY_k_1_GPC, YYzad(k, :));
         YY_GPC(k, :) = getObjectOutputEq(A, B, YY_GPC, ypp,...
             UU_GPC, upp, ny, nu, InputDelay, k);
         YY_k_1_GPC = YY_GPC(k, :);

@@ -27,8 +27,7 @@ function [errorYY_MPCNO_JMatlab, errorUU_MPCNO_JMatlab] = compareMPCNO(varargin)
 
     % Control loop
     for k=1:kk
-        reg = reg.calculateControl(YY_k_1_MPCNO, YYzad(k, :));
-        dataMPCNO.UU(k, :) = reg.getControl();
+        dataMPCNO.UU(k, :) = reg.calculateControl(YY_k_1_MPCNO, YYzad(k, :));
         dataMPCNO.YY(k, :) = obj.getOutput(dataMPCNO, k);
         YY_k_1_MPCNO = dataMPCNO.YY(k, :);
     end

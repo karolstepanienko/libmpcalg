@@ -1,4 +1,4 @@
-classdef (Abstract) CoreMPCS < MPC
+classdef (Abstract) CoreMPCS < MPC & handle
     properties
         % Required
         dA % Discrete-time relation between internal process variables

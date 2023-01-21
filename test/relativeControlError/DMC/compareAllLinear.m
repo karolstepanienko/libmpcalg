@@ -45,20 +45,17 @@ function [err_YY_DMC_GPC, err_YY_DMC_MPCS, err_YY_GPC_MPCS,...
     UU_MPCS = ones(kk, nu) * upp;
 
     for k=1:kk
-        regDMC = regDMC.calculateControl(YY_DMC_k_1, YYzad(k, :));
-        UU_DMC(k, :) = regDMC.getControl();
+        UU_DMC(k, :) = regDMC.calculateControl(YY_DMC_k_1, YYzad(k, :));
         YY_DMC(k, :) = getObjectOutputEq(A, B, YY_DMC, ypp, UU_DMC, upp,...
             ny, nu, InputDelay, k);
         YY_DMC_k_1 = YY_DMC(k, :);
 
-        regGPC = regGPC.calculateControl(YY_GPC_k_1, YYzad(k, :));
-        UU_GPC(k, :) = regGPC.getControl();
+        UU_GPC(k, :) = regGPC.calculateControl(YY_GPC_k_1, YYzad(k, :));
         YY_GPC(k, :) = getObjectOutputEq(A, B, YY_GPC, ypp, UU_GPC, upp,...
             ny, nu, InputDelay, k);
         YY_GPC_k_1 = YY_GPC(k, :);
 
-        regMPCS = regMPCS.calculateControl(XX(k, :), YYzad(k, :));
-        UU_MPCS(k, :) = regMPCS.getControl();
+        UU_MPCS(k, :) = regMPCS.calculateControl(XX(k, :), YYzad(k, :));
         [XX(k + 1, :), YY_MPCS(k, :)] = getObjectOutputState(dA, dB, dC,...
             dD, XX, xpp, nx, UU_MPCS, upp, nu, ny, InputDelay, k);
     end

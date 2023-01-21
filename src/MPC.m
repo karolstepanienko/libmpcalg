@@ -1,4 +1,4 @@
-classdef (Abstract) MPC
+classdef (Abstract) MPC < handle
     properties
         N  % Prediction horizon
         Nu  % Moving horizon
@@ -25,12 +25,6 @@ classdef (Abstract) MPC
     end
 
     methods
-        %% getControl
-        % Returns horizontal vector of new control values
-        function UU_k = getControl(obj)
-            UU_k = obj.UU_k;
-        end
-
         %% limitU_k
         function U_k = limitU_k(obj, U_k)
             for i=1:obj.nu
