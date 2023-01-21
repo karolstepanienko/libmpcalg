@@ -1,6 +1,10 @@
 %% plotRun
 % Plots run results
-function plotRun(YY, Yzad, UU, st, ny, nu, algName, algType)
+function plotRun(YY, Yzad, UU, st, ny, nu, algName,...
+    varargin)
+    if size(varargin, 1) == 0 algType = '';
+    else algType = varargin{1}; end
+
     plotTitle = Utilities.getPlotTitle(algName, algType);
 
     fig = figure;

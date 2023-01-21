@@ -1,5 +1,6 @@
 % Adjust this to point to libmpcalg library src folder
-addpath('../libmpcalg/src')
+addpath('../libmpcalg/src');
+init();  % Adding necessary paths
 
 % Object parameters
 ny = 1;  % Number of outputs
