@@ -2,6 +2,7 @@ classdef Validation
     properties
         % Int
         validScalarIntGreaterThan0Num
+        validScalarIntGreaterThan1Num
         % Double
         validScalarDoubleNum
         validScalarDoubleLessThan0Num
@@ -33,6 +34,13 @@ classdef Validation
         function validScalarIntGreaterThan0Num = get.validScalarIntGreaterThan0Num(obj)
             validScalarIntGreaterThan0Num = @(x) isnumeric(x) && isscalar(x)...
             && x == round(x) && mod(x, 1) == 0 && obj.isPositive(x);
+        end
+
+        %% get.validScalarIntGreaterThan1Num
+        % Returns function for validating integers
+        function validScalarIntGreaterThan1Num = get.validScalarIntGreaterThan1Num(obj)
+            validScalarIntGreaterThan1Num = @(x) isnumeric(x) && isscalar(x)...
+            && x == round(x) && mod(x, 1) == 0 && obj.isMoreOrEqualTo2(x);
         end
 
         %--------------------------- double ------------------------------------
@@ -249,6 +257,10 @@ classdef Validation
             else
                 r = 0;
             end
+        end
+
+        function r = isMoreOrEqualTo2(x)
+            if x >= 2 r = 1; else r = 0; end
         end
     end
 end

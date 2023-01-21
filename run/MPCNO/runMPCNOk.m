@@ -14,6 +14,11 @@ function err = runMPCNOk(object, varargin)
     lambda = ones(1, nu);  % Control weight
     uMin = -100;
     uMax = -uMin;
+    c = Constants();
+    duMin = c.defaultMPCNOduMin;
+    duMax = c.defaultMPCNOduMax;
+    yMin = c.defaultMPCNOyMin;
+    yMax = c.defaultMPCNOyMax;
     algType = '';
 
     % Trajectory
@@ -37,6 +42,7 @@ function err = runMPCNOk(object, varargin)
     % Regulator
     reg = MPCNO(N, Nu, ny, nu, getOutput, 'lambda', lambda,...
         'ypp', ypp, 'upp', upp, 'uMin', uMin, 'uMax', uMax,...
+        'duMin', duMin, 'duMax', duMax, 'yMin', yMin, 'yMax', yMax,...
         'k', initK, 'YY', YY, 'UU', UU);
 
     % Control loop

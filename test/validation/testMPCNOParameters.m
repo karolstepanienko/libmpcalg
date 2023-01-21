@@ -116,18 +116,68 @@
 %!error <MPCNO: failed validation of UMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('uMax', int8(1));
 
 
-%------------------------------------- k ---------------------------------------
+%------------------------------------- duMin -----------------------------------
 % isnumeric
-%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCNOParameters('k', '2');
+%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', '2');
 
 % isscalar (is not a matrix)
-%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCNOParameters('k', [1, 1]);
+%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', [1, 1]);
+
+% Value has a type of 'double'
+%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', int8(1));
+
+% Value <= 0
+%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', 1);
+
+
+%------------------------------------- duMax -----------------------------------
+% isnumeric
+%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', [1, 1]);
+
+% Value has a type of 'double'
+%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', int8(1));
+
+% Value >= 0
+%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', -1);
+
+
+%------------------------------------- yMin ------------------------------------
+% isnumeric
+%!error <MPCNO: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMin', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCNO: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMin', [1, 1]);
+
+% Value has a type of 'double'
+%!error <MPCNO: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMin', int8(1));
+
+
+%------------------------------------- yMax ------------------------------------
+% isnumeric
+%!error <MPCNO: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMax', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCNO: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMax', [1, 1]);
+
+% Value has a type of 'double'
+%!error <MPCNO: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMax', int8(1));
+
+
+%------------------------------------- k ---------------------------------------
+% isnumeric
+%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isMoreOrEqualTo2 \(x\)> testMPCNOParameters('k', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isMoreOrEqualTo2 \(x\)> testMPCNOParameters('k', [1, 1]);
 
 % isInteger (x == round(x) && mod(x, 1) == 0)
-%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCNOParameters('k', 1.1);
+%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isMoreOrEqualTo2 \(x\)> testMPCNOParameters('k', 1.1);
 
 % isPositive (x > 0)
-%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCNOParameters('k', -1);
+%!error <MPCNO: failed validation of K with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isMoreOrEqualTo2 \(x\)> testMPCNOParameters('k', -1);
 
 
 %-------------------------------------- YY -------------------------------------
@@ -198,6 +248,14 @@ function testMPCNOParameters(valueName, testValue)
         uMin = testValue;
     elseif strcmp(valueName, 'uMax')
         uMax = testValue;
+    elseif strcmp(valueName, 'duMin')
+        duMin = testValue;
+    elseif strcmp(valueName, 'duMax')
+        duMax = testValue;
+    elseif strcmp(valueName, 'yMin')
+        yMin = testValue;
+    elseif strcmp(valueName, 'yMax')
+        yMax = testValue;
     elseif strcmp(valueName, 'k')
         k = testValue;
     elseif strcmp(valueName, 'YY')
@@ -211,5 +269,6 @@ function testMPCNOParameters(valueName, testValue)
     % Regulator
     reg = MPCNO(N, Nu, ny, nu, getOutput, 'lambda', lambda,...
         'ypp', ypp, 'upp', upp, 'uMin', uMin, 'uMax', uMax,...
+        'duMin', duMin, 'duMax', duMax, 'yMin', yMin, 'yMax', yMax,...
         'k', k, 'YY', YY, 'UU', UU, 'data', data);
 end

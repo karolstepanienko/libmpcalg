@@ -18,5 +18,17 @@ classdef Warnings
         function showLambda0()
             warning('Lambda value set to 0. Regulator might be unstable.');
         end
+
+        function removedYConstraints()
+            warning('Provided output (yMin, yMax) limits removed, because optimisation could not find solutions.');
+        end
+
+        function removedDUConstraints()
+            warning('Provided control change (duMin, duMax) limits removed, because optimisation could not find solutions.');
+        end
+
+        function removedUConstraints()
+            warning('Provided control (uMin, uMax) limits removed, because optimisation could not find solutions.');
+        end
     end
 end

@@ -13,6 +13,10 @@ classdef MPCNO < handle
         lambda  % Control weight
         uMin  % Minimal control value
         uMax  % Maximal control value
+        duMin  % Minimal control change value
+        duMax  % Maximal control change value
+        yMin  % Minimal output value
+        yMax  % Maximal output value
         ypp  % Output initial value
         upp  % Control initial value
         YY  % Output values
@@ -25,6 +29,10 @@ classdef MPCNO < handle
         c  % Constants object
         uMinVec  % Used by fmincon
         uMaxVec  % Used by fmincon
+        duMinVec  % Used to enforce limits
+        duMaxVec  % Used to enforce limits
+        yMinVec  % Used to enforce limits
+        yMaxVec  % Used to enforce limits
         YY_k_1_m  % Last output value predicted using object model
         ym  % Temporary variable with last output value predicted using object
             % model
@@ -43,6 +51,10 @@ classdef MPCNO < handle
             obj.c = Constants();
             obj.uMinVec = obj.uMin * ones(obj.Nu, obj.nu);
             obj.uMaxVec = obj.uMax * ones(obj.Nu, obj.nu);
+            obj.duMinVec = obj.duMin * ones(1, obj.nu);
+            obj.duMaxVec = obj.duMax * ones(1, obj.nu);
+            obj.yMinVec = obj.yMin * ones(1, obj.ny);
+            obj.yMaxVec = obj.yMax * ones(1, obj.ny);
             obj.UU_k = obj.upp * ones(1, obj.nu);
             UUlength = size(obj.UU, 1);
             % Hot start
@@ -68,10 +80,43 @@ classdef MPCNO < handle
 
             % Prepare target function filled with necessary parameters
             f = @(x)obj.targetFunc(x, YYzad_k);
+            nonlcon = @(x)obj.applyLimits(x);
 
             % x = fmincon(fun,x0,A,b,Aeq,beq,lb,ub,nonlcon,options)
-            UUopt = fmincon(f, UU_k0, [], [], [], [], obj.uMinVec,...
-                obj.uMaxVec, [], obj.c.fminconOptions);
+            try
+                UUopt = fmincon(f, UU_k0, [], [], [], [], obj.uMinVec,...
+                    obj.uMaxVec, nonlcon, obj.c.fminconOptions);
+            catch
+                Warnings.removedYConstraints();
+                obj.yMin = obj.c.defaultMPCNOyMin;
+                obj.yMax = obj.c.defaultMPCNOyMax;
+                obj.yMinVec = obj.yMin * ones(1, obj.ny);
+                obj.yMaxVec = obj.yMax * ones(1, obj.ny);
+                try
+                    UUopt = fmincon(f, UU_k0, [], [], [], [], obj.uMinVec,...
+                        obj.uMaxVec, nonlcon, obj.c.fminconOptions);
+                catch
+                    Warnings.removedDUConstraints();
+                    obj.duMin = obj.c.defaultMPCNOduMin;
+                    obj.duMax = obj.c.defaultMPCNOduMax;
+                    obj.duMinVec = obj.duMin * ones(1, obj.nu);
+                    obj.duMaxVec = obj.duMax * ones(1, obj.nu);
+                    try
+                        UUopt = fmincon(f, UU_k0, [], [], [], [],...
+                            obj.uMinVec, obj.uMaxVec, nonlcon,...
+                            obj.c.fminconOptions);
+                    catch
+                        Warnings.removedUConstraints();
+                        obj.uMin = obj.c.defaultuMin;
+                        obj.uMin = obj.c.defaultuMin;
+                        obj.uMinVec = obj.uMin * ones(obj.Nu, obj.nu);
+                        obj.uMaxVec = obj.uMax * ones(obj.Nu, obj.nu);
+                        UUopt = fmincon(f, UU_k0, [], [], [], [],...
+                            obj.uMinVec, obj.uMaxVec, nonlcon,...
+                            obj.c.fminconOptions);
+                    end
+                end
+            end
             obj.YY_k_1_m = obj.ym;
 
             obj.UU(obj.k, :) = UUopt(1, :);
@@ -86,33 +131,10 @@ classdef MPCNO < handle
 
     methods (Access = protected)
         function e = targetFunc(obj, x, YYzad_k)
-            % Assigning control values calculated by fmincon
-            obj.UU(obj.k:obj.k + obj.Nu - 1, :) = x;
+            du = obj.getDU(x);
 
-            du = zeros(obj.Nu, obj.nu);
-            if obj.k == 1 du(obj.k, :) = obj.UU(obj.k, :)...
-                - ones(1, obj.nu) * obj.upp;
-            else du(obj.k, :) = obj.UU(obj.k, :) - obj.UU(obj.k - 1, :); end
-            du(obj.k + 1:obj.k + obj.Nu - 1, :) =...
-                obj.UU(obj.k + 1:obj.k + obj.Nu - 1, :)...
-                - obj.UU(obj.k:obj.k + obj.Nu - 2, :);
-            % Above same as:
-            % for p=1:Nu-1 du(k + p, :) = UU(k + p, :) - UU(k + p - 1, :); end
-            % duLimits
-
-            % Assuming control values constant between Nu and N
-            obj.UU(obj.k + obj.Nu:obj.k + obj.N, :) =...
-                Utilities.stackVectorHorizontally(...
-                obj.UU(obj.k + obj.Nu - 1, :), obj.N - obj.Nu + 1);
-
-            % Predicting object output values for N elements ahead
-            d_k = obj.YY(obj.k - 1, :) - obj.YY_k_1_m;
-            for p=0:obj.N-1
-                [obj.YY(obj.k + p, :), data] = obj.getOutput(obj, obj.k + p);
-                obj.YY(obj.k + p, :) = obj.YY(obj.k + p, :) + d_k;
-                obj.data = data;
-            end
-            obj.ym = obj.YY(obj.k, :);
+            obj.stretchUUtoN();
+            obj.runPrediction();
 
             % Trajectory constant on prediction horizon
             e = 0;
@@ -125,9 +147,60 @@ classdef MPCNO < handle
 
             % Control change limiting with lambda penalty
             for cu = 1:obj.nu
-                e = e + obj.lambda(cu) * du(obj.k:obj.k + obj.Nu - 1, cu)'...
-                    *(du(obj.k:obj.k + obj.Nu-1, cu));
+                e = e + obj.lambda(cu) * du(:, cu)' * du(:, cu);
             end
+        end
+
+        function [c, ceq] = applyLimits(obj, x)
+            % ceq = 0 limits not used
+            ceq = [];
+
+            % du limits
+            du = obj.getDU(x);
+            duVec = zeros(obj.Nu * obj.nu, 1);
+            for i=1:obj.Nu
+                duVec((i - 1) * obj.nu + 1:i*obj.nu, 1) = du(i, :)';
+            end
+
+            % y limits
+            YYVec = zeros(obj.N * obj.ny, 1);
+            obj.runPrediction();
+            for p=0:obj.N-1
+                YYVec(p * obj.ny + 1:(p+1)*obj.ny, 1) = obj.YY(obj.k + p, :)';
+            end
+
+            c = [ -duVec + Utilities.stackVector(obj.duMinVec, obj.Nu);
+                   duVec - Utilities.stackVector(obj.duMaxVec, obj.Nu);
+                  -YYVec + Utilities.stackVector(obj.yMinVec, obj.N);
+                  YYVec - Utilities.stackVector(obj.yMaxVec, obj.N)
+            ];
+        end
+
+        function du = getDU(obj, x)
+            % Assigning control values calculated by fmincon
+            obj.UU(obj.k:obj.k + obj.Nu - 1, :) = x;
+            du = zeros(obj.Nu, obj.nu);
+            for p=0:obj.Nu - 1
+                % obj.k >= 2
+                du(1 + p, :) = obj.UU(obj.k + p, :) - obj.UU(obj.k - 1 + p, :);
+            end
+        end
+
+        function stretchUUtoN(obj)
+            % Assuming control values constant between Nu and N
+            obj.UU(obj.k + obj.Nu:obj.k + obj.N, :) =...
+                Utilities.stackVectorHorizontally(...
+                obj.UU(obj.k + obj.Nu - 1, :), obj.N - obj.Nu + 1);
+        end
+
+        function runPrediction(obj)
+            % Predicting object output values for N elements ahead
+            d_k = obj.YY(obj.k - 1, :) - obj.YY_k_1_m;
+            for p=0:obj.N-1
+                [obj.YY(obj.k + p, :)] = obj.getOutput(obj, obj.k + p);
+                obj.YY(obj.k + p, :) = obj.YY(obj.k + p, :) + d_k;
+            end
+            obj.ym = obj.YY(obj.k, :);
         end
     end
 end

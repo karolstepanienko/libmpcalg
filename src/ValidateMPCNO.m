@@ -28,7 +28,17 @@ classdef (Abstract) ValidateMPCNO
             addParameter(p, 'uMin', v.c.defaultuMin, v.validScalarDoubleNum);
             addParameter(p, 'uMax', v.c.defaultuMax, v.validScalarDoubleNum);
 
-            addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'duMin', v.c.defaultMPCNOduMin,...
+                v.validScalarDoubleLessThan0Num);
+            addParameter(p, 'duMax', v.c.defaultMPCNOduMax,...
+                v.validScalarDoubleGreaterThan0Num);
+
+            addParameter(p, 'yMin', v.c.defaultMPCNOyMin,...
+                v.validScalarDoubleNum);
+            addParameter(p, 'yMax', v.c.defaultMPCNOyMax,...
+                v.validScalarDoubleNum);
+
+            addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan1Num);
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
             addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
 
@@ -50,6 +60,10 @@ classdef (Abstract) ValidateMPCNO
             obj.upp = p.Results.upp;
             obj.uMin = p.Results.uMin;
             obj.uMax = p.Results.uMax;
+            obj.duMin = p.Results.duMin;
+            obj.duMax = p.Results.duMax;
+            obj.yMin = p.Results.yMin;
+            obj.yMax = p.Results.yMax;
             obj.k = p.Results.k;
             % Y(k) is calculated in loop based on given Y(k-1) value, so values
             % Y(k-2),Y(k-3)... need to be already initialised

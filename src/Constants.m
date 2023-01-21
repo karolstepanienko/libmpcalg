@@ -61,6 +61,10 @@ classdef Constants
         defaultduMax  % (1,1) double
         defaultyMin  % (1,1) double
         defaultyMax  % (1,1) double
+        defaultMPCNOduMin  % (1,1) double
+        defaultMPCNOduMax  % (1,1) double
+        defaultMPCNOyMin  % (1,1) double
+        defaultMPCNOyMax  % (1,1) double
         defaultK  % (1,1) int8
         defaultEmptyMatrix  % (0, 0) double
         defaultEmptyStruct  % (0, 0) struct
@@ -329,6 +333,22 @@ classdef Constants
 
         function defaultyMax = get.defaultyMax(obj)
             defaultyMax = Inf;
+        end
+
+        function defaultMPCNOduMin = get.defaultMPCNOduMin(obj)
+            defaultMPCNOduMin = -realmax('double');
+        end
+
+        function defaultMPCNOduMax = get.defaultMPCNOduMax(obj)
+            defaultMPCNOduMax = realmax('double');
+        end
+
+        function defaultMPCNOyMin = get.defaultMPCNOyMin(obj)
+            defaultMPCNOyMin = -realmax('double');
+        end
+
+        function defaultMPCNOyMax = get.defaultMPCNOyMax(obj)
+            defaultMPCNOyMax = realmax('double');
         end
 
         function defaultK = get.defaultK(obj)
