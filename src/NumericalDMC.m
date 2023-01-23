@@ -44,20 +44,29 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities
             UU_k_1 = Utilities.stackVector(obj.UU_k, obj.Nu);
 
             % Quadprog optimisation problem equations
-            b = [
-                -obj.UUmin + UU_k_1;
-                obj.UUmax - UU_k_1;
-                -obj.YYmin + YY_0;
-                obj.YYmax - YY_0
-            ];
-
             Aeq = [];
             beq = [];
-            x0 = [];
-            dUU_k = quadprog(obj.H, f, obj.AMatrix, b, Aeq, beq, obj.duuMin,...
-                obj.duuMax, x0, obj.c.quadprogOptions);
+            x0 = obj.dUU_k;  % Hot start
+            exitFlag = -1; i = 0;
+            while exitFlag < 0
+                switch i
+                    case 1
+                        obj.removeYLimits(); Warnings.removedYConstraints();
+                    case 2
+                        obj.removeDULimits(); Warnings.removedDUConstraints();
+                    case 3
+                        obj.removeULimits(); Warnings.removedUConstraints();
+                    case 4
+                        Exceptions.throwOptimisationCouldNotContinue();
+                end
+                b = obj.getBMatrix(UU_k_1, YY_0);
+                [obj.dUU_k, ~, exitFlag] = quadprog(obj.H, f, obj.AMatrix, b,...
+                    Aeq, beq, obj.duuMin, obj.duuMax, x0,...
+                    obj.c.quadprogOptions);
+                i = i + 1;
+            end
 
-            dU_k = dUU_k(1:obj.nu);
+            dU_k = obj.dUU_k(1:obj.nu);
 
             obj.dUUp_k = [dU_k; obj.dUUp_k(1:(length(obj.dUUp_k)-obj.nu), 1)];
 

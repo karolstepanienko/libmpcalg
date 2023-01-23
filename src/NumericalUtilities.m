@@ -14,6 +14,8 @@ classdef (Abstract) NumericalUtilities < handle
         YYmax  % (ny * N, 1) vector of yMax values
         duuMin  % (nu * Nu, 1) vector of duMin values
         duuMax  % (nu * Nu, 1) vector of duMax values
+        dUU_k  % (nu * Nu, 1) vector of control value changes calculated by
+               % quadprog
     end
 
     methods (Access = protected)
@@ -27,6 +29,7 @@ classdef (Abstract) NumericalUtilities < handle
             obj.YYmax = ones(obj.ny * obj.N, 1) * obj.yMax;
             obj.duuMin = ones(obj.nu * obj.Nu, 1) * obj.duMin;
             obj.duuMax = ones(obj.nu * obj.Nu, 1) * obj.duMax;
+            obj.dUU_k = [];
         end
 
         %% getH
@@ -61,6 +64,38 @@ classdef (Abstract) NumericalUtilities < handle
         % Creates static AMatrix matrix describing linear inequality constraints
         function AMatrix = getAMatrix(obj, M)
             AMatrix = [-obj.J; obj.J; -M; M];
+        end
+
+        %% getBMatrix
+        % Creates b matrix used by quadprog
+        function b = getBMatrix(obj, UU_k_1, YY_0)
+            b = [
+                -obj.UUmin + UU_k_1;
+                obj.UUmax - UU_k_1;
+                -obj.YYmin + YY_0;
+                obj.YYmax - YY_0
+            ];
+        end
+
+        %% removeYLimits
+        % Resets output limits in case quadprog fails to find solutions
+        function removeYLimits(obj)
+            obj.YYmin = ones(obj.ny * obj.N, 1) * obj.c.defaultyMin;
+            obj.YYmax = ones(obj.ny * obj.N, 1) * obj.c.defaultyMax;
+        end
+
+        %% removeDULimits
+        % Resets control change limits in case quadprog fails to find solutions
+        function removeDULimits(obj)
+            obj.duuMin = ones(obj.nu * obj.Nu, 1) * obj.c.defaultduMin;
+            obj.duuMax = ones(obj.nu * obj.Nu, 1) * obj.c.defaultduMax;
+        end
+
+        %% removeULimits
+        % Resets control limits in case quadprog fails to find solutions
+        function removeULimits(obj)
+            obj.UUmin = ones(obj.nu * obj.Nu, 1) * obj.c.defaultuMin;
+            obj.UUmax = ones(obj.nu * obj.Nu, 1) * obj.c.defaultuMax;
         end
     end
 end
