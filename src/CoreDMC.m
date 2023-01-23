@@ -16,7 +16,8 @@ classdef (Abstract) CoreDMC < MPC & handle
             obj.c = Constants();
             obj.dUUp_k = zeros(obj.nu*(obj.D - 1), 1);
             obj.UU_k = zeros(1, obj.nu);
-            obj.Sp = obj.getSp(obj.stepResponses, obj.D);
+            % stepResponses contains first step response element
+            obj.Sp = obj.getSp(obj.stepResponses, obj.D + 1);
             obj.Mp = obj.getMp();
             obj.M = obj.getM();
             obj.Xi = obj.getXi();

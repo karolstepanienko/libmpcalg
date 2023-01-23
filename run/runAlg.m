@@ -37,8 +37,9 @@ function e = runSingleAlg(D, N, NNl, Nu, NuNl, mi, lambda, uMin, uMax,...
     OutputDelay, nx, st, A, B, dA, dB, dC, dD, xpp, ypp, upp, osf, Yzad, kk,...
     isPlotting, c)
 
-    % Get D elements of object step response
-    stepResponses = getStepResponsesEq(ny, nu, IODelay, A, B, D);
+    % Get D + 1 elements of object step response, because this method does not
+    % remove the first step response element
+    stepResponses = getStepResponsesEq(ny, nu, IODelay, A, B, D + 1);
 
     %% Variable initialisation
     XX = ones(kk, nx) * xpp;
