@@ -25,8 +25,8 @@ classdef (Abstract) NumericalUtilities < handle
             obj.AMatrix = obj.getAMatrix(M);
             obj.UUmin = ones(obj.nu * obj.Nu, 1) * obj.uMin;
             obj.UUmax = ones(obj.nu * obj.Nu, 1) * obj.uMax;
-            obj.YYmin = ones(obj.ny * obj.N, 1) * obj.yMin;
-            obj.YYmax = ones(obj.ny * obj.N, 1) * obj.yMax;
+            obj.YYmin = ones(obj.ny * (obj.N - obj.N1 + 1), 1) * obj.yMin;
+            obj.YYmax = ones(obj.ny * (obj.N - obj.N1 + 1), 1) * obj.yMax;
             obj.duuMin = ones(obj.nu * obj.Nu, 1) * obj.duMin;
             obj.duuMax = ones(obj.nu * obj.Nu, 1) * obj.duMax;
             obj.dUU_k = [];

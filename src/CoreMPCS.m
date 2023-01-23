@@ -19,6 +19,7 @@ classdef (Abstract) CoreMPCS < MPC & handle
     methods (Access = protected)
         function obj = initMPCS(obj)
             obj.c = Constants();
+            obj.N1 = obj.c.defaultN1;
             obj.UU_k = zeros(1, obj.nu);
             obj.X_k_1 = zeros(1, obj.nx);
             obj.Xi = obj.getXi();

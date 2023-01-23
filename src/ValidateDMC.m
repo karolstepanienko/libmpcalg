@@ -23,6 +23,8 @@ classdef (Abstract) ValidateDMC
                 v.validScalarIntGreaterThan0Num);
 
             % Optional parameters
+            addParameter(p, 'N1', v.c.defaultN1,...
+                v.validScalarIntGreaterThan0Num);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
@@ -54,6 +56,7 @@ classdef (Abstract) ValidateDMC
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
+            obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.uMin = p.Results.uMin;
@@ -84,6 +87,8 @@ classdef (Abstract) ValidateDMC
                 v.validScalarIntGreaterThan0Num);
 
             % Optional parameters
+            addParameter(p, 'N1', v.c.defaultN1,...
+                v.validScalarIntGreaterThan0Num);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
@@ -121,6 +126,7 @@ classdef (Abstract) ValidateDMC
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
+            obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.uMin = p.Results.uMin;

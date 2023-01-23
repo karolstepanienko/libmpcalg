@@ -34,7 +34,7 @@ classdef (Abstract) CoreGPC < MPC & handle
 
     methods
         function YY_0 = getYY_0(obj)
-            YY_0_tmp = zeros(obj.N + 1, obj.ny);
+            YY_0_tmp = zeros(obj.N - obj.N1 + 1 + 1, obj.ny);
             UU_tmp = obj.UU;
             YY_tmp = obj.YY;
             % Assumed last known control value to be constant for next
@@ -49,9 +49,9 @@ classdef (Abstract) CoreGPC < MPC & handle
                 YY_tmp(obj.k + i, :) = YY_0_tmp(i + 1, :);
             end
             % Prediction from YY_0(k+1) to remove the need for M matrix shift
-            YY_0_tmp = YY_0_tmp(2:end, :);
-            YY_0 = zeros(obj.N * obj.ny, 1);
-            for p=1:obj.N
+            YY_0_tmp = YY_0_tmp(obj.N1 + 1:end, :);
+            YY_0 = zeros(obj.ny * (obj.N - obj.N1 + 1), 1);
+            for p=1:obj.N - obj.N1 + 1
                 YY_0((p-1) * obj.ny + 1:p * obj.ny, 1) = YY_0_tmp(p, :)';
             end
         end

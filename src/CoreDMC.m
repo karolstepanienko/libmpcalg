@@ -17,7 +17,7 @@ classdef (Abstract) CoreDMC < MPC & handle
             obj.dUUp_k = zeros(obj.nu*(obj.D - 1), 1);
             obj.UU_k = zeros(1, obj.nu);
             % stepResponses contains first step response element
-            obj.Sp = obj.getSp(obj.stepResponses, obj.D + 1);
+            obj.Sp = obj.getSp(obj.stepResponses, obj.D + obj.N1);
             obj.Mp = obj.getMp();
             obj.M = obj.getM();
             obj.Xi = obj.getXi();
@@ -26,14 +26,15 @@ classdef (Abstract) CoreDMC < MPC & handle
         end
 
         %% getMp
-        % Creates Mp matrix used by DMC algorithm
+        % Creates Mp ( ny(N - N1 + 1) x nu(D - 1) ) matrix used by DMC algorithm
         function Mp = getMp(obj)
-            Mp = zeros(obj.ny*obj.N, obj.nu*(obj.D - 1));
-            for i=1:obj.N+obj.ny
+            Mp = zeros(obj.ny*(obj.N - obj.N1 + 1), obj.nu*(obj.D - 1));
+            for i=1:obj.N - obj.N1 + 1 + obj.ny
                 for j=1:obj.D-1
                     Mp((i - 1)*obj.ny + 1:i*obj.ny,...
                         (j - 1)*obj.nu + 1:j*obj.nu) = ...
-                        obj.Sp{min(obj.D, i+j), 1} - obj.Sp{j, 1};
+                        obj.Sp{min(obj.D, i + obj.N1 - 1 + j), 1}...
+                            - obj.Sp{j, 1};
                 end
             end
         end

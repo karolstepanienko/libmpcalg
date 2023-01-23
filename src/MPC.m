@@ -6,6 +6,7 @@ classdef (Abstract) MPC < handle
         nu  % Number of inputs
 
         % Optional
+        N1  % Offset resulting from the delay
         mi  % Output importance
         lambda  % Control weight
         uMin  % Minimal control value
@@ -48,13 +49,13 @@ classdef (Abstract) MPC < handle
         end
 
         %% stackVectorNTimes
-        % Tries to stack given vector N time vertically
+        % Tries to stack given vector N - N1 + 1 time vertically
         % @throws MalformedVector error if stacking is not possible.
-        function YY = stackVectorNTimes(obj, Y)
+        function YY = stackVectorNN1Times(obj, Y)
             if size(Y, 1) == obj.ny && size(Y, 2) == 1  % Vertical vector
-                YY = Utilities.stackVector(Y, obj.N);
+                YY = Utilities.stackVector(Y, obj.N - obj.N1 + 1);
             elseif size(Y, 1) == 1 && size(Y, 2) == obj.ny  % Horizontal vector
-                YY = Utilities.stackVector(Y', obj.N);
+                YY = Utilities.stackVector(Y', obj.N - obj.N1 + 1);
             else
                 error("Malformed vector. Cannot be stacked.");
             end
@@ -87,14 +88,15 @@ classdef (Abstract) MPC < handle
         end
 
         %% getM
-        % Creates M matrix used by DMC and GPC algorithm
+        % Creates M ( ny(N - N1 + 1) x nuNu ) matrix used by DMC and GPC
+        % algorithm
         function M = getM(obj)
-            % Variable initialisation
-            M = zeros(obj.ny*obj.N, obj.nu*obj.Nu);
+            M = zeros(obj.ny * (obj.N - obj.N1 + 1), obj.nu*obj.Nu);
             for j=1:obj.Nu
-                for i=j:obj.N
+                for i=j:obj.N - obj.N1 + 1
                     M((i - 1)*obj.ny + 1:i*obj.ny,...
-                        (j - 1)*obj.nu + 1:j*obj.nu) = obj.Sp{i-j+1+1, 1};
+                        (j - 1)*obj.nu + 1:j*obj.nu) =...
+                            obj.Sp{i + obj.N1 - j + 1, 1};
                         % First +1 for MATLAB indexing, second to remove first
                         % step response element
                 end
@@ -110,8 +112,8 @@ classdef (Abstract) MPC < handle
         %% getXi
         % Creates Xi matrix used by DMC algorithm
         function Xi = getXi(obj)
-            Xi = zeros(obj.ny*obj.N);
-            for i=1:obj.N
+            Xi = zeros(obj.ny * (obj.N - obj.N1 + 1));
+            for i=1:obj.N - obj.N1 + 1
                 Xi((i - 1)*obj.ny + 1:i*obj.ny,...
                     (i - 1)*obj.ny + 1:i*obj.ny) = ...
                     diag(obj.mi); % square ny x ny matrix
@@ -128,7 +130,5 @@ classdef (Abstract) MPC < handle
                     diag(obj.lambda); % square nu x nu matrix
             end
         end
-
-
     end
 end

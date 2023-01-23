@@ -20,6 +20,8 @@ classdef (Abstract) ValidateGPC
             addRequired(p, 'B', v.validCell)
 
             % Optional parameters
+            addParameter(p, 'N1', v.c.defaultN1,...
+                v.validScalarIntGreaterThan0Num);
             addParameter(p, 'IODelay', v.c.defaultIODelay, v.validNum);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
@@ -53,6 +55,7 @@ classdef (Abstract) ValidateGPC
             obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
+            obj.N1 = p.Results.N1;
             obj.IODelay = v.validateIODelay(p.Results.IODelay, 'IODelay',...
                 obj.ny, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
@@ -92,6 +95,8 @@ classdef (Abstract) ValidateGPC
             addRequired(p, 'B', v.validCell)
 
             % Optional parameters
+            addParameter(p, 'N1', v.c.defaultN1,...
+                v.validScalarIntGreaterThan0Num);
             addParameter(p, 'IODelay', v.c.defaultIODelay, v.validNum);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
@@ -128,6 +133,7 @@ classdef (Abstract) ValidateGPC
             obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
+            obj.N1 = p.Results.N1;
             obj.IODelay = v.validateIODelay(p.Results.IODelay, 'IODelay',...
                 obj.ny, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
