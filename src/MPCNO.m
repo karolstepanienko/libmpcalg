@@ -36,7 +36,6 @@ classdef MPCNO < handle
         YY_k_1_m  % Last output value predicted using object model
         ym  % Temporary variable with last output value predicted using object
             % model
-        UU_k  % Current calculated control value
     end
 
     methods
@@ -55,7 +54,6 @@ classdef MPCNO < handle
             obj.duMaxVec = obj.duMax * ones(1, obj.nu);
             obj.yMinVec = obj.yMin * ones(1, obj.ny);
             obj.yMaxVec = obj.yMax * ones(1, obj.ny);
-            obj.UU_k = obj.upp * ones(1, obj.nu);
             UUlength = size(obj.UU, 1);
             % Hot start
             if UUlength == 0
@@ -76,7 +74,13 @@ classdef MPCNO < handle
             obj.YY(obj.k - 1, :) = YY_k_1;
 
             % Hot start of optimisation start point
-            UU_k0 = [obj.UU(obj.k:obj.k + obj.Nu - 2, :); obj.UU(obj.k + obj.Nu - 2, :)];
+            UU_k0 = zeros(obj.nu * obj.Nu, 1);
+            for i=0:obj.Nu - 2
+                UU_k0(i * obj.nu + 1:(i + 1) * obj.nu) = obj.UU(i + obj.k, :)';
+            end
+            % Stretch last element
+            UU_k0(obj.nu * (obj.Nu - 1) + 1: obj.nu * obj.Nu) =...
+                obj.UU(obj.k + obj.Nu - 2, :)';
 
             % Prepare target function filled with necessary parameters
             f = @(x)obj.targetFunc(x, YYzad_k);
@@ -119,7 +123,7 @@ classdef MPCNO < handle
             end
             obj.YY_k_1_m = obj.ym;
 
-            obj.UU(obj.k, :) = UUopt(1, :);
+            obj.UU(obj.k, :) = UUopt(1:obj.nu)';
             UU_k = obj.UU(obj.k, :);
             obj.k = obj.k + 1;
         end
@@ -175,7 +179,10 @@ classdef MPCNO < handle
 
         function du = getDU(obj, x)
             % Assigning control values calculated by fmincon
-            obj.UU(obj.k:obj.k + obj.Nu - 1, :) = x;
+            for i=0:obj.Nu - 1
+                obj.UU(obj.k + i, :) = x(i * obj.nu + 1:(i + 1) * obj.nu);
+            end
+
             du = zeros(obj.Nu, obj.nu);
             for p=0:obj.Nu - 1
                 % obj.k >= 2
