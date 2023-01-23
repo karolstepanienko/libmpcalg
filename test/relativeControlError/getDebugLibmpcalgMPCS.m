@@ -16,7 +16,8 @@ function [regMPCS, Y, U, debug] = getDebugLibmpcalgMPCS(isPlotting, po)
     for k=1:po.kk
         U(k, :) = regMPCS.calculateControl(X(k, :), po.Yzad(k, :));
         [X(k + 1, :), Y(k, :)] = getObjectOutputState(po.dA, po.dB, po.dC,...
-            po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny, po.InputDelay, k);
+            po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny, po.InputDelay,
+            po.OutputDelay, k);
     end
 
     if isPlotting

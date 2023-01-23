@@ -52,7 +52,7 @@ classdef Constants
         algMPCS  % (1, 4) char array
         algMPCNO  % (1, 5) char array
         % Constraints and default values
-        defaultInputDelay  % (1,1) int8
+        defaultIODelay  % (1,1) int8
         defaultMi  % (1,1) double
         defaultLambda  % (1,1) double
         defaultuMin  % (1,1) double
@@ -299,8 +299,8 @@ classdef Constants
             algMPCNO = 'MPCNO';
         end
 
-        function defaultInputDelay= get.defaultInputDelay(obj)
-            defaultInputDelay = 0;
+        function defaultIODelay= get.defaultIODelay(obj)
+            defaultIODelay = 0;
         end
 
         function defaultMi = get.defaultMi(obj)

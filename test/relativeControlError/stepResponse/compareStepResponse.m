@@ -28,11 +28,11 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
     stepResponseRef = Utilities.stepResponseMatrix2Cell(stepResponseMatrix, nu);
 
     %% Differential equation step response
-    stepResponseEq = getStepResponsesEq(ny, nu, InputDelay, A, B, kk);
+    stepResponseEq = getStepResponsesEq(ny, nu, IODelay, A, B, kk);
 
     %% State system step response
     stepResponseState = getStepResponsesState(nx, ny, nu, InputDelay,...
-        dA, dB, dC, dD, kk);
+        OutputDelay, dA, dB, dC, dD, kk);
 
     %% Differences between step responses
     errEq = Utilities.calMatrixError(stepResponseMatrix,...
@@ -55,7 +55,7 @@ function [errEq, errState] = compareStepResponse(object, isPlotting)
         stepResponseCombined{cu, 3} = stepResponseState{cu, 1};
     end
 
-    if (isPlotting)
+    if isPlotting
         figure;
         plotStepResponses(stepResponseCombined, st);
         legend({'Reference', 'Differential equation', 'State system'});

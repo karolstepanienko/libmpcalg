@@ -7,7 +7,8 @@ function obj = get2x2Compare()
           0, 1];
     obj.dD = [0, 0;
           0, 0];
-    obj.InputDelay = [0, 0];
+    obj.InputDelay = [0; 0];
+    obj.OutputDelay = [0; 0];
     obj.st = 1;
     obj.osf = 1;
 

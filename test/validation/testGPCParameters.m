@@ -82,15 +82,15 @@
 %!error <Cell B should have 2 rows and 2 columns> testGPCParameters('B', cell(2, 1));
 
 
-%--------------------------------- InputDelay ----------------------------------
+%----------------------------------- IODelay -----------------------------------
 % isnumeric
-%!error <GPC: failed validation of INPUTDELAY with isnumeric> testGPCParameters('InputDelay', '2');
+%!error <GPC: failed validation of IODELAY with isnumeric> testGPCParameters('IODelay', '2');
 
 % stretch single element
-%!warning <Assumed array InputDelay consists of 2 elements with a value of 1> testGPCParameters('InputDelay', 1)
+%!warning <Assumed \(2 x 2\) IODelay matrix consists entirely of elements with a value of 1> testGPCParameters('IODelay', 1)
 
 % has nu Elements
-%!error <Array InputDelay should have \(2\) elements> testGPCParameters('InputDelay', [1, 1, 1])
+%!error <Matrix IODelay should have 2 rows and 2 columns> testGPCParameters('IODelay', [1, 1, 1])
 
 
 %-------------------------------------- mi -------------------------------------
@@ -292,8 +292,8 @@ function testGPCParameters(valueName, testValue)
         A = testValue;
     elseif strcmp(valueName, 'B')
         B = testValue;
-    elseif strcmp(valueName, 'InputDelay')
-        InputDelay = testValue;
+    elseif strcmp(valueName, 'IODelay')
+        IODelay = testValue;
     elseif strcmp(valueName, 'mi')
         mi = testValue;
     elseif strcmp(valueName, 'lambda')
@@ -325,7 +325,7 @@ function testGPCParameters(valueName, testValue)
     end
 
     % Regulator
-    reg = GPC(N, Nu, ny, nu, A, B, 'InputDelay', InputDelay,...
+    reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
         'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
         'uMin', uMin, 'uMax', uMax,...
         'duMin', duMin, 'duMax', duMax,...

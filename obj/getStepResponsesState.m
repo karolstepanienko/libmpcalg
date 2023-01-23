@@ -1,15 +1,17 @@
 % Returns all object step responses
-function stepResponses = getStepResponsesState(nx, ny, nu, InputDelay, dA, dB, dC, dD, kk)
+function stepResponses = getStepResponsesState(nx, ny, nu, InputDelay,...
+    OutputDelay, dA, dB, dC, dD, kk)
     stepResponses = cell(nu, 1);
     for i=1:nu % for every input
         % kk + 1 because first element does not belong to step response
         stepResponses{i, 1} = getStepResponse(nx, ny, nu, InputDelay,...
-            dA, dB, dC, dD, i, kk);
+            OutputDelay, dA, dB, dC, dD, i, kk);
     end
 end
 
 % Returns output response for a step on a given input
-function YY = getStepResponse(nx, ny, nu, InputDelay, dA, dB, dC, dD, chosenU, kk)
+function YY = getStepResponse(nx, ny, nu, InputDelay, OutputDelay,...
+    dA, dB, dC, dD, chosenU, kk)
     c = Constants();
     %% Variable initialisation
     xpp = c.testUInitVal;
@@ -26,6 +28,6 @@ function YY = getStepResponse(nx, ny, nu, InputDelay, dA, dB, dC, dD, chosenU, k
 
     for k=1:kk
         [XX(k + 1, :), YY(k, :)]= getObjectOutputState(dA, dB, dC, dD,...
-            XX, xpp, nx, UU, upp, nu, ny, InputDelay, k);
+            XX, xpp, nx, UU, upp, nu, ny, InputDelay, OutputDelay, k);
     end
 end

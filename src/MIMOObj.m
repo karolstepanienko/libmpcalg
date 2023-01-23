@@ -26,6 +26,8 @@ classdef MIMOObj
         nu  % Number of inputs
         nx  % Number of state variables
         InputDelay
+        IODelay  % Input-Output delay
+        OutputDelay
     end
 
     properties (Access = private)
@@ -49,6 +51,8 @@ classdef MIMOObj
             [obj.cA, obj.cB, obj.cC, obj.cD] = ssdata(ss(obj.Gs));
             obj = obj.getDiscreteTransmittance();
             [obj.dA, obj.dB, obj.dC, obj.dD] = ssdata(ss(obj.Gz));
+            obj.InputDelay = ss(obj.Gz).InputDelay;
+            obj.OutputDelay = ss(obj.Gz).OutputDelay;
             obj = obj.getNumDen();
 
             % A and B matrix -- need numDen
@@ -69,8 +73,14 @@ classdef MIMOObj
             nx = size(obj.dA, 1);
         end
 
-        function InputDelay = get.InputDelay(obj)
-            InputDelay = obj.Gs.InputDelay;
+        function IODelay = get.IODelay(obj)
+            IODelay = obj.Gz.IODelay;
+            for cu=1:obj.nu
+                IODelay(:, cu) = IODelay(:, cu) + obj.Gz.InputDelay(cu);
+            end
+            for cy=1:obj.ny
+                IODelay(cy, :) = IODelay(cy, :) + obj.Gz.OutputDelay(cy);
+            end
         end
 
         % Others
@@ -87,6 +97,8 @@ classdef MIMOObj
             nu = obj.nu;
             nx = obj.nx;
             InputDelay = obj.InputDelay;
+            IODelay = obj.IODelay;
+            OutputDelay = obj.OutputDelay;
             numDen = obj.numDen;
             % Discrete transmittance for step response comparison
             Gz = obj.Gz;
@@ -104,8 +116,9 @@ classdef MIMOObj
             % Difference equation
             A = obj.A;
             B = obj.B;
-            save(filePath, 'ny', 'nu', 'nx', 'InputDelay', 'numDen', 'st',...
-                'Gz', 'A', 'B', 'cA', 'cB', 'cC', 'cD', 'dA', 'dB', 'dC', 'dD');
+            save(filePath, 'ny', 'nu', 'nx', 'InputDelay', 'IODelay',...
+                'OutputDelay', 'numDen', 'st', 'Gz', 'A', 'B', 'cA', 'cB',...
+                'cC', 'cD', 'dA', 'dB', 'dC', 'dD');
         end
     end
 

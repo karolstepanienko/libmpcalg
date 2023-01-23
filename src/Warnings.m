@@ -15,6 +15,11 @@ classdef Warnings
                 arrayName, num2str(n), num2str(value)));
         end
 
+        function showValueStretchedToMatrix(matrixName, value, nRows, nColumns)
+            warning(sprintf('Assumed (%s x %s) %s matrix consists entirely of elements with a value of %s',...
+                num2str(nRows), num2str(nColumns), matrixName, num2str(value)));
+        end
+
         function showLambda0()
             warning('Lambda value set to 0. Regulator might be unstable.');
         end

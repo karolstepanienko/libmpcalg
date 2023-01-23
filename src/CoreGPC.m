@@ -6,7 +6,7 @@ classdef (Abstract) CoreGPC < MPC & handle
            % between current control value(s) and past control value(s)
 
         % Optional
-        InputDelay
+        IODelay  % Input-Output delay
         ypp  % Output initial value
         upp  % Control initial value
         YY  % Output values
@@ -22,7 +22,7 @@ classdef (Abstract) CoreGPC < MPC & handle
         function obj = initCoreGPC(obj)
             obj.c = Constants();
             obj.stepResponses = getStepResponsesEq(obj.ny, obj.nu,...
-                obj.InputDelay, obj.A, obj.B, obj.N + 1);
+                obj.IODelay, obj.A, obj.B, obj.N + 1);
             obj.Sp = obj.getSp(obj.stepResponses, obj.N + 1);
             obj.M = obj.getM();
             obj.Xi = obj.getXi();
@@ -45,7 +45,7 @@ classdef (Abstract) CoreGPC < MPC & handle
             for i=0:obj.N
                 YY_0_tmp(i + 1, :) = getObjectOutputEq(obj.A, obj.B,...
                     YY_tmp, obj.ypp, UU_tmp, obj.upp, obj.ny, obj.nu,...
-                    obj.InputDelay, obj.k + i);
+                    obj.IODelay, obj.k + i);
                 YY_tmp(obj.k + i, :) = YY_0_tmp(i + 1, :);
             end
             % Prediction from YY_0(k+1) to remove the need for M matrix shift

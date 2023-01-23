@@ -298,7 +298,7 @@ classdef Utilities
             [Yzad, kk, ypp, upp, xpp] = trajectoryGetterFunc(osf);
 
             % Step response
-            stepResponse = getStepResponsesEq(ny, nu, InputDelay, A, B, D);
+            stepResponse = getStepResponsesEq(ny, nu, IODelay, A, B, D);
 
             % Structure
             po.algType = algType;
@@ -306,6 +306,8 @@ classdef Utilities
             po.kk = kk;
             po.st = st;
             po.InputDelay = InputDelay;
+            po.IODelay = IODelay;
+            po.OutputDelay = OutputDelay;
             po.ypp = ypp;
             po.upp = upp;
             po.xpp = xpp;

@@ -203,7 +203,7 @@ function testDMCParameters(valueName, testValue)
     algType = c.numericalAlgType;
 
     % Get D number of elements of object step response
-    stepResponses = getStepResponsesEq(ny, nu, InputDelay, A, B, D);
+    stepResponses = getStepResponsesEq(ny, nu, IODelay, A, B, D);
 
     % Assign test values
     if strcmp(valueName, 'D')

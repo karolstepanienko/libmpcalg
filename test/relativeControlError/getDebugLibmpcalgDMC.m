@@ -18,7 +18,7 @@ function [regDMC, Y, U, debug] = getDebugLibmpcalgDMC(isPlotting, po)
         U(k, :) = regDMC.calculateControl(Y_k, po.Yzad(k, :));
         [X(k + 1, :), Y(k, :)] = getObjectOutputState(po.dA, po.dB,...
             po.dC, po.dD, X, po.xpp, po.nx, U, po.upp, po.nu, po.ny,...
-            po.InputDelay, k);
+            po.InputDelay, po.OutputDelay, k);
         Y_k = Y(k, :);
     end
 

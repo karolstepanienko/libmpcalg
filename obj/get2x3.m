@@ -26,9 +26,7 @@ function obj = get2x3(st)
         [4 1] [5 1] [6 1]  % y2
     };
 
-    InputDelay = [0; 0];
-
-    Gs = tf(cNum, cDen, 'InputDelay', InputDelay);
+    Gs = tf(cNum, cDen);
     obj = MIMOObj(Gs, st);
 
     % obj.A

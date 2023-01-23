@@ -21,9 +21,7 @@ function obj = get1x2(st)
         [1.5 1] [2.5 1] % y1
     };
 
-    InputDelay = [0; 0];
-
-    Gs = tf(cNum, cDen, 'InputDelay', InputDelay);
+    Gs = tf(cNum, cDen);
     obj = MIMOObj(Gs, st);
     % SSs = ss(Gs);
     % SSz = c2d(SSs, st)

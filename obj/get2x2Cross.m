@@ -1,39 +1,35 @@
 %% get2x2
-% Returns stable object with two outputs and two inputs
+% Returns stable object with two outputs and two inputs with cross delays
 % y x u
-function obj = get2x2(st)
+function obj = get2x2Cross(st)
     arguments
         st (1,1) { mustBeNumeric } = 0.1  % Sampling time
     end
     %% Single inertial object
-    %               1                       2
-    % (y1, u1): ----------,   (y1, u2): ----------
-    %            0.1s + 1                0.2s + 1
-    %               3                       4
-    % (y2, u1): ----------,   (y2, u2): ----------
-    %            0.3s + 1                0.4s + 1
+    %                          1                                 2
+    % (y1, u1): e^(-0.1s) ----------,   (y1, u2): e^(-0.3s) ----------
+    %                      0.1s + 1                          0.2s + 1
+    %                          3                                 4
+    % (y2, u1): e^(-0.3s) ----------,   (y2, u2): e^(-0.4s) ----------
+    %                      0.3s + 1                          0.4s + 1
     %
 
-    cNum = {
-    %  u1 u2
-        1 2; % y1
-        3 4  % y2
-    };
+    % From input 1 to output...
+    Gs1x1 = tf([1], [1 1], 'InputDelay', 0.1);
+    Gs2x1 = tf([3], [3 1], 'InputDelay', 0.2);
+    % From input 2 to output...
+    Gs1x2 = tf([2], [2 1], 'InputDelay', 0.3);
+    Gs2x2 = tf([4], [4 1], 'InputDelay', 0.4);
 
-    cDen = {
-        %  u1     u2
-        [1 1] [2 1]; % y1
-        [3 1] [4 1]  % y2
-    };
+    Gs = [Gs1x1, Gs1x2;
+        Gs2x1, Gs2x2];
 
-    Gs = tf(cNum, cDen);
+    st = 0.1;
     obj = MIMOObj(Gs, st);
-    % SSs = ss(Gs)
-    % SSz = c2d(SSs, st)
     % figure;
     % step(Gs);
 
-    fileName = '2x2.mat';
+    fileName = '2x2Cross.mat';
     obj.save(fileName);
 
     % Appending the save file

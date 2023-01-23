@@ -18,9 +18,7 @@ function obj = get1x1RelativeTest(st)
     cNum = [K];
     cDen = [T, 1];
 
-    InputDelay = 0;
-
-    Gs = tf(cNum, cDen, 'InputDelay', InputDelay);  % Continuous transmittance
+    Gs = tf(cNum, cDen);  % Continuous transmittance
     Gz = c2d(Gs, st, 'zoh');  % Discrete transmittance
     obj = MIMOObj(Gs, st);   % Object
 

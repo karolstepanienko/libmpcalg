@@ -1,4 +1,4 @@
-function Y_k = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k)
+function Y_k = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, IODelay, k)
     Y_k = zeros(1, ny);
     na = size(A{1, 1}(2:end), 2);  % First element is always one, so discard it
     nb = size(B{1, 1}, 2) - 1;  % vector in B matrix has nb + 1 elements
@@ -23,13 +23,13 @@ function Y_k = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k)
         % Input - B matrix part
         for cu=1:nu
             b = B{cy, cu};
-            if k - nb - InputDelay(cu) < 1
+            if k - nb - IODelay(cy, cu) < 1
 
                 % In a loop
                 for i=0:nb
-                    if k - i - InputDelay(cu) >= 1
+                    if k - i - IODelay(cy, cu) >= 1
                         Y_k(1, cy) = Y_k(1, cy) + b(i + 1)...
-                            * UU(k - i + 1 - InputDelay(cu), cu);
+                            * UU(k - i + 1 - IODelay(cy, cu), cu);
                     else
                         Y_k(1, cy) = Y_k(1, cy) + b(i + 1) * upp;
                     end
@@ -38,7 +38,7 @@ function Y_k = getObjectOutputEq(A, B, YY, ypp, UU, upp, ny, nu, InputDelay, k)
             else
                 % Using vectors
                 Y_k(1, cy) = Y_k(1, cy) + b...
-                    * flip(UU(k - nb - InputDelay(cu):k - InputDelay(cu), cu));
+                    * flip(UU(k - nb - IODelay(cy, cu):k - IODelay(cy, cu), cu));
             end
         end
     end

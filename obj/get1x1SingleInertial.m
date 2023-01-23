@@ -18,9 +18,8 @@ function obj = get1x1SingleInertial(st)
 
     cNum = [K];
     cDen = [T a];
-    InputDelay = 0;
 
-    Gs = tf(cNum, cDen, 'InputDelay', InputDelay);
+    Gs = tf(cNum, cDen);
 
     obj = MIMOObj(Gs, st);
     % figure;

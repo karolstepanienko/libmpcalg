@@ -82,11 +82,6 @@ classdef Validation
             value = obj.validateArray(arrayName, array, n);
         end
 
-        function value = validateInputDelay(obj, arrayName, array, n)
-            value = obj.stretchValueToArray(arrayName, array, n);
-            value = obj.validateArraySize(arrayName, value, n);
-        end
-
         function value = validateArray(obj, arrayName, array, n)
             value = obj.stretchValueToArray(arrayName, array, n);
             value = obj.validateArraySize(arrayName, value, n);
@@ -145,7 +140,7 @@ classdef Validation
             end
         end
 
-        function value = validateStateMatrix(obj, matrix, matrixName, nRows,...
+        function value = validateMatrixSize(obj, matrix, matrixName, nRows,...
             nColumns)
             if ~(size(matrix, 1) == nRows && size(matrix, 2) == nColumns)
                 Exceptions.throwMatrixInvalidSize(matrixName, nRows, nColumns);
@@ -165,6 +160,25 @@ classdef Validation
                 nRows, nColumns);
             else
                 value = matrix;
+            end
+        end
+
+        function value = validateIODelay(obj, matrix, matrixName, nRows,...
+            nColumns)
+            value = obj.stretchValueToMatrix(matrix, matrixName, nRows,...
+                nColumns);
+            value = obj.validateMatrixSize(value, matrixName, nRows, nColumns);
+        end
+
+        function stretchedMatrix = stretchValueToMatrix(obj, matrix,...
+            matrixName, nRows, nColumns)
+            % length(x) returns the length of the largest dimension in x
+            if length(matrix) == 1 && (nRows ~= 1 || nColumns ~= 1)
+                stretchedMatrix= matrix * ones(nRows, nColumns);
+                Warnings.showValueStretchedToMatrix(matrixName, matrix,...
+                nRows, nColumns);
+            else
+                stretchedMatrix = matrix;
             end
         end
 

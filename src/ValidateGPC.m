@@ -20,7 +20,7 @@ classdef (Abstract) ValidateGPC
             addRequired(p, 'B', v.validCell)
 
             % Optional parameters
-            addParameter(p, 'InputDelay', v.c.defaultInputDelay, v.validNum);
+            addParameter(p, 'IODelay', v.c.defaultIODelay, v.validNum);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
@@ -53,8 +53,8 @@ classdef (Abstract) ValidateGPC
             obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
-            obj.InputDelay = v.validateInputDelay('InputDelay',...
-                p.Results.InputDelay, obj.nu);
+            obj.IODelay = v.validateIODelay(p.Results.IODelay, 'IODelay',...
+                obj.ny, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.ypp = p.Results.ypp;
@@ -92,7 +92,7 @@ classdef (Abstract) ValidateGPC
             addRequired(p, 'B', v.validCell)
 
             % Optional parameters
-            addParameter(p, 'InputDelay', v.c.defaultInputDelay, v.validNum);
+            addParameter(p, 'IODelay', v.c.defaultIODelay, v.validNum);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
@@ -128,8 +128,8 @@ classdef (Abstract) ValidateGPC
             obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
-            obj.InputDelay = v.validateInputDelay('InputDelay',...
-                p.Results.InputDelay, obj.nu);
+            obj.IODelay = v.validateIODelay(p.Results.IODelay, 'IODelay',...
+                obj.ny, obj.nu);
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.ypp = p.Results.ypp;

@@ -19,23 +19,13 @@ function obj = get1x1Unstable(st)
     cNum = [K];
     cDen = [T1*T2 T1-T2 1];
 
-    InputDelay = 0;
-
-    Gs = tf(cNum, cDen, 'InputDelay', InputDelay);
+    Gs = tf(cNum, cDen);
 
     obj = MIMOObj(Gs, st);
 
     % kk = 300;
     % figure;
     % step(Gs, kk);
-    % stepResponses = getStepResponsesEq(obj.ny, obj.nu, obj.InputDelay,...
-    % obj.A, obj.B, kk);
-    % figure;
-    % plotStepResponses(stepResponses, st);
-    % stepResponses = getStepResponsesState(obj.nx, obj.ny, obj.nu,...
-    %     obj.InputDelay, obj.dA, obj.dB, obj.dC, obj.dD, kk)
-    % figure;
-    % plotStepResponses(stepResponses, st);
 
     fileName = '1x1Unstable.mat';
     obj.save(fileName);
