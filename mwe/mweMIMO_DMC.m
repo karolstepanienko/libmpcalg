@@ -7,7 +7,6 @@ init();  % Adding necessary paths
 ny = 2;  % Number of outputs
 nu = 2;  % Number of inputs
 IODelay = zeros(ny, nu);  % Input-Output delay
-osf = 1;  % Object sampling factor
 
 %% Object model: step response
 %
@@ -85,7 +84,7 @@ reg = DMC(D, N, Nu, ny, nu, stepResponse, 'mi', mi, 'lambda', lambda,...
     'algType', algType);
 
 % Trajectory
-[YYzad, kk] = getY2Trajectory(osf);
+[YYzad, kk] = getY2Trajectory();
 
 % Variable initialisation
 ypp = 0; upp = 0;

@@ -1,6 +1,9 @@
 %% getY2CompareTrajectory
 % Trajectory used in algorithm comparisons
-function [YYzad, kk, varargout] = getY2CompareTrajectory(osf)
+function [YYzad, kk, varargout] = getY2CompareTrajectory(varargin)
+    if size(varargin, 1) == 0 osf = 1;
+    else osf = varargin{1}; end
+
     c = Constants();
     % Trajectory in JMatlab starts from 1 and first index is at 0, hence
     % trajectory has 49 elements

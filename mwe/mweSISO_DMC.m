@@ -7,10 +7,6 @@ init();  % Adding necessary paths
 ny = 1;  % Number of outputs
 nu = 1;  % Number of inputs
 IODelay = zeros(ny, nu);  % Input-Output delay
-osf = 1;  % Object sampling factor - how many times object
-        % output will be calculated between consecutive
-        % control calculations. Here set to 1 for
-        % simplicity of the Minimal Working Example
 
 %% Object model: step response
 %
@@ -47,7 +43,7 @@ reg = DMC(D, N, Nu, ny, nu, stepResponse, 'mi', mi,...
     'duMin', -1, 'duMax', 1, 'algType', algType);
 
 % Trajectory
-[Yzad, kk] = getY1Trajectory(osf);
+[Yzad, kk] = getY1Trajectory();
 
 % Variable initialisation
 ypp = 0; upp = 0;

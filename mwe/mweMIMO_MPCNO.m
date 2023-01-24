@@ -6,7 +6,6 @@ init();  % Adding necessary paths
 % Object parameters
 ny = 2;  % Number of outputs
 nu = 3;  % Number of inputs
-osf = 1;  % Object sampling factor
 
 % Object model: nonlinear difference equation
 % y_1(k) = - 0.25y_1(k-1) - 0.01y_2(k-1)
@@ -22,7 +21,7 @@ lambda = ones(1, nu);  % Control weight
 initK = 3;
 
 % Trajectory
-[YYzad, kk] = getY2Trajectory(0.3*osf);;
+[YYzad, kk] = getY2Trajectory(0.3);
 
 % Variable initialisation
 ypp = 0; upp = 0; xpp = 0;

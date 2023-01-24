@@ -1,4 +1,7 @@
-function [Yzad, kk, varargout] = getY1Trajectory(osf)
+function [Yzad, kk, varargout] = getY1Trajectory(varargin)
+    if size(varargin, 1) == 0 osf = 1;
+    else osf = varargin{1}; end
+
     % Simulation length
     c = Constants();
     kk = c.testSimulationLength * osf;

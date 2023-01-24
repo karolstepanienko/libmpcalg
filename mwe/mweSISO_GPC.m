@@ -7,7 +7,6 @@ init();  % Adding necessary paths
 ny = 1;  % Number of outputs
 nu = 1;  % Number of inputs
 IODelay = zeros(ny, nu);  % Input-Output delay
-osf = 1;  % Object sampling factor
 
 % Object model: difference equation
 %
@@ -37,7 +36,7 @@ reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay, 'mi', mi, 'lambda', lambda, '
     'uMax', uMax, 'duMin', duMin, 'duMax', duMax, 'algType', algType);
 
 % Trajectory
-[Yzad, kk] = getY1Trajectory(osf);
+[Yzad, kk] = getY1Trajectory();
 
 % Variable initialisation
 ypp = 0; upp = 0;

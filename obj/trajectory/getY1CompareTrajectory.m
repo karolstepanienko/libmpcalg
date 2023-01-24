@@ -1,4 +1,7 @@
-function [Yzad, kk, varargout] = getY1CompareTrajectory(osf)
+function [Yzad, kk, varargout] = getY1CompareTrajectory(varargin)
+    if size(varargin, 1) == 0 osf = 1;
+    else osf = varargin{1}; end
+
     % Simulation length
     kk = 50 * osf;
     c = Constants();
