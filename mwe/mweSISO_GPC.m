@@ -1,3 +1,4 @@
+function [Yzad, Y, U] = mweSISO_GPC()
 % Adjust this to point to libmpcalg library src folder
 addpath('../libmpcalg/src');
 init();  % Adding necessary paths
@@ -36,9 +37,10 @@ reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay, 'mi', mi, 'lambda', lambda, '
     'uMax', uMax, 'duMin', duMin, 'duMax', duMax, 'algType', algType);
 
 % Trajectory
-[Yzad, kk, ypp, upp, ~] = getY1Trajectory(osf);
+[Yzad, kk] = getY1Trajectory(osf);
 
 % Variable initialisation
+ypp = 0; upp = 0;
 Y = ones(kk, ny) * ypp;
 U = ones(kk, nu) * ypp;
 Y_k_1 = ones(1, ny) * ypp;
@@ -55,3 +57,4 @@ plotRun(Y, Yzad, U, 0.1, ny, nu, 'GPC', algType);
 
 % Control error
 err = Utilities.calculateError(Y, Yzad)
+end

@@ -1,3 +1,4 @@
+function [YYzad, YY, UU] = mweMIMO_GPC()
 % Adjust this to point to libmpcalg library src folder
 addpath('../libmpcalg/src');
 init();  % Adding necessary paths
@@ -8,7 +9,7 @@ nu = 2;  % Number of inputs
 IODelay = zeros(ny, nu);  % Input-Output delay
 osf = 1;  % Object sampling factor
 
-% Object model: difference equation
+%% Object model: difference equation
 %
 % Continuous-time transmittance Gs(ny x nu)(s):
 %                  1       Y1
@@ -73,9 +74,10 @@ reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
     'duMin', -0.5, 'duMax', 0.5, 'algType', algType);
 
 % Trajectory
-[YYzad, kk, ypp, upp, ~] = getY2Trajectory(osf);
+[YYzad, kk] = getY2Trajectory(osf);
 
 % Variable initialisation
+ypp = 0; upp = 0;
 YY = ones(kk, ny) * ypp;
 UU = ones(kk, nu) * upp;
 YY_k_1 = ones(1, ny) * ypp;
@@ -93,3 +95,4 @@ plotRun(YY, YYzad, UU, 0.1, ny, nu, 'GPC', algType);
 
 % Control error
 err = Utilities.calculateError(YY, YYzad)
+end

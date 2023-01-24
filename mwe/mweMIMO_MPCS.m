@@ -1,3 +1,4 @@
+function [YYzad, YY, UU] = mweMIMO_MPCS()
 % Adjust this to point to libmpcalg library src folder
 addpath('../libmpcalg/src');
 init();  % Adding necessary paths
@@ -38,9 +39,10 @@ reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, 'mi', mi,...
     'yMin', -0.5, 'yMax', 0.5, 'algType', algType);
 
 % Trajectory
-[YYzad, kk, ypp, upp, xpp] = getY2Trajectory(osf);
+[YYzad, kk] = getY2Trajectory(osf);
 
 % Variable initialisation
+ypp = 0; upp = 0; xpp = 0;
 XX = ones(kk, nx) * xpp;
 YY = ones(kk, ny) * ypp;
 UU = ones(kk, nu) * upp;
@@ -58,3 +60,4 @@ plotRun(YY, YYzad, UU, 0.1, ny, nu, 'MPCS', algType);
 
 % Control error
 err = Utilities.calculateError(YY, YYzad)
+end

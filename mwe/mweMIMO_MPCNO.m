@@ -1,3 +1,5 @@
+function [YYzad, YY, UU] = mweMIMO_MPCNO()
+% Adjust this to point to libmpcalg library src folder
 addpath('../libmpcalg/src');
 init();  % Adding necessary paths
 
@@ -20,9 +22,10 @@ lambda = ones(1, nu);  % Control weight
 initK = 3;
 
 % Trajectory
-[YYzad, kk, ypp, upp, xpp] = getY2Trajectory(osf);;
+[YYzad, kk] = getY2Trajectory(0.3*osf);;
 
 % Variable initialisation
+ypp = 0; upp = 0; xpp = 0;
 YY = ones(kk, ny) * ypp;
 UU = ones(kk, nu) * upp;
 
@@ -46,3 +49,4 @@ plotRun(YY, YYzad, UU, 1, ny, nu, 'MPCNO');
 
 % Control error
 err = Utilities.calculateError(YY, YYzad)
+end

@@ -1,3 +1,4 @@
+function [Yzad, Y, U] = mweSISO_MPCS()
 % Adjust this to point to libmpcalg library src folder
 addpath('../libmpcalg/src');
 init();  % Adding necessary paths
@@ -36,9 +37,10 @@ reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD, 'mi', mi, 'lambda', lambda,...
     'yMin', yMin, 'yMax', yMax, 'algType', algType);
 
 % Trajectory
-[Yzad, kk, ypp, upp, xpp] = getY1Trajectory(osf);
+[Yzad, kk] = getY1Trajectory(osf);
 
 % Variable initialisation
+ypp = 0; upp = 0; xpp = 0;
 X = ones(kk, nx) * xpp;
 Y = ones(kk, ny) * ypp;
 U = ones(kk, nu) * upp;
@@ -55,3 +57,4 @@ plotRun(Y, Yzad, U, 0.1, ny, nu, 'MPCS', algType);
 
 % Control error
 err = Utilities.calculateError(Y, Yzad)
+end

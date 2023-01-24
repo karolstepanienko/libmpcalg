@@ -1,10 +1,11 @@
-function [Yzad, kk, ypp, upp, xpp] = getY1RelativeTestTrajectory(osf)
+function [Yzad, kk, varargout] = getY1RelativeTestTrajectory(osf)
     % Simulation length
     c = Constants();
     kk = 4000 * osf;
     ypp = c.testYInitVal;
     upp = c.testUInitVal;
     xpp = c.testXInitVal;
+    varargout{1} = ypp; varargout{2} = upp; varargout{3} = xpp;
 
     % Space allocation
     Yzad = zeros(kk, 1) + ypp;

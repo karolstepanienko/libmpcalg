@@ -1,10 +1,11 @@
-function [Yzad, kk, ypp, upp, xpp] = getY2Trajectory(osf)
+function [Yzad, kk, varargout] = getY2Trajectory(osf)
     % Simulation length
     c = Constants();
     kk = c.testSimulationLength * osf;
     ypp = c.testYInitVal;
     upp = c.testUInitVal;
     xpp = c.testXInitVal;
+    varargout{1} = ypp; varargout{2} = upp; varargout{3} = xpp;
 
     % Space allocation
     Yzad = zeros(kk, 2) + ypp;

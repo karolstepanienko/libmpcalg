@@ -7,10 +7,16 @@ function obj = get1x1(st)
     end
 
     %% Double inertial object
-    % Object's continuous transmittance
-    %          K                     2
-    % -------------------- = --------------------
-    % (T1s + 1)(T2s + 1)      0.24s^2 + 1.1s + 1
+    % Continuous-time transmittance Gs(ny x nu)(s):
+    %                   K                     2
+    % Gs(s) = -------------------- = --------------------
+    %          (T1s + 1)(T2s + 1)     0.24s^2 + 1.1s + 1
+    %
+    % Sampling time = 0.1.
+    % Discrete-time transmittance Gz(z):
+    %            0.03585 z + 0.03077
+    %  Gz(z) = -------------------------
+    %            z^2 - 1.599 z + 0.6323
     %
 
     K = 2;
