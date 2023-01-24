@@ -58,6 +58,17 @@
 %!error <MPCNO: failed validation of GETOUTPUT with @\(x\) isa \(x, \'function_handle\'\)> testMPCNOParameters('getOutput', '2');
 
 
+%-------------------------------------- mi -------------------------------------
+% stretch single element
+%!warning <Assumed array mi consists of 2 elements with a value of 1> testMPCNOParameters('mi', 1)
+
+% has ny Elements
+%!error <Array mi should have \(2\) elements> testMPCNOParameters('mi', [1, 1, 1])
+
+% is Horizontal
+%!error <Array mi should be horizontal> testMPCNOParameters('mi', [1; 1])
+
+
 %------------------------------------ lambda -----------------------------------
 % lambda = 0
 %!warning <Lambda value set to 0. Regulator might be unstable.> testMPCNOParameters('lambda', [0, 0])
@@ -238,6 +249,8 @@ function testMPCNOParameters(valueName, testValue)
         nu = testValue;
     elseif strcmp(valueName, 'getOutput')
         getOutput = testValue;
+    elseif strcmp(valueName, 'mi')
+        mi = testValue;
     elseif strcmp(valueName, 'lambda')
         lambda = testValue;
     elseif strcmp(valueName, 'ypp')
@@ -267,7 +280,7 @@ function testMPCNOParameters(valueName, testValue)
     end
 
     % Regulator
-    reg = MPCNO(N, Nu, ny, nu, getOutput, 'lambda', lambda,...
+    reg = MPCNO(N, Nu, ny, nu, getOutput, 'mi', mi, 'lambda', lambda,...
         'ypp', ypp, 'upp', upp, 'uMin', uMin, 'uMax', uMax,...
         'duMin', duMin, 'duMax', duMax, 'yMin', yMin, 'yMax', yMax,...
         'k', k, 'YY', YY, 'UU', UU, 'data', data);
