@@ -20,6 +20,7 @@ classdef (Abstract) ValidateMPCNO
             addRequired(p, 'getOutput', v.validFunctionHandle);
 
             % Optional parameters
+            addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
             addParameter(p, 'ypp', v.c.testYInitVal, v.validScalarDoubleNum);
@@ -55,6 +56,7 @@ classdef (Abstract) ValidateMPCNO
             obj.getOutput = p.Results.getOutput;
 
             % Assign optional parameters
+            obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.ypp = p.Results.ypp;
             obj.upp = p.Results.upp;

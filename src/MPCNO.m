@@ -10,6 +10,7 @@ classdef MPCNO < handle
                    % output calculation
 
         % Optional
+        mi  % Output importance
         lambda  % Control weight
         uMin  % Minimal control value
         uMax  % Maximal control value
@@ -141,7 +142,8 @@ classdef MPCNO < handle
             for cy = 1:obj.ny
                 YYzadCompare = Utilities.stackVectorHorizontally(...
                     YYzad_k(cy), obj.N);
-                e = e + (YYzadCompare - obj.YY(obj.k:obj.k + obj.N-1, cy))'...
+                e = e + obj.mi(cy)...
+                    * (YYzadCompare - obj.YY(obj.k:obj.k + obj.N-1, cy))'...
                     * (YYzadCompare - obj.YY(obj.k:obj.k + obj.N-1, cy));
             end
 
@@ -173,7 +175,7 @@ classdef MPCNO < handle
             c = [ -duVec + Utilities.stackVector(obj.duMinVec, obj.Nu);
                    duVec - Utilities.stackVector(obj.duMaxVec, obj.Nu);
                   -YYVec + Utilities.stackVector(obj.yMinVec, obj.N);
-                  YYVec - Utilities.stackVector(obj.yMaxVec, obj.N)
+                   YYVec - Utilities.stackVector(obj.yMaxVec, obj.N)
             ];
         end
 

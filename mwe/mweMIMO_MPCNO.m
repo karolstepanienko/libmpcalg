@@ -16,6 +16,7 @@ osf = 1;  % Object sampling factor
 % Regulator parameters
 N = 4;  % Prediction horizon
 Nu = 2;  % Moving horizon
+mi = ones(1, ny);  % Output importance
 lambda = ones(1, nu);  % Control weight
 
 % Trajectory
@@ -27,7 +28,7 @@ UU = ones(kk, nu) * upp;
 
 % Regulator
 reg = MPCNO(N, Nu, ny, nu, @getObjectOutputNl2x3,...
-    'lambda', lambda, 'ypp', ypp, 'upp', upp,...
+    'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
     'uMin', -2, 'uMax', 2, 'duMin', -0.2, 'duMax', 0.2,...
     'yMin', -0.5, 'yMax', 0.5, 'k', 3,...
     'YY', YY, 'UU', UU);

@@ -11,6 +11,7 @@ function err = runMPCNO(object, varargin)
     % Regulator parameters
     N = 4;  % Prediction horizon
     Nu = 2;  % Moving horizon
+    mi = ones(1, ny);  % Output importance
     lambda = ones(1, nu);  % Control weight
     uMin = -100;
     uMax = -uMin;
@@ -29,7 +30,7 @@ function err = runMPCNO(object, varargin)
     getOutput = getObjectNlFunc(object);
 
     % Regulator
-    reg = MPCNO(N, Nu, ny, nu, getOutput, 'lambda', lambda,...
+    reg = MPCNO(N, Nu, ny, nu, getOutput, 'mi', mi, 'lambda', lambda,...
         'ypp', data.ypp, 'upp', data.upp, 'uMin', uMin, 'uMax', uMax,...
         'duMin', duMin, 'duMax', duMax, 'yMin', yMin, 'yMax', yMax);
 
