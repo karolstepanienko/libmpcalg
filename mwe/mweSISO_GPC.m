@@ -5,7 +5,7 @@ init();  % Adding necessary paths
 % Object parameters
 ny = 1;  % Number of outputs
 nu = 1;  % Number of inputs
-InputDelay = 0;
+IODelay = zeros(ny, nu);  % Input-Output delay
 osf = 1;  % Object sampling factor
 
 % Object model: difference equation
@@ -32,7 +32,7 @@ duMax = -duMin;
 algType = 'fast';
 
 % Regulator
-reg = GPC(N, Nu, ny, nu, A, B, 'InputDelay', InputDelay, 'mi', mi, 'lambda', lambda, 'uMin', uMin,...
+reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay, 'mi', mi, 'lambda', lambda, 'uMin', uMin,...
     'uMax', uMax, 'duMin', duMin, 'duMax', duMax, 'algType', algType);
 
 % Trajectory
@@ -46,7 +46,7 @@ Y_k_1 = ones(1, ny) * ypp;
 % Control loop
 for k=1:kk
     U(k, :) = reg.calculateControl(Y_k_1, Yzad(k, :));
-    Y(k, :) = getObjectOutputEq(A, B, Y, ypp, U, upp, ny, nu, InputDelay, k);
+    Y(k, :) = getObjectOutputEq(A, B, Y, ypp, U, upp, ny, nu, IODelay, k);
     Y_k_1 = Y(k, :);
 end
 

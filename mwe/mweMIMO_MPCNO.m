@@ -4,7 +4,6 @@ init();  % Adding necessary paths
 % Object parameters
 ny = 2;  % Number of outputs
 nu = 3;  % Number of inputs
-InputDelay = zeros(nu, 1);
 osf = 1;  % Object sampling factor
 
 % Object model: nonlinear difference equation
@@ -18,6 +17,7 @@ N = 4;  % Prediction horizon
 Nu = 2;  % Moving horizon
 mi = ones(1, ny);  % Output importance
 lambda = ones(1, nu);  % Control weight
+initK = 3;
 
 % Trajectory
 [YYzad, kk, ypp, upp, xpp] = getY2Trajectory(osf);;
@@ -30,7 +30,7 @@ UU = ones(kk, nu) * upp;
 reg = MPCNO(N, Nu, ny, nu, @getObjectOutputNl2x3,...
     'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
     'uMin', -2, 'uMax', 2, 'duMin', -0.2, 'duMax', 0.2,...
-    'yMin', -0.5, 'yMax', 0.5, 'k', 3,...
+    'yMin', -0.5, 'yMax', 0.5, 'k', initK,...
     'YY', YY, 'UU', UU);
 
 % Control loop

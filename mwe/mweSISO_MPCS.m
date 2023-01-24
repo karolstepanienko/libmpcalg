@@ -7,6 +7,7 @@ ny = 1;  % Number of outputs
 nu = 1;  % Number of inputs
 nx = 2;  % Number of state variables
 InputDelay = 0;
+OutputDelay = 0;
 osf = 1;  % Object sampling factor
 
 % Object model
@@ -46,7 +47,7 @@ U = ones(kk, nu) * upp;
 for k=1:kk
     U(k, :) = reg.calculateControl(X(k, :), Yzad(k, :));
     [X(k + 1, :), Y(k, :)] = getObjectOutputState(dA, dB, dC, dD, X, xpp, nx,...
-        U, upp, nu, ny, InputDelay, k);
+        U, upp, nu, ny, InputDelay, OutputDelay, k);
 end
 
 % Plotting

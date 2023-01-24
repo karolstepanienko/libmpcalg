@@ -5,7 +5,7 @@ init();  % Adding necessary paths
 % Object parameters
 ny = 2;  % Number of outputs
 nu = 2;  % Number of inputs
-InputDelay = [1; 1];
+IODelay = zeros(ny, nu);  % Input-Output delay
 osf = 1;  % Object sampling factor
 
 % Object model
@@ -43,7 +43,7 @@ YY_k_1 = ones(1, ny) * ypp;
 % Control loop
 for k=1:kk
     UU(k, :) = reg.calculateControl(YY_k_1, YYzad(k, :));
-    YY(k, :) = simulateObjectDMC(ny, nu, InputDelay, YY, ypp, UU, upp, k);
+    YY(k, :) = simulateObjectDMC(ny, nu, IODelay, YY, ypp, UU, upp, k);
     YY_k_1 = YY(k, :);
 end
 
