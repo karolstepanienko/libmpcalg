@@ -33,7 +33,7 @@ classdef NumericalDMC < CoreDMC & NumericalUtilities
         % @param YYzad_k     horizontal vector of target trajectory values
         function UU_k = calculateControl(obj, YY_k_1, YYzad_k)
             YY_k_1 = obj.stackVectorNN1Times(YY_k_1);
-            YYzad_k = obj.stackVectorNN1Times(YYzad_k);
+            YYzad_k = obj.stackYzadVector(YYzad_k);
 
             YY_k = obj.Mp * obj.dUUp_k;
             YY_0 = YY_k_1 + YY_k(obj.ny*obj.ny + 1:end);

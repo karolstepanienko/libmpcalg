@@ -57,7 +57,35 @@ classdef (Abstract) MPC < handle
             elseif size(Y, 1) == 1 && size(Y, 2) == obj.ny  % Horizontal vector
                 YY = Utilities.stackVector(Y', obj.N - obj.N1 + 1);
             else
-                error("Malformed vector. Cannot be stacked.");
+                Exceptions.throwMalformedVector('Y');
+            end
+        end
+
+        %% stackYzadVector
+        % Stacks the trajectory vector according to its length
+        % @throws MalformedVector error if stacking is not possible.
+        function YYzad = stackYzadVector(obj, Y)
+            len = size(Y, 1);
+            ny = size(Y, 2);
+            if len == 1 && ny == obj.ny
+                YYzad = stackVectorNN1Times(obj, Y);
+            elseif len < obj.N - obj.N1 + 1 && ny == obj.ny
+                YYzad = zeros(obj.ny * (obj.N - obj.N1 + 1), 1);
+                % Stack existing elements
+                for i=0:len-1
+                    YYzad(obj.ny * i + 1:obj.ny * (i + 1), 1) = Y(i + 1, :)';
+                end
+                % Stretch last element
+                for i=len:obj.N - obj.N1
+                    YYzad(obj.ny * i + 1:obj.ny * (i + 1), 1) = Y(len, :)';
+                end
+            elseif len >= obj.N - obj.N1
+                YYzad = zeros(obj.ny * (obj.N - obj.N1 + 1), 1);
+                for i=0:obj.N - obj.N1
+                    YYzad(obj.ny * i + 1:obj.ny * (i + 1), 1) = Y(i + 1, :)';
+                end
+            else
+                Exceptions.throwMalformedVector('Yzad');
             end
         end
     end

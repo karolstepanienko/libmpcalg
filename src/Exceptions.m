@@ -28,6 +28,12 @@ classdef Exceptions
                 sprintf('Array %s should be horizontal', arrayName));
         end
 
+        %---------------------------- vector -----------------------------------
+        function throwMalformedVector(vectorName)
+            error('array:MalformedVector',...
+                sprintf('Malformed %s vector. Cannot be stacked.', vectorName));
+        end
+
         %---------------------------- matrix -----------------------------------
         function throwMatrixNotSquare(matrixName)
             error('matrix:MatrixNotSquare',...

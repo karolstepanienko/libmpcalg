@@ -32,7 +32,7 @@ classdef AnalyticalMPCS < CoreMPCS
         % @param X_k        horizontal vector of current state values
         % @param YYzad_k    horizontal vector of target trajectory values
         function UU_k = calculateControl(obj, X_k, YYzad_k)
-            YYzad_k = obj.stackVectorNN1Times(YYzad_k);
+            YYzad_k = obj.stackYzadVector(YYzad_k);
             V_k = X_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k')';
 
             YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V...

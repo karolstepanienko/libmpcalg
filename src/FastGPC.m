@@ -31,7 +31,7 @@ classdef FastGPC < CoreGPC
         % @param Yzad_k     horizontal vector of target trajectory values
         function UU_k = calculateControl(obj, YY_k_1, YYzad_k)
             obj.YY(obj.k - 1, :) = YY_k_1;
-            YYzad_k = obj.stackVectorNN1Times(YYzad_k);
+            YYzad_k = obj.stackYzadVector(YYzad_k);
 
             YY_0 = obj.getYY_0();
 

@@ -36,7 +36,7 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
         % @param XX_k        horizontal vector of current state values
         % @param YYzad_k     horizontal vector of target trajectory values
         function UU_k = calculateControl(obj, XX_k, YYzad_k)
-            YYzad_k = obj.stackVectorNN1Times(YYzad_k);
+            YYzad_k = obj.stackYzadVector(YYzad_k);
 
             YY_0 = obj.CC * obj.AA * XX_k'...
                 + obj.CC * obj.V * (obj.dB * obj.UU_k');
