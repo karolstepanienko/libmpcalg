@@ -30,6 +30,7 @@ function obj = get1x1RelativeTest(st)
     %% MPC regulator parameters
     m.D = 350;  % Dynamic horizon
     m.N = 300;  % Prediction horizon
+    m.N1 = 1;  % Delay offset
     m.NNl = 4;  % Prediction horizon for nonlinear algorithm
                 % (purpose: decrease test time)
     m.Nu = 2;  % Moving horizon

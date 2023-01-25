@@ -49,6 +49,7 @@ function obj = get2x3(st)
     %% MPC regulator parameters
     m.D = 300;  % Dynamic horizon
     m.N = 200;  % Prediction horizon
+    m.N1 = 1;  % Delay offset
     m.NNl = 8;  % Prediction horizon for nonlinear algorithm
                 % (purpose: decrease test time)
     m.Nu = 8;  % Moving horizon

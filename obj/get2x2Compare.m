@@ -15,6 +15,7 @@ function obj = get2x2Compare()
     % Regulator parameters
     obj.D = 99;
     obj.N = 15;
+    obj.N1 = 1;
     obj.Nu = 10;
     obj.ny = 2;
     obj.nu = 2;
