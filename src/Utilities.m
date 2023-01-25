@@ -79,6 +79,27 @@ classdef Utilities
             end
         end
 
+        %% stretchLastElement
+        % Horizontal vector with last element stretched
+        function newVec = stretchLastElement(V, n)
+            len = size(V, 1);
+            width = size(V, 2);
+            if n == 1
+                newVec = Utilities.stackVectorHorizontally(V, n);
+            elseif len < n
+                newVec = zeros(n, width);
+                % Stack existing elements
+                newVec(1:len, :) = V(1:len, :);
+                % Stretch last element
+                for i=len+1:n
+                    newVec(i, :) = V(len, :);
+                end
+            else
+                % Stack existing elements
+                newVec = V(1:n, :);
+            end
+        end
+
         %% addAllPaths
         % Adds all paths used by library
         % Platform independent

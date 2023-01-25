@@ -1,6 +1,6 @@
-%!test(testYzadVec('2x3', false))
+%!test(testYzadVecLin('2x3', false))
 
-function testYzadVec(object, isPlotting)
+function testYzadVecLin(object, isPlotting)
     load(Utilities.getObjBinFilePath(Utilities.joinText(object, '.mat')));
 
     % Get D + 1 elements of object step response, because this method does not
@@ -76,15 +76,16 @@ function testYzadVec(object, isPlotting)
     % Control error
     errDMC = Utilities.calculateError(YY_DMC, YYzad);
     errDMC_Tr = Utilities.calculateError(YY_DMC_Tr, YYzad);
-    assert(errDMC > errDMC_Tr)
     fprintf('Multi-element Yzad test errDMC = %2.4f, errDMC_Tr = %2.4f\n',...
         errDMC, errDMC_Tr);
 
     errGPC = Utilities.calculateError(YY_GPC, YYzad);
     errGPC_Tr = Utilities.calculateError(YY_GPC_Tr, YYzad);
-    assert(errGPC > errGPC_Tr)
     fprintf('Multi-element Yzad test errGPC = %2.4f, errGPC_Tr = %2.4f\n',...
         errGPC, errGPC_Tr);
+
+    assert(errDMC > errDMC_Tr)
+    assert(errGPC > errGPC_Tr)
 
     if isPlotting
         plotRun(YY_DMC, YYzad, UU_DMC, 0.1, ny, nu, 'DMC',...
