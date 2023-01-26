@@ -65,8 +65,11 @@
 % has ny Elements
 %!error <Array mi should have \(2\) elements> testMPCNOParameters('mi', [1, 1, 1])
 
-% is Horizontal
-%!error <Array mi should be horizontal> testMPCNOParameters('mi', [1; 1])
+% can be horizontal
+%!test(testMPCNOParameters('mi', [1, 1]))
+
+% can be vertical
+%!test(testMPCNOParameters('mi', [1; 1]))
 
 
 %------------------------------------ lambda -----------------------------------
@@ -79,8 +82,11 @@
 % has nu Elements
 %!error <Array lambda should have \(2\) elements> testMPCNOParameters('lambda', [1, 1, 1])
 
-% is Horizontal
-%!error <Array lambda should be horizontal> testMPCNOParameters('lambda', [1; 1])
+% can be horizontal
+%!test(testMPCNOParameters('mi', [1, 1]))
+
+% can be vertical
+%!test(testMPCNOParameters('mi', [1; 1]))
 
 
 %------------------------------------ ypp --------------------------------------

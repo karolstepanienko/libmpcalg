@@ -92,8 +92,11 @@
 % has ny Elements
 %!error <Array mi should have \(2\) elements> testDMCParameters('mi', [1, 1, 1])
 
-% is Horizontal
-%!error <Array mi should be horizontal> testDMCParameters('mi', [1; 1])
+% can be horizontal
+%!test(testDMCParameters('mi', [1, 1]))
+
+% can be vertical
+%!test(testDMCParameters('mi', [1; 1]))
 
 
 %------------------------------------ lambda -----------------------------------
@@ -106,8 +109,11 @@
 % has nu Elements
 %!error <Array lambda should have \(2\) elements> testDMCParameters('lambda', [1, 1, 1])
 
-% is Horizontal
-%!error <Array lambda should be horizontal> testDMCParameters('lambda', [1; 1])
+% can be horizontal
+%!test(testDMCParameters('lambda', [1, 1]))
+
+% can be vertical
+%!test(testDMCParameters('lambda', [1; 1]))
 
 
 %-------------------------------------- uMin -----------------------------------

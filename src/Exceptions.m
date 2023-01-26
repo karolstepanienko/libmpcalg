@@ -23,11 +23,6 @@ classdef Exceptions
                 arrayName, num2str(n)));
         end
 
-        function throwArrayNotHorizontal(arrayName)
-            error('array:ArrayInvalidSize',...
-                sprintf('Array %s should be horizontal', arrayName));
-        end
-
         %---------------------------- vector -----------------------------------
         function throwMalformedVector(vectorName)
             error('array:MalformedVector',...

@@ -133,8 +133,11 @@
 % has ny Elements
 %!error <Array mi should have \(2\) elements> testMPCSParameters('mi', [1, 1, 1])
 
-% is Horizontal
-%!error <Array mi should be horizontal> testMPCSParameters('mi', [1; 1])
+% can be horizontal
+%!test(testMPCSParameters('mi', [1, 1]))
+
+% can be vertical
+%!test(testMPCSParameters('mi', [1; 1]))
 
 
 %------------------------------------ lambda -----------------------------------
@@ -147,8 +150,11 @@
 % has nu Elements
 %!error <Array lambda should have \(2\) elements> testMPCSParameters('lambda', [1, 1, 1])
 
-% is Horizontal
-%!error <Array lambda should be horizontal> testMPCSParameters('lambda', [1; 1])
+% can be horizontal
+%!test(testMPCSParameters('mi', [1, 1]))
+
+% can be vertical
+%!test(testMPCSParameters('mi', [1; 1]))
 
 
 %-------------------------------------- uMin -----------------------------------

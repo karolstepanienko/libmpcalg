@@ -85,7 +85,6 @@ classdef Validation
         function value = validateArray(obj, arrayName, array, n)
             value = obj.stretchValueToArray(arrayName, array, n);
             value = obj.validateArraySize(arrayName, value, n);
-            value = obj.validateArrayIsHorizontal(arrayName, value);
         end
 
         function stretchedArray = stretchValueToArray(obj, arrayName, array, n)
@@ -101,14 +100,6 @@ classdef Validation
         function value = validateArraySize(obj, arrayName, array, n)
             if length(array) ~= n
                 Exceptions.throwArrayInvalidSize(arrayName, n);
-            else
-                value = array;
-            end
-        end
-
-        function value = validateArrayIsHorizontal(obj, arrayName, array)
-            if size(array, 1) ~= 1
-                Exceptions.throwArrayNotHorizontal(arrayName);
             else
                 value = array;
             end

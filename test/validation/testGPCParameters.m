@@ -100,8 +100,11 @@
 % has ny Elements
 %!error <Array mi should have \(2\) elements> testGPCParameters('mi', [1, 1, 1])
 
-% is Horizontal
-%!error <Array mi should be horizontal> testGPCParameters('mi', [1; 1])
+% can be horizontal
+%!test(testGPCParameters('mi', [1, 1]))
+
+% can be vertical
+%!test(testGPCParameters('mi', [1; 1]))
 
 
 %------------------------------------ lambda -----------------------------------
@@ -114,8 +117,11 @@
 % has nu Elements
 %!error <Array lambda should have \(2\) elements> testGPCParameters('lambda', [1, 1, 1])
 
-% is Horizontal
-%!error <Array lambda should be horizontal> testGPCParameters('lambda', [1; 1])
+% can be horizontal
+%!test(testGPCParameters('mi', [1, 1]))
+
+% can be vertical
+%!test(testGPCParameters('mi', [1; 1]))
 
 
 %------------------------------------ ypp --------------------------------------
