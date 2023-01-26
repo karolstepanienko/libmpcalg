@@ -32,14 +32,15 @@ stepResponse = {[0; 0.0358; 0.1239; 0.2421; 0.3754; 0.5138; 0.6508; 0.7824; 0.90
 % Regulator parameters
 D = 80;  % Dynamic horizon
 N = 70;  % Prediction horizon
+N1 = 1;  % Offset resulting from the delay
 Nu = 5;  % Moving horizon
 mi = ones(1, ny);  % Output importance
 lambda = 20 * ones(1, nu);  % Control weight
 algType = 'analytical';
 
 % Regulator
-reg = DMC(D, N, Nu, ny, nu, stepResponse, 'mi', mi,...
-    'lambda', lambda, 'uMin', -1, 'uMax', 1,...
+reg = DMC(D, N, Nu, ny, nu, stepResponse, 'N1', N1,...
+    'mi', mi, 'lambda', lambda, 'uMin', -1, 'uMax', 1,...
     'duMin', -1, 'duMax', 1, 'algType', algType);
 
 % Trajectory

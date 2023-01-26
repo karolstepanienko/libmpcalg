@@ -62,15 +62,17 @@ B = { [0, 0.0952, -0.0905], [0, 0.0975, -0.0883];
 % Regulator parameters
 D = 200;  % Dynamic horizon
 N = 100;  % Prediction horizon
+N1 = 1;  % Offset resulting from the delay
 Nu = 8;  % Moving horizon
 mi = ones(1, ny);  % Output importance
 lambda = ones(1, nu);  % Control weight
 algType = 'fast';
 
 % Regulator
-reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
-    'mi', mi, 'lambda', lambda, 'uMin', -2,'uMax', 2,...
-    'duMin', -0.5, 'duMax', 0.5, 'algType', algType);
+reg = GPC(N, Nu, ny, nu, A, B, 'N1', N1,...
+    'IODelay', IODelay, 'mi', mi, 'lambda', lambda,...
+    'uMin', -2,'uMax', 2, 'duMin', -0.5, 'duMax', 0.5,...
+    'algType', algType);
 
 % Trajectory
 [YYzad, kk] = getY2Trajectory();

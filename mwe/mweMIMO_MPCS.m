@@ -48,7 +48,8 @@ UU = ones(kk, nu) * upp;
 
 % Control loop
 for k=1:kk
-    UU(k, :) = reg.calculateControl(XX(k, :), YYzad(k, :));
+    UU(k, :) = reg.calculateControl(XX(k, :),...
+        YYzad(k:end, :));
     [XX(k + 1, :), YY(k, :)] = getObjectOutputState(...
         dA, dB, dC, dD, XX, xpp, nx, UU, upp,...
         nu, ny, InputDelay, OutputDelay, k);
