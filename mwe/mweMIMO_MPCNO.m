@@ -21,7 +21,7 @@ lambda = ones(1, nu);  % Control weight
 initK = 3;
 
 % Trajectory
-[YYzad, kk] = getY2Trajectory(0.3);
+[YYzad, kk] = getNlTrajectory();
 
 % Variable initialisation
 ypp = 0; upp = 0; xpp = 0;
