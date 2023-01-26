@@ -26,18 +26,14 @@ classdef (Abstract) ValidateMPCNO
             addParameter(p, 'ypp', v.c.testYInitVal, v.validScalarDoubleNum);
             addParameter(p, 'upp', v.c.testUInitVal, v.validScalarDoubleNum);
 
-            addParameter(p, 'uMin', v.c.defaultuMin, v.validScalarDoubleNum);
-            addParameter(p, 'uMax', v.c.defaultuMax, v.validScalarDoubleNum);
+            addParameter(p, 'uMin', v.c.defaultuMin, v.validNum);
+            addParameter(p, 'uMax', v.c.defaultuMax, v.validNum);
 
-            addParameter(p, 'duMin', v.c.defaultMPCNOduMin,...
-                v.validScalarDoubleLessThan0Num);
-            addParameter(p, 'duMax', v.c.defaultMPCNOduMax,...
-                v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'duMin', v.c.defaultduMin, v.validNumLessThan0);
+            addParameter(p, 'duMax', v.c.defaultduMax, v.validNumGreaterThan0);
 
-            addParameter(p, 'yMin', v.c.defaultMPCNOyMin,...
-                v.validScalarDoubleNum);
-            addParameter(p, 'yMax', v.c.defaultMPCNOyMax,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'yMin', v.c.defaultMPCNOyMin, v.validNum);
+            addParameter(p, 'yMax', v.c.defaultMPCNOyMax, v.validNum);
 
             addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan1Num);
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
@@ -60,12 +56,12 @@ classdef (Abstract) ValidateMPCNO
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.ypp = p.Results.ypp;
             obj.upp = p.Results.upp;
-            obj.uMin = p.Results.uMin;
-            obj.uMax = p.Results.uMax;
-            obj.duMin = p.Results.duMin;
-            obj.duMax = p.Results.duMax;
-            obj.yMin = p.Results.yMin;
-            obj.yMax = p.Results.yMax;
+            obj.uMin = v.validateArray('uMin', p.Results.uMin, obj.nu);
+            obj.uMax = v.validateArray('uMax', p.Results.uMax, obj.nu);
+            obj.duMin = v.validateArray('duMin', p.Results.duMin, obj.nu);
+            obj.duMax = v.validateArray('duMax',p.Results.duMax, obj.nu);
+            obj.yMin = v.validateArray('yMin', p.Results.yMin, obj.ny);
+            obj.yMax = v.validateArray('yMax', p.Results.yMax, obj.ny);
             obj.k = p.Results.k;
             % Y(k) is calculated in loop based on given Y(k-1) value, so values
             % Y(k-2),Y(k-3)... need to be already initialised

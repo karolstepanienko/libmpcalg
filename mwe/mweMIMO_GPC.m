@@ -64,14 +64,15 @@ D = 200;  % Dynamic horizon
 N = 100;  % Prediction horizon
 N1 = 1;  % Offset resulting from the delay
 Nu = 8;  % Moving horizon
-mi = ones(1, ny);  % Output importance
-lambda = ones(1, nu);  % Control weight
+mi = ones(ny, 1);  % Output importance
+lambda = ones(nu, 1);  % Control weight
 algType = 'fast';
 
 % Regulator
 reg = GPC(N, Nu, ny, nu, A, B, 'N1', N1,...
     'IODelay', IODelay, 'mi', mi, 'lambda', lambda,...
-    'uMin', -2,'uMax', 2, 'duMin', -0.5, 'duMax', 0.5,...
+    'uMin', -2 * ones(nu, 1),'uMax', 2 * ones(nu, 1),...
+    'duMin', -0.5 * ones(nu, 1), 'duMax', 0.5 * ones(nu, 1),...
     'algType', algType);
 
 % Trajectory

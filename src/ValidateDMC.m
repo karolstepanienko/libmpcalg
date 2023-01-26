@@ -28,17 +28,11 @@ classdef (Abstract) ValidateDMC
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
-            addParameter(p, 'uMin', v.c.defaultuMin,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'uMin', v.c.defaultuMin, v.validNum);
+            addParameter(p, 'uMax', v.c.defaultuMax, v.validNum);
 
-            addParameter(p, 'uMax', v.c.defaultuMax,...
-                v.validScalarDoubleNum);
-
-            addParameter(p, 'duMin', v.c.defaultduMin,...
-                v.validScalarDoubleLessThan0Num);
-
-            addParameter(p, 'duMax', v.c.defaultduMax,...
-                v.validScalarDoubleGreaterThan0Num);
+            addParameter(p, 'duMin', v.c.defaultduMin, v.validNumLessThan0);
+            addParameter(p, 'duMax', v.c.defaultduMax, v.validNumGreaterThan0);
 
             addParameter(p, 'algType', v.c.analyticalAlgType,...
                 v.validAlgType);
@@ -59,10 +53,10 @@ classdef (Abstract) ValidateDMC
             obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
-            obj.uMin = p.Results.uMin;
-            obj.uMax = p.Results.uMax;
-            obj.duMin = p.Results.duMin;
-            obj.duMax = p.Results.duMax;
+            obj.uMin = v.validateArray('uMin', p.Results.uMin, obj.nu);
+            obj.uMax = v.validateArray('uMax', p.Results.uMax, obj.nu);
+            obj.duMin = v.validateArray('duMin', p.Results.duMin, obj.nu);
+            obj.duMax = v.validateArray('duMax',p.Results.duMax, obj.nu);
             % algType is not saved as a class property
         end
 
@@ -92,23 +86,14 @@ classdef (Abstract) ValidateDMC
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
-            addParameter(p, 'uMin', v.c.defaultuMin,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'uMin', v.c.defaultuMin, v.validNum);
+            addParameter(p, 'uMax', v.c.defaultuMax, v.validNum);
 
-            addParameter(p, 'uMax', v.c.defaultuMax,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'duMin', v.c.defaultduMin, v.validNumLessThan0);
+            addParameter(p, 'duMax', v.c.defaultduMax, v.validNumGreaterThan0);
 
-            addParameter(p, 'duMin', v.c.defaultduMin,...
-                v.validScalarDoubleLessThan0Num);
-
-            addParameter(p, 'duMax', v.c.defaultduMax,...
-                v.validScalarDoubleGreaterThan0Num);
-
-            addParameter(p, 'yMin', v.c.defaultyMin,...
-                v.validScalarDoubleNum);
-
-            addParameter(p, 'yMax', v.c.defaultyMax,...
-                v.validScalarDoubleNum);
+            addParameter(p, 'yMin', v.c.defaultyMin, v.validNum);
+            addParameter(p, 'yMax', v.c.defaultyMax, v.validNum);
 
             addParameter(p, 'algType', v.c.analyticalAlgType,...
                 v.validAlgType);
@@ -129,12 +114,12 @@ classdef (Abstract) ValidateDMC
             obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
-            obj.uMin = p.Results.uMin;
-            obj.uMax = p.Results.uMax;
-            obj.duMin = p.Results.duMin;
-            obj.duMax = p.Results.duMax;
-            obj.yMin = p.Results.yMin;
-            obj.yMax = p.Results.yMax;
+            obj.uMin = v.validateArray('uMin', p.Results.uMin, obj.nu);
+            obj.uMax = v.validateArray('uMax', p.Results.uMax, obj.nu);
+            obj.duMin = v.validateArray('duMin', p.Results.duMin, obj.nu);
+            obj.duMax = v.validateArray('duMax',p.Results.duMax, obj.nu);
+            obj.yMin = v.validateArray('yMin', p.Results.yMin, obj.ny);
+            obj.yMax = v.validateArray('yMax', p.Results.yMax, obj.ny);
             % algType is not saved as a class property
         end
     end

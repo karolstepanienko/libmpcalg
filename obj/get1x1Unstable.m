@@ -42,13 +42,13 @@ function obj = get1x1Unstable(st)
     m.Nu = 5;  % Moving horizon
     m.NuNl = 1;  % Moving horizon for nonlinear algorithm
                  % (purpose: decrease test time)
-    m.mi = ones(1, m.ny);  % Output importance
-    m.lambda = ones(1, m.nu);  % Control weight
-    m.uMin = -2;
-    m.uMax = -m.uMin;
-    m.duMin = -1;
-    m.duMax = -m.duMin;
-    m.yMin = -1.3;
-    m.yMax = -m.yMin;
+    m.mi = ones(m.ny, 1);  % Output importance
+    m.lambda = ones(m.nu, 1);  % Control weight
+    m.uMin = -2 * ones(m.nu, 1);
+    m.uMax = 2 * ones(m.nu, 1);
+    m.duMin = -1 * ones(m.nu, 1);
+    m.duMax = 1 * ones(m.nu, 1);
+    m.yMin = -1.3 * ones(m.ny, 1);
+    m.yMax = 1.3 * ones(m.nu, 1);
     m.osf = 1;  % Object Sampling Factor
 end

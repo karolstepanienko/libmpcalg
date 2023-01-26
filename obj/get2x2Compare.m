@@ -20,10 +20,15 @@ function obj = get2x2Compare()
     obj.ny = 2;
     obj.nu = 2;
     obj.nx = size(obj.dA, 1);
-    obj.mi = ones(1, obj.ny);  % Output importance
-    obj.lambda = ones(1, obj.nu); % Input importance
-    obj.uMin = -inf;
-    obj.duMin = -inf;
+    obj.mi = ones(obj.ny, 1);  % Output importance
+    obj.lambda = ones(obj.nu, 1); % Input importance
+    obj.uMin = -inf * ones(obj.nu, 1);
+    obj.uMax = inf * ones(obj.nu, 1);
+    obj.c = Constants();
+    obj.duMin = obj.c.defaultMPCNOduMin * ones(obj.nu, 1);
+    obj.duMax = obj.c.defaultMPCNOduMax * ones(obj.nu, 1);
+    obj.yMin = obj.c.defaultMPCNOyMin * ones(obj.ny, 1);
+    obj.yMax = obj.c.defaultMPCNOyMax * ones(obj.ny, 1);
     obj.getOutput = @getOutput2x2Compare;
 end
 

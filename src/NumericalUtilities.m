@@ -23,12 +23,12 @@ classdef (Abstract) NumericalUtilities < handle
             obj.H = obj.getH(M, Xi, Lambda);
             obj.J = obj.getJ();
             obj.AMatrix = obj.getAMatrix(M);
-            obj.UUmin = ones(obj.nu * obj.Nu, 1) * obj.uMin;
-            obj.UUmax = ones(obj.nu * obj.Nu, 1) * obj.uMax;
-            obj.YYmin = ones(obj.ny * (obj.N - obj.N1 + 1), 1) * obj.yMin;
-            obj.YYmax = ones(obj.ny * (obj.N - obj.N1 + 1), 1) * obj.yMax;
-            obj.duuMin = ones(obj.nu * obj.Nu, 1) * obj.duMin;
-            obj.duuMax = ones(obj.nu * obj.Nu, 1) * obj.duMax;
+            obj.UUmin = Utilities.stackVector(obj.uMin, obj.Nu);
+            obj.UUmax = Utilities.stackVector(obj.uMax, obj.Nu);
+            obj.duuMin = Utilities.stackVector(obj.duMin, obj.Nu);
+            obj.duuMax = Utilities.stackVector(obj.duMax, obj.Nu);
+            obj.YYmin = Utilities.stackVector(obj.yMin, (obj.N - obj.N1 + 1));
+            obj.YYmax = Utilities.stackVector(obj.yMax, (obj.N - obj.N1 + 1));
             obj.dUU_k = [];
         end
 

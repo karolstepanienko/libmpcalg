@@ -86,6 +86,9 @@
 
 
 %-------------------------------------- mi -------------------------------------
+% isnumeric
+%!error <DMC: failed validation of MI with isnumeric> testDMCParameters('mi', '2');
+
 % stretch single element
 %!warning <Assumed array mi consists of 2 elements with a value of 1> testDMCParameters('mi', 1)
 
@@ -103,6 +106,9 @@
 
 
 %------------------------------------ lambda -----------------------------------
+% isnumeric
+%!error <DMC: failed validation of LAMBDA with isnumeric> testDMCParameters('lambda', '2');
+
 % lambda = 0
 %!warning <Lambda value set to 0. Regulator might be unstable.> testDMCParameters('lambda', [0, 0])
 
@@ -124,63 +130,108 @@
 
 %-------------------------------------- uMin -----------------------------------
 % isnumeric
-%!error <DMC: failed validation of UMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('uMin', '2');
+%!error <DMC: failed validation of UMIN with isnumeric> testDMCParameters('uMin', '2');
 
-% isscalar (is not a matrix)
-%!error <DMC: failed validation of UMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('uMin', [1, 1]);
+% stretch single element
+%!warning <Assumed array uMin consists of 2 elements with a value of 1> testDMCParameters('uMin', 1)
 
-% Value has a type of 'double'
-%!error <DMC: failed validation of UMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('uMin', int8(1));
+% has ny Elements
+%!error <Array uMin should have \(2\) elements> testDMCParameters('uMin', [1, 1, 1])
+
+% can be horizontal
+%!test(testDMCParameters('uMin', [1, 1]))
+
+% can be vertical
+%!test(testDMCParameters('uMin', [1; 1]))
+
+% is not a matrix
+%!error <Value uMin should be a horizontal or vertical array with 2 elements> (testDMCParameters('uMin', [1, 1; 1, 1]))
 
 
 %-------------------------------------- uMax -----------------------------------
 % isnumeric
-%!error <DMC: failed validation of UMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('uMax', '2');
+%!error <DMC: failed validation of UMAX with isnumeric> testDMCParameters('uMax', '2');
 
-% isscalar (is not a matrix)
-%!error <DMC: failed validation of UMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('uMax', [1, 1]);
+% stretch single element
+%!warning <Assumed array uMax consists of 2 elements with a value of 1> testDMCParameters('uMax', 1)
 
-% Value has a type of 'double'
-%!error <DMC: failed validation of UMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('uMax', int8(1));
+% has ny Elements
+%!error <Array uMax should have \(2\) elements> testDMCParameters('uMax', [1, 1, 1])
+
+% can be horizontal
+%!test(testDMCParameters('uMax', [1, 1]))
+
+% can be vertical
+%!test(testDMCParameters('uMax', [1; 1]))
+
+% is not a matrix
+%!error <Value uMax should be a horizontal or vertical array with 2 elements> (testDMCParameters('uMax', [1, 1; 1, 1]))
 
 
 %------------------------------------- duMin -----------------------------------
 % isnumeric
-%!error <DMC: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testDMCParameters('duMin', '2');
+%!error <DMC: failed validation of DUMIN with @\(x\) isnumeric \(x\) && obj.isNegative \(x\)> testDMCParameters('duMin', '2');
 
-% isscalar (is not a matrix)
-%!error <DMC: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testDMCParameters('duMin', [1, 1]);
+% isNegative (x < 0)
+%!error <DMC: failed validation of DUMIN with @\(x\) isnumeric \(x\) && obj.isNegative \(x\)> testDMCParameters('duMin', 2);
 
-% Value has a type of 'double'
-%!error <DMC: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testDMCParameters('duMin', int8(1));
+% stretch single element
+%!warning <Assumed array duMin consists of 2 elements with a value of -1> testDMCParameters('duMin', -1)
 
-% Value <= 0
-%!error <DMC: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testDMCParameters('duMin', 1);
+% has ny Elements
+%!error <Array duMin should have \(2\) elements> testDMCParameters('duMin', [-1, -1, -1])
+
+% can be horizontal
+%!test(testDMCParameters('duMin', [-1, -1]))
+
+% can be vertical
+%!test(testDMCParameters('duMin', [-1; -1]))
+
+% is not a matrix
+%!error <Value duMin should be a horizontal or vertical array with 2 elements> (testDMCParameters('duMin', [-1, -1; -1, -1]))
 
 
 %------------------------------------- duMax -----------------------------------
 % isnumeric
-%!error <DMC: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testDMCParameters('duMax', '2');
+%!error <DMC: failed validation of DUMAX with @\(x\) isnumeric \(x\) && obj.isPositive \(x\)> testDMCParameters('duMax', '2');
 
-% isscalar (is not a matrix)
-%!error <DMC: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testDMCParameters('duMax', [1, 1]);
+% isPositive (x > 0)
+%!error <DMC: failed validation of DUMAX with @\(x\) isnumeric \(x\) && obj.isPositive \(x\)> testDMCParameters('duMax', -1);
 
-% Value has a type of 'double'
-%!error <DMC: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testDMCParameters('duMax', int8(1));
+% stretch single element
+%!warning <Assumed array duMax consists of 2 elements with a value of 1> testDMCParameters('duMax', 1)
 
-% Value >= 0
-%!error <DMC: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testDMCParameters('duMax', -1);
+% has ny Elements
+%!error <Array duMax should have \(2\) elements> testDMCParameters('duMax', [1, 1, 1])
+
+% can be horizontal
+%!test(testDMCParameters('duMax', [1, 1]))
+
+% can be vertical
+%!test(testDMCParameters('duMax', [1; 1]))
+
+% is not a matrix
+%!error <Value duMax should be a horizontal or vertical array with 2 elements> (testDMCParameters('duMax', [1, 1; 1, 1]))
 
 
 %------------------------------------- yMin ------------------------------------
 % isnumeric
-%!error <DMC: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('yMin', '2');
+%!error <DMC: failed validation of YMIN with isnumeric> testDMCParameters('yMin', '2');
 
-% isscalar (is not a matrix)
-%!error <DMC: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('yMin', [1, 1]);
+% stretch single element
+%!warning <Assumed array yMin consists of 2 elements with a value of 1> testDMCParameters('yMin', 1)
 
-% Value has a type of 'double'
-%!error <DMC: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('yMin', int8(1));
+% has ny Elements
+%!error <Array yMin should have \(2\) elements> testDMCParameters('yMin', [1, 1, 1])
+
+% can be horizontal
+%!test(testDMCParameters('yMin', [1, 1]))
+
+% can be vertical
+%!test(testDMCParameters('yMin', [1; 1]))
+
+% is not a matrix
+%!error <Value yMin should be a horizontal or vertical array with 2 elements> (testDMCParameters('yMin', [1, 1; 1, 1]))
 
 % Not accessible in analyticalAlgType
 %!error <DMC: argument 'YMIN' is not a valid parameter> testDMCParameters('algType', Constants().analyticalAlgType);
@@ -191,13 +242,22 @@
 
 %------------------------------------- yMax ------------------------------------
 % isnumeric
-%!error <DMC: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('yMax', '2');
+%!error <DMC: failed validation of YMAX with isnumeric> testDMCParameters('yMax', '2');
 
-% isscalar (is not a matrix)
-%!error <DMC: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('yMax', [1, 1]);
+% stretch single element
+%!warning <Assumed array yMax consists of 2 elements with a value of 1> testDMCParameters('yMax', 1)
 
-% Value has a type of 'double'
-%!error <DMC: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testDMCParameters('yMax', int8(1));
+% has ny Elements
+%!error <Array yMax should have \(2\) elements> testDMCParameters('yMax', [1, 1, 1])
+
+% can be horizontal
+%!test(testDMCParameters('yMax', [1, 1]))
+
+% can be vertical
+%!test(testDMCParameters('yMax', [1; 1]))
+
+% is not a matrix
+%!error <Value yMax should be a horizontal or vertical array with 2 elements> (testDMCParameters('yMax', [1, 1; 1, 1]))
 
 
 %------------------------------------ algType ----------------------------------

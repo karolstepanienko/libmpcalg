@@ -20,14 +20,14 @@ dD = 0;
 D = 80;  % Dynamic horizon
 N = 70;  % Prediction horizon
 Nu = 5;  % Moving horizon
-mi = ones(1, ny);  % Output importance
-lambda = ones(1, nu);  % Control weight
-uMin = -2;
-uMax = -uMin;
-duMin = -1;
-duMax = -duMin;
-yMin = -1.3;
-yMax = -yMin;
+mi = ones(ny, 1);  % Output importance
+lambda = ones(nu, 1);  % Control weight
+uMin = -2 * ones(nu, 1);
+uMax = 2 * ones(nu, 1);
+duMin = -1 * ones(nu, 1);
+duMax = 1 * ones(nu, 1);
+yMin = -1.3 * ones(ny, 1);
+yMax = 1.3 * ones(ny, 1);
 algType = 'numerical';  % Numerical algorithm allows the usage of output limits
 
 % Regulator

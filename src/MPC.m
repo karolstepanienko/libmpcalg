@@ -28,22 +28,22 @@ classdef (Abstract) MPC < handle
     methods
         %% limitU_k
         function U_k = limitU_k(obj, U_k)
-            for i=1:obj.nu
-                if U_k(i) < obj.uMin
-                    U_k(i) = obj.uMin;
-                elseif U_k(i) > obj.uMax
-                    U_k(i) = obj.uMax;
+            for cu=1:obj.nu
+                if U_k(cu) < obj.uMin(cu)
+                    U_k(cu) = obj.uMin(cu);
+                elseif U_k(cu) > obj.uMax(cu)
+                    U_k(cu) = obj.uMax(cu);
                 end
             end
         end
 
         %% limitdU_k
         function dU_k = limitdU_k(obj, dU_k)
-            for i=1:obj.nu
-                if dU_k(i) < obj.duMin
-                    dU_k(i) = obj.duMin;
-                elseif dU_k(i) > obj.duMax
-                    dU_k(i) = obj.duMax;
+            for cu=1:obj.nu
+                if dU_k(cu) < obj.duMin(cu)
+                    dU_k(cu) = obj.duMin(cu);
+                elseif dU_k(cu) > obj.duMax(cu)
+                    dU_k(cu) = obj.duMax(cu);
                 end
             end
         end

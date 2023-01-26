@@ -16,8 +16,8 @@ nu = 3;  % Number of inputs
 % Regulator parameters
 N = 4;  % Prediction horizon
 Nu = 2;  % Moving horizon
-mi = ones(1, ny);  % Output importance
-lambda = ones(1, nu);  % Control weight
+mi = ones(ny, 1);  % Output importance
+lambda = ones(nu, 1);  % Control weight
 initK = 3;
 
 % Trajectory
@@ -31,9 +31,10 @@ UU = ones(kk, nu) * upp;
 % Regulator
 reg = MPCNO(N, Nu, ny, nu, @getObjectOutputNl2x3,...
     'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
-    'uMin', -2, 'uMax', 2, 'duMin', -0.2, 'duMax', 0.2,...
-    'yMin', -0.5, 'yMax', 0.5, 'k', initK,...
-    'YY', YY, 'UU', UU);
+    'uMin', -2 * ones(nu, 1), 'uMax', 2 * ones(nu, 1),...
+    'duMin', -0.2 * ones(nu, 1), 'duMax', 0.2 * ones(nu, 1),...
+    'yMin', -0.5 * ones(ny, 1), 'yMax', 0.5 * ones(ny, 1),...
+    'k', initK, 'YY', YY, 'UU', UU);
 
 % Control loop
 for k=initK:kk

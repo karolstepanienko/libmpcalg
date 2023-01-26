@@ -34,14 +34,16 @@ D = 80;  % Dynamic horizon
 N = 70;  % Prediction horizon
 N1 = 1;  % Offset resulting from the delay
 Nu = 5;  % Moving horizon
-mi = ones(1, ny);  % Output importance
-lambda = 20 * ones(1, nu);  % Control weight
+mi = ones(ny, 1);  % Output importance
+lambda = 20 * ones(nu, 1);  % Control weight
 algType = 'analytical';
 
 % Regulator
 reg = DMC(D, N, Nu, ny, nu, stepResponse, 'N1', N1,...
-    'mi', mi, 'lambda', lambda, 'uMin', -1, 'uMax', 1,...
-    'duMin', -1, 'duMax', 1, 'algType', algType);
+    'mi', mi, 'lambda', lambda,...
+    'uMin', -1 * ones(nu, 1), 'uMax', 1 * ones(nu, 1),...
+    'duMin', -1 * ones(nu, 1), 'duMax', 1 * ones(nu, 1),...
+    'algType', algType);
 
 % Trajectory
 [Yzad, kk] = getY1Trajectory();

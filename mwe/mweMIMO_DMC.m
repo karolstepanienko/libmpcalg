@@ -70,12 +70,12 @@ stepResponse{2, 1} = [0 0; 0 0; 0.0975 0.0988; 0.1903 0.1951; 0.2786 0.2890; 0.3
 D = 200;  % Dynamic horizon
 N = 100;  % Prediction horizon
 Nu = 8;  % Moving horizon
-mi = ones(1, ny);  % Output importance
-lambda = ones(1, nu);  % Control weight
-uMin = -2;
-uMax = -uMin;
-duMin = -0.5;
-duMax = -duMin;
+mi = ones(ny, 1);  % Output importance
+lambda = ones(nu, 1);  % Control weight
+uMin = -2 * ones(nu, 1);
+uMax = 2 * ones(nu, 1);
+duMin = -0.5 * ones(nu, 1);
+duMax = 0.5 * ones(nu, 1);
 algType = 'fast';
 
 % Regulator

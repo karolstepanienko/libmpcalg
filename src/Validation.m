@@ -5,10 +5,10 @@ classdef Validation
         validScalarIntGreaterThan1Num
         % Double
         validScalarDoubleNum
-        validScalarDoubleLessThan0Num
-        validScalarDoubleGreaterThan0Num
         % Double or array
         validNum
+        validNumGreaterThan0
+        validNumLessThan0
         % Matrix
         validMatrix
         validSquareMatrix
@@ -52,25 +52,20 @@ classdef Validation
                 && isa(x, 'double');
         end
 
-        %--------------------------- double < 0 --------------------------------
+        %----------------------- double or array -------------------------------
 
-        %% get.validScalarDoubleLessThan0Num
-        % Returns function for validating doubles smaller or equal to zero
-        function validScalarDoubleLessThan0Num = get.validScalarDoubleLessThan0Num(obj)
-            validScalarDoubleLessThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
-                isa(x, 'double') && obj.isNegativeOrEqualToZero(x);
+        %% get.validNumGreaterThan0
+        function validScalarDoubleNum = get.validNumGreaterThan0(obj)
+            validScalarDoubleNum = @(x) isnumeric(x) && obj.isPositive(x);
         end
 
-        %--------------------------- double > 0 --------------------------------
-
-        %% get.validScalarDoubleGreaterThan0Num
-        % Returns function for validating doubles bigger or equal to zero
-        function validScalarDoubleGreaterThan0Num = get.validScalarDoubleGreaterThan0Num(obj)
-            validScalarDoubleGreaterThan0Num = @(x) isnumeric(x) && isscalar(x) &&...
-                isa(x, 'double') && obj.isPositiveOrEqualToZero(x);
+        %% get.validNumLessThan0
+        function validNumLessThan0 = get.validNumLessThan0(obj)
+            validNumLessThan0 = @(x) isnumeric(x) && obj.isNegative(x);
         end
 
         %---------------------------- vector -----------------------------------
+
         function validNum = get.validNum(obj)
             validNum = @isnumeric;
         end
@@ -250,27 +245,19 @@ classdef Validation
         % Those methods were implemented for the purpose of Octave tests
 
         function r = isPositive(x)
-            if x > 0
-                r = 1;
-            else
-                r = 0;
-            end
+            if x > 0 r = 1; else r = 0; end
+        end
+
+        function r = isNegative(x)
+            if x < 0 r = 1; else r = 0; end
         end
 
         function r = isNegativeOrEqualToZero(x)
-            if x <= 0
-                r = 1;
-            else
-                r = 0;
-            end
+            if x <= 0 r = 1; else r = 0; end
         end
 
         function r = isPositiveOrEqualToZero(x)
-            if x >= 0
-                r = 1;
-            else
-                r = 0;
-            end
+            if x >= 0 r = 1; else r = 0; end
         end
 
         function r = isMoreOrEqualTo2(x)

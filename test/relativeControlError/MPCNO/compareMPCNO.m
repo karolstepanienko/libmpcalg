@@ -11,13 +11,16 @@ function [errorYY_MPCNO_JMatlab, errorUU_MPCNO_JMatlab] = compareMPCNO(varargin)
     c = Constants();
     % Object
     obj = get2x2Compare();
+    % obj.duMin
+    % pause
 
     [YYzad, kk, dataMPCNO.ypp, dataMPCNO.upp, ~] = getY2CompareTrajectory(obj.osf);
 
     % Regulator
     reg = MPCNO(obj.N+1, obj.Nu, obj.ny, obj.nu, obj.getOutput, 'mi', obj.mi,...
         'lambda', obj.lambda, 'ypp', dataMPCNO.ypp, 'upp', dataMPCNO.upp,...
-        'uMin', obj.uMin, 'uMax', -obj.uMin);
+        'uMin', obj.uMin, 'uMax', obj.uMax, 'duMin', obj.duMin,...
+        'duMax', obj.duMax, 'yMin', obj.yMin, 'yMax', obj.yMax);
 
     % Variable initialisation
     dataMPCNO.data = struct;

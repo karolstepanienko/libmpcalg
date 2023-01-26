@@ -49,12 +49,12 @@ classdef MPCNO < handle
 
         function obj = initMPCNO(obj)
             obj.c = Constants();
-            obj.uMinVec = obj.uMin * ones(obj.Nu, obj.nu);
-            obj.uMaxVec = obj.uMax * ones(obj.Nu, obj.nu);
-            obj.duMinVec = obj.duMin * ones(1, obj.nu);
-            obj.duMaxVec = obj.duMax * ones(1, obj.nu);
-            obj.yMinVec = obj.yMin * ones(1, obj.ny);
-            obj.yMaxVec = obj.yMax * ones(1, obj.ny);
+            obj.uMinVec = Utilities.stackVector(obj.uMin, obj.Nu);
+            obj.uMaxVec = Utilities.stackVector(obj.uMax, obj.Nu);
+            obj.duMinVec = Utilities.stackVector(obj.duMin, obj.Nu);
+            obj.duMaxVec = Utilities.stackVector(obj.duMax, obj.Nu);
+            obj.yMinVec = Utilities.stackVector(obj.yMin, obj.N);
+            obj.yMaxVec = Utilities.stackVector(obj.yMax, obj.N);
             UUlength = size(obj.UU, 1);
             % Hot start
             if UUlength == 0
@@ -93,29 +93,29 @@ classdef MPCNO < handle
                     obj.uMaxVec, nonlcon, obj.c.fminconOptions);
             catch
                 Warnings.removedYConstraints();
-                obj.yMin = obj.c.defaultMPCNOyMin;
-                obj.yMax = obj.c.defaultMPCNOyMax;
-                obj.yMinVec = obj.yMin * ones(1, obj.ny);
-                obj.yMaxVec = obj.yMax * ones(1, obj.ny);
+                obj.yMinVec = Utilities.stackVector(...
+                    obj.c.defaultMPCNOyMin * ones(obj.ny, 1), obj.N);
+                obj.yMaxVec = Utilities.stackVector(...
+                    obj.c.defaultMPCNOyMax * ones(obj.ny, 1), obj.N);
                 try
                     UUopt = fmincon(f, UU_k0, [], [], [], [], obj.uMinVec,...
                         obj.uMaxVec, nonlcon, obj.c.fminconOptions);
                 catch
                     Warnings.removedDUConstraints();
-                    obj.duMin = obj.c.defaultMPCNOduMin;
-                    obj.duMax = obj.c.defaultMPCNOduMax;
-                    obj.duMinVec = obj.duMin * ones(1, obj.nu);
-                    obj.duMaxVec = obj.duMax * ones(1, obj.nu);
+                    obj.duMinVec = Utilities.stackVector(...
+                        obj.c.defaultMPCNOduMin * ones(obj.nu, 1), obj.Nu);
+                    obj.duMaxVec = Utilities.stackVector(...
+                        obj.c.defaultMPCNOduMax * ones(obj.nu, 1), obj.Nu);
                     try
                         UUopt = fmincon(f, UU_k0, [], [], [], [],...
                             obj.uMinVec, obj.uMaxVec, nonlcon,...
                             obj.c.fminconOptions);
                     catch
                         Warnings.removedUConstraints();
-                        obj.uMin = obj.c.defaultuMin;
-                        obj.uMax = obj.c.defaultuMax;
-                        obj.uMinVec = obj.uMin * ones(obj.Nu, obj.nu);
-                        obj.uMaxVec = obj.uMax * ones(obj.Nu, obj.nu);
+                        obj.uMinVec = Utilities.stackVector(...
+                            obj.c.defaultuMin * ones(obj.nu, 1), obj.Nu);
+                        obj.uMaxVec = Utilities.stackVector(...
+                            obj.c.defaultuMax * ones(obj.nu, 1), obj.Nu);
                         UUopt = fmincon(f, UU_k0, [], [], [], [],...
                             obj.uMinVec, obj.uMaxVec, nonlcon,...
                             obj.c.fminconOptions);
@@ -172,10 +172,10 @@ classdef MPCNO < handle
                 YYVec(p * obj.ny + 1:(p+1)*obj.ny, 1) = obj.YY(obj.k + p, :)';
             end
 
-            c = [ -duVec + Utilities.stackVector(obj.duMinVec, obj.Nu);
-                   duVec - Utilities.stackVector(obj.duMaxVec, obj.Nu);
-                  -YYVec + Utilities.stackVector(obj.yMinVec, obj.N);
-                   YYVec - Utilities.stackVector(obj.yMaxVec, obj.N)
+            c = [ -duVec + obj.duMinVec;
+                   duVec - obj.duMaxVec;
+                  -YYVec + obj.yMinVec;
+                   YYVec - obj.yMaxVec
             ];
         end
 

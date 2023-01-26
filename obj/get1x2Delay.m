@@ -48,13 +48,13 @@ function obj = get1x2Delay(st)
     m.Nu = 6;  % Moving horizon
     m.NuNl = 1;  % Moving horizon for nonlinear algorithm
                  % (purpose: decrease test time)
-    m.mi = ones(1, m.ny);  % Output importance
-    m.lambda = ones(1, m.nu);  % Control weight
-    m.uMin = -0.5;
-    m.uMax = -m.uMin;
-    m.duMin = -0.4;
-    m.duMax = -m.duMin;
-    m.yMin = -1.8;
-    m.yMax = -m.yMin;
+    m.mi = ones(m.ny, 1);  % Output importance
+    m.lambda = ones(m.nu, 1);  % Control weight
+    m.uMin = -0.5 * ones(m.nu, 1);
+    m.uMax = 0.5 * ones(m.nu, 1);
+    m.duMin = -0.4 * ones(m.nu, 1);
+    m.duMax = 0.4 * ones(m.nu, 1);
+    m.yMin = -1.8 * ones(m.ny, 1);
+    m.yMax = 1.8 * ones(m.ny, 1);
     m.osf = 1;  % Object Sampling Factor
 end

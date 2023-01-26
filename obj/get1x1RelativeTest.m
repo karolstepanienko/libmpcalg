@@ -36,13 +36,13 @@ function obj = get1x1RelativeTest(st)
     m.Nu = 2;  % Moving horizon
     m.NuNl = 1;  % Moving horizon for nonlinear algorithm
                  % (purpose: decrease test time)
-    m.mi = ones(1, m.ny);  % Output importance
-    m.lambda = ones(1, m.nu) * 6;  % Control weight
-    m.uMin = -1.5;
-    m.uMax = -m.uMin;
-    m.duMin = -0.2;
-    m.duMax = -m.duMin;
-    m.yMin = -1.3;
-    m.yMax = -m.yMin;
+    m.mi = ones(m.ny, 1);  % Output importance
+    m.lambda = 6 * ones(m.nu, 1);  % Control weight
+    m.uMin = -1.5 * ones(m.nu, 1);
+    m.uMax = 1.5 * ones(m.nu, 1);
+    m.duMin = -0.2 * ones(m.nu, 1);
+    m.duMax = 0.2 * ones(m.nu, 1);
+    m.yMin = -1.3 * ones(m.ny, 1);
+    m.yMax = 1.3 * ones(m.nu, 1);
     m.osf = 4;  % Object Sampling Factor
 end

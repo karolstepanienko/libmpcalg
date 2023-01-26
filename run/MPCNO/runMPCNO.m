@@ -11,15 +11,15 @@ function err = runMPCNO(object, varargin)
     % Regulator parameters
     N = 4;  % Prediction horizon
     Nu = 2;  % Moving horizon
-    mi = ones(1, ny);  % Output importance
-    lambda = ones(1, nu);  % Control weight
-    uMin = -100;
-    uMax = -uMin;
+    mi = ones(ny, 1);  % Output importance
+    lambda = ones(nu, 1);  % Control weight
+    uMin = -100 * ones(nu, 1);
+    uMax = 100 * ones(nu, 1);
     c = Constants();
-    duMin = c.defaultMPCNOduMin;
-    duMax = c.defaultMPCNOduMax;
-    yMin = c.defaultMPCNOyMin;
-    yMax = c.defaultMPCNOyMax;
+    duMin = c.defaultMPCNOduMin * ones(nu, 1);
+    duMax = c.defaultMPCNOduMax * ones(nu, 1);
+    yMin = c.defaultMPCNOyMin * ones(ny, 1);
+    yMax = c.defaultMPCNOyMax * ones(ny, 1);
     algType = '';
 
     % Trajectory

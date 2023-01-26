@@ -59,6 +59,9 @@
 
 
 %-------------------------------------- mi -------------------------------------
+% isnumeric
+%!error <MPCNO: failed validation of MI with isnumeric> testMPCNOParameters('mi', '2');
+
 % stretch single element
 %!warning <Assumed array mi consists of 2 elements with a value of 1> testMPCNOParameters('mi', 1)
 
@@ -76,6 +79,9 @@
 
 
 %------------------------------------ lambda -----------------------------------
+% isnumeric
+%!error <MPCNO: failed validation of LAMBDA with isnumeric> testMPCNOParameters('lambda', '2');
+
 % lambda = 0
 %!warning <Lambda value set to 0. Regulator might be unstable.> testMPCNOParameters('lambda', [0, 0])
 
@@ -86,10 +92,10 @@
 %!error <Array lambda should have \(2\) elements> testMPCNOParameters('lambda', [1, 1, 1])
 
 % can be horizontal
-%!test(testMPCNOParameters('mi', [1, 1]))
+%!test(testMPCNOParameters('lambda', [1, 1]))
 
 % can be vertical
-%!test(testMPCNOParameters('mi', [1; 1]))
+%!test(testMPCNOParameters('lambda', [1; 1]))
 
 % is not a matrix
 %!error <Value lambda should be a horizontal or vertical array with 2 elements> (testMPCNOParameters('lambda', [1, 1; 1, 1]))
@@ -119,74 +125,128 @@
 
 %-------------------------------------- uMin -----------------------------------
 % isnumeric
-%!error <MPCNO: failed validation of UMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('uMin', '2');
+%!error <MPCNO: failed validation of UMIN with isnumeric> testMPCNOParameters('uMin', '2');
 
-% isscalar (is not a matrix)
-%!error <MPCNO: failed validation of UMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('uMin', [1, 1]);
+% stretch single element
+%!warning <Assumed array uMin consists of 2 elements with a value of 1> testMPCNOParameters('uMin', 1)
 
-% Value has a type of 'double'
-%!error <MPCNO: failed validation of UMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('uMin', int8(1));
+% has ny Elements
+%!error <Array uMin should have \(2\) elements> testMPCNOParameters('uMin', [1, 1, 1])
+
+% can be horizontal
+%!test(testMPCNOParameters('uMin', [1, 1]))
+
+% can be vertical
+%!test(testMPCNOParameters('uMin', [1; 1]))
+
+% is not a matrix
+%!error <Value uMin should be a horizontal or vertical array with 2 elements> (testMPCNOParameters('uMin', [1, 1; 1, 1]))
 
 
 %-------------------------------------- uMax -----------------------------------
 % isnumeric
-%!error <MPCNO: failed validation of UMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('uMax', '2');
+%!error <MPCNO: failed validation of UMAX with isnumeric> testMPCNOParameters('uMax', '2');
 
-% isscalar (is not a matrix)
-%!error <MPCNO: failed validation of UMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('uMax', [1, 1]);
+% stretch single element
+%!warning <Assumed array uMax consists of 2 elements with a value of 1> testMPCNOParameters('uMax', 1)
 
-% Value has a type of 'double'
-%!error <MPCNO: failed validation of UMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('uMax', int8(1));
+% has ny Elements
+%!error <Array uMax should have \(2\) elements> testMPCNOParameters('uMax', [1, 1, 1])
+
+% can be horizontal
+%!test(testMPCNOParameters('uMax', [1, 1]))
+
+% can be vertical
+%!test(testMPCNOParameters('uMax', [1; 1]))
+
+% is not a matrix
+%!error <Value uMax should be a horizontal or vertical array with 2 elements> (testMPCNOParameters('uMax', [1, 1; 1, 1]))
 
 
 %------------------------------------- duMin -----------------------------------
 % isnumeric
-%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', '2');
+%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && obj.isNegative \(x\)> testMPCNOParameters('duMin', '2');
 
-% isscalar (is not a matrix)
-%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', [1, 1]);
+% isNegative (x < 0)
+%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && obj.isNegative \(x\)> testMPCNOParameters('duMin', 2);
 
-% Value has a type of 'double'
-%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', int8(1));
+% stretch single element
+%!warning <Assumed array duMin consists of 2 elements with a value of -1> testMPCNOParameters('duMin', -1)
 
-% Value <= 0
-%!error <MPCNO: failed validation of DUMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isNegativeOrEqualToZero \(x\)> testMPCNOParameters('duMin', 1);
+% has ny Elements
+%!error <Array duMin should have \(2\) elements> testMPCNOParameters('duMin', [-1, -1, -1])
+
+% can be horizontal
+%!test(testMPCNOParameters('duMin', [-1, -1]))
+
+% can be vertical
+%!test(testMPCNOParameters('duMin', [-1; -1]))
+
+% is not a matrix
+%!error <Value duMin should be a horizontal or vertical array with 2 elements> (testMPCNOParameters('duMin', [-1, -1; -1, -1]))
 
 
 %------------------------------------- duMax -----------------------------------
 % isnumeric
-%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', '2');
+%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && obj.isPositive \(x\)> testMPCNOParameters('duMax', '2');
 
-% isscalar (is not a matrix)
-%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', [1, 1]);
+% isPositive (x > 0)
+%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && obj.isPositive \(x\)> testMPCNOParameters('duMax', -1);
 
-% Value has a type of 'double'
-%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', int8(1));
+% stretch single element
+%!warning <Assumed array duMax consists of 2 elements with a value of 1> testMPCNOParameters('duMax', 1)
 
-% Value >= 0
-%!error <MPCNO: failed validation of DUMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\) && obj.isPositiveOrEqualToZero \(x\)> testMPCNOParameters('duMax', -1);
+% has ny Elements
+%!error <Array duMax should have \(2\) elements> testMPCNOParameters('duMax', [1, 1, 1])
+
+% can be horizontal
+%!test(testMPCNOParameters('duMax', [1, 1]))
+
+% can be vertical
+%!test(testMPCNOParameters('duMax', [1; 1]))
+
+% is not a matrix
+%!error <Value duMax should be a horizontal or vertical array with 2 elements> (testMPCNOParameters('duMax', [1, 1; 1, 1]))
 
 
 %------------------------------------- yMin ------------------------------------
 % isnumeric
-%!error <MPCNO: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMin', '2');
+%!error <MPCNO: failed validation of YMIN with isnumeric> testMPCNOParameters('yMin', '2');
 
-% isscalar (is not a matrix)
-%!error <MPCNO: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMin', [1, 1]);
+% stretch single element
+%!warning <Assumed array yMin consists of 2 elements with a value of 1> testMPCNOParameters('yMin', 1)
 
-% Value has a type of 'double'
-%!error <MPCNO: failed validation of YMIN with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMin', int8(1));
+% has ny Elements
+%!error <Array yMin should have \(2\) elements> testMPCNOParameters('yMin', [1, 1, 1])
+
+% can be horizontal
+%!test(testMPCNOParameters('yMin', [1, 1]))
+
+% can be vertical
+%!test(testMPCNOParameters('yMin', [1; 1]))
+
+% is not a matrix
+%!error <Value yMin should be a horizontal or vertical array with 2 elements> (testMPCNOParameters('yMin', [1, 1; 1, 1]))
 
 
 %------------------------------------- yMax ------------------------------------
 % isnumeric
-%!error <MPCNO: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMax', '2');
+%!error <MPCNO: failed validation of YMAX with isnumeric> testMPCNOParameters('yMax', '2');
 
-% isscalar (is not a matrix)
-%!error <MPCNO: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMax', [1, 1]);
+% stretch single element
+%!warning <Assumed array yMax consists of 2 elements with a value of 1> testMPCNOParameters('yMax', 1)
 
-% Value has a type of 'double'
-%!error <MPCNO: failed validation of YMAX with @\(x\) isnumeric \(x\) && isscalar \(x\) && isa \(x, 'double'\)> testMPCNOParameters('yMax', int8(1));
+% has ny Elements
+%!error <Array yMax should have \(2\) elements> testMPCNOParameters('yMax', [1, 1, 1])
+
+% can be horizontal
+%!test(testMPCNOParameters('yMax', [1, 1]))
+
+% can be vertical
+%!test(testMPCNOParameters('yMax', [1; 1]))
+
+% is not a matrix
+%!error <Value yMax should be a horizontal or vertical array with 2 elements> (testMPCNOParameters('yMax', [1, 1; 1, 1]))
 
 
 %------------------------------------- k ---------------------------------------
