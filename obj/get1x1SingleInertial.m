@@ -10,7 +10,7 @@ function obj = get1x1SingleInertial(st)
     % Object's continuous transmittance
     %      K            4
     % ---------- = ----------
-    %  (Ts + a)     (2s + 3)
+    %  (Ts + a)     (10s + 3)
 
     K = 4;
     T = 10;
