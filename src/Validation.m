@@ -85,6 +85,7 @@ classdef Validation
         function value = validateArray(obj, arrayName, array, n)
             value = obj.stretchValueToArray(arrayName, array, n);
             value = obj.validateArraySize(arrayName, value, n);
+            value = obj.validateArrayNotMatrix(arrayName, value, n);
         end
 
         function stretchedArray = stretchValueToArray(obj, arrayName, array, n)
@@ -100,6 +101,14 @@ classdef Validation
         function value = validateArraySize(obj, arrayName, array, n)
             if length(array) ~= n
                 Exceptions.throwArrayInvalidSize(arrayName, n);
+            else
+                value = array;
+            end
+        end
+
+        function value = validateArrayNotMatrix(obj, arrayName, array, n)
+            if size(array, 1) ~= 1 && size(array, 2) ~= 1
+                Exceptions.throwArrayCannotBeMatrix(arrayName, n);
             else
                 value = array;
             end

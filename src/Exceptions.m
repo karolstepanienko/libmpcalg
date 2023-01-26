@@ -23,6 +23,12 @@ classdef Exceptions
                 arrayName, num2str(n)));
         end
 
+        function throwArrayCannotBeMatrix(valueName, n)
+            error('array:ArrayCannotBeMatrix',...
+                sprintf('Value %s should be a horizontal or vertical array with %s elements',...
+                valueName, num2str(n)));
+        end
+
         %---------------------------- vector -----------------------------------
         function throwMalformedVector(vectorName)
             error('array:MalformedVector',...

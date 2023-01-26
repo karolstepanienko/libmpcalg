@@ -106,6 +106,9 @@
 % can be vertical
 %!test(testGPCParameters('mi', [1; 1]))
 
+% is not a matrix
+%!error <Value mi should be a horizontal or vertical array with 2 elements> (testGPCParameters('mi', [1, 1; 1, 1]))
+
 
 %------------------------------------ lambda -----------------------------------
 % lambda = 0
@@ -122,6 +125,9 @@
 
 % can be vertical
 %!test(testGPCParameters('mi', [1; 1]))
+
+% is not a matrix
+%!error <Value lambda should be a horizontal or vertical array with 2 elements> (testGPCParameters('lambda', [1, 1; 1, 1]))
 
 
 %------------------------------------ ypp --------------------------------------
