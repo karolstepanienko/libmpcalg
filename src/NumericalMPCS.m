@@ -37,9 +37,10 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
         % @param YYzad_k     horizontal vector of target trajectory values
         function UU_k = calculateControl(obj, XX_k, YYzad_k)
             YYzad_k = obj.stackYzadVector(YYzad_k);
+            V_k = XX_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k')';
 
-            YY_0 = obj.CC * obj.AA * XX_k'...
-                + obj.CC * obj.V * (obj.dB * obj.UU_k');
+            YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V...
+                * (obj.dB * obj.UU_k' + V_k');
 
             f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
@@ -71,6 +72,8 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
 
             UU_k = obj.UU_k + obj.dUU_k(1:obj.nu, 1)';
             obj.UU_k = UU_k;
+
+            obj.X_k_1 = XX_k;
         end
     end
 end

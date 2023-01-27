@@ -29,13 +29,13 @@ classdef AnalyticalMPCS < CoreMPCS
         %% calculateControl
         % Calculates new, current object control values
         % Should be run in a loop
-        % @param X_k        horizontal vector of current state values
+        % @param XX_k        horizontal vector of current state values
         % @param YYzad_k    horizontal vector of target trajectory values
-        function UU_k = calculateControl(obj, X_k, YYzad_k)
+        function UU_k = calculateControl(obj, XX_k, YYzad_k)
             YYzad_k = obj.stackYzadVector(YYzad_k);
-            V_k = X_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k')';
+            V_k = XX_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k')';
 
-            YY_0 = obj.CC * obj.AA * X_k' + obj.CC * obj.V...
+            YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V...
                 * (obj.dB * obj.UU_k' + V_k');
 
             dUU_k = obj.K * (YYzad_k - YY_0);
@@ -46,7 +46,7 @@ classdef AnalyticalMPCS < CoreMPCS
             UU_k = obj.limitU_k(obj.UU_k + dU_k');
             obj.UU_k = UU_k;
 
-            obj.X_k_1 = X_k;
+            obj.X_k_1 = XX_k;
         end
     end
 end

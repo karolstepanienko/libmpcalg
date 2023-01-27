@@ -33,9 +33,10 @@ classdef FastMPCS < CoreMPCS
         % @param YYzad_k     horizontal vector of target trajectory values
         function UU_k = calculateControl(obj, XX_k, YYzad_k)
             YYzad_k = obj.stackYzadVector(YYzad_k);
+            V_k = XX_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k')';
 
             YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V *...
-                (obj.dB * obj.UU_k');
+                (obj.dB * obj.UU_k' + V_k');
 
             dU_k = obj.K(1:obj.nu, :) * (YYzad_k - YY_0);
 
@@ -43,6 +44,8 @@ classdef FastMPCS < CoreMPCS
             % UU_k_1 = obj.UU_k
             UU_k = obj.limitU_k(obj.UU_k + dU_k');
             obj.UU_k = UU_k;
+
+            obj.X_k_1 = XX_k;
         end
     end
 end
