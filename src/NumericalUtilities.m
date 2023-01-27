@@ -10,10 +10,10 @@ classdef (Abstract) NumericalUtilities < handle
         AMatrix  % Matrix describing linear inequality constraints
         UUmin  % (nu * Nu, 1) vector of uMin values
         UUmax  % (nu * Nu, 1) vector of uMax values
-        YYmin  % (ny * N, 1) vector of yMin values
-        YYmax  % (ny * N, 1) vector of yMax values
         duuMin  % (nu * Nu, 1) vector of duMin values
         duuMax  % (nu * Nu, 1) vector of duMax values
+        YYmin  % (ny * N, 1) vector of yMin values
+        YYmax  % (ny * N, 1) vector of yMax values
         dUU_k  % (nu * Nu, 1) vector of control value changes calculated by
                % quadprog
     end
