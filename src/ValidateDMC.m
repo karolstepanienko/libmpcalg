@@ -23,6 +23,13 @@ classdef (Abstract) ValidateDMC
                 v.validScalarIntGreaterThan0Num);
 
             % Optional parameters
+            addParameter(p, 'nz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'Dz', v.c.defaultDz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'stepResponsesZ', v.c.defaultStepResponsesZ,...
+                v.validCell);
+
             addParameter(p, 'N1', v.c.defaultN1,...
                 v.validScalarIntGreaterThan0Num);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
@@ -50,6 +57,9 @@ classdef (Abstract) ValidateDMC
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
+            obj.nz = p.Results.nz;
+            obj.Dz = p.Results.Dz;
+            obj.stepResponsesZ = p.Results.stepResponsesZ;  % TODO validation with Dz
             obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
@@ -81,6 +91,13 @@ classdef (Abstract) ValidateDMC
                 v.validScalarIntGreaterThan0Num);
 
             % Optional parameters
+            addParameter(p, 'nz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'Dz', v.c.defaultDz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'stepResponsesZ', v.c.defaultStepResponsesZ,...
+                v.validCell);
+
             addParameter(p, 'N1', v.c.defaultN1,...
                 v.validScalarIntGreaterThan0Num);
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
@@ -111,6 +128,9 @@ classdef (Abstract) ValidateDMC
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
+            obj.nz = p.Results.nz;
+            obj.Dz = p.Results.Dz;
+            obj.stepResponsesZ = p.Results.stepResponsesZ;  % TODO validation with Dz
             obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);

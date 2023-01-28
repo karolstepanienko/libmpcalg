@@ -53,7 +53,10 @@ classdef Constants
         algMPCNO  % (1, 5) char array
         % Constraints and default values
         defaultIODelay  % (1,1) int8
+        defaultnz  % (1,1) int8
+        defaultDz  % (1,1) int8
         defaultN1  % (1,1) int8
+        defaultStepResponsesZ  % (0,0) cell
         defaultMi  % (1,1) double
         defaultLambda  % (1,1) double
         defaultuMin  % (1,1) double
@@ -304,8 +307,20 @@ classdef Constants
             defaultIODelay = 0;
         end
 
+        function defaultnz= get.defaultnz(obj)
+            defaultnz = -1;
+        end
+
+        function defaultDz= get.defaultDz(obj)
+            defaultDz = -1;
+        end
+
         function defaultN1= get.defaultN1(obj)
             defaultN1 = 1;
+        end
+
+        function defaultStepResponsesZ= get.defaultStepResponsesZ(obj)
+            defaultStepResponsesZ = {};
         end
 
         function defaultMi = get.defaultMi(obj)

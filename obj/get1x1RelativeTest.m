@@ -19,7 +19,6 @@ function obj = get1x1RelativeTest(st)
     cDen = [T, 1];
 
     Gs = tf(cNum, cDen);  % Continuous transmittance
-    Gz = c2d(Gs, st, 'zoh');  % Discrete transmittance
     obj = MIMOObj(Gs, st);   % Object
 
     fileName = '1x1RelativeTest';

@@ -7,6 +7,7 @@ classdef (Abstract) MPC < handle
 
         % Optional
         N1  % Offset resulting from the delay
+        nz  % Number of disturbance inputs
         mi  % Output importance
         lambda  % Control weight
         uMin  % Minimal control value
@@ -19,6 +20,7 @@ classdef (Abstract) MPC < handle
     properties (GetAccess = public, SetAccess = protected)
         c  % Constants object
         Sp  % Sp cell of step response matrices in p moment
+        Szp  % Szp cell of disturbance step response matrices in p moment
         M   % M (ny*N, ny*Nu) dynamic matrix
         Xi  % Xi (ny*N, ny*N) output importance matrix
         Lambda  % Lambda (nu*Nu, nu*Nu) input importance matrix
