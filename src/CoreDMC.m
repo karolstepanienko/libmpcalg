@@ -28,7 +28,7 @@ classdef (Abstract) CoreDMC < MPC & handle
             % stepResponses contains first step response element
             obj.Sp = obj.getSp(obj.stepResponses, obj.D + obj.N1);
             obj.Mp = obj.getMp();
-            if obj.Dz > 0
+            if obj.nz > 0
                 obj.Szp = obj.getSp(obj.stepResponsesZ, obj.Dz + obj.N1);
                 obj.Mzp = obj.getMzp();
             end

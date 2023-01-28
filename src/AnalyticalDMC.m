@@ -31,7 +31,7 @@ classdef AnalyticalDMC < CoreDMC
             YY_k_1 = obj.stackVectorNN1Times(YY_k_1);
             YYzad_k = obj.stackYzadVector(YYzad_k);
 
-            if obj.Dz < 0
+            if obj.nz < 0
                 YY_k = obj.Mp * obj.dUUp_k;
             else
                 % Disturbance compensation

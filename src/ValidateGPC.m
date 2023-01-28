@@ -16,10 +16,16 @@ classdef (Abstract) ValidateGPC
             addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfOutputs', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs', v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'A', v.validCell)
-            addRequired(p, 'B', v.validCell)
+            addRequired(p, 'A', v.validCell);
+            addRequired(p, 'B', v.validCell);
 
             % Optional parameters
+            addParameter(p, 'nz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'Az', v.c.defaultCell, v.validCell);
+            addParameter(p, 'Bz', v.c.defaultCell, v.validCell);
+            addParameter(p, 'IODelayZ', v.c.defaultIODelay, v.validNum);
+
             addParameter(p, 'N1', v.c.defaultN1,...
                 v.validScalarIntGreaterThan0Num);
             addParameter(p, 'IODelay', v.c.defaultIODelay, v.validNum);
@@ -37,7 +43,9 @@ classdef (Abstract) ValidateGPC
 
             addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan0Num);
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
+            addParameter(p, 'YYz', v.c.defaultEmptyMatrix, v.validNum);
             addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
+            addParameter(p, 'UUz', v.c.defaultEmptyMatrix, v.validNum);
 
             addParameter(p, 'algType', v.c.analyticalAlgType, v.validAlgType);
 
@@ -53,6 +61,10 @@ classdef (Abstract) ValidateGPC
             obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
+            obj.nz = p.Results.nz;
+            obj.Az = p.Results.Az; % TODO
+            obj.Bz = p.Results.Bz; % TODO
+            obj.IODelayZ = p.Results.IODelayZ; % TODO
             obj.N1 = p.Results.N1;
             obj.IODelay = v.validateIODelay(p.Results.IODelay, 'IODelay',...
                 obj.ny, obj.nu);
@@ -69,8 +81,10 @@ classdef (Abstract) ValidateGPC
             % Y(k-2),Y(k-3)... need to be already initialised
             obj.YY = v.validateInitialisationMatrix(p.Results.YY, 'YY',...
                 obj.k - 2, obj.ny);
+            obj.YYz = p.Results.YYz;  % TODO
             obj.UU = v.validateInitialisationMatrix(p.Results.UU, 'UU',...
                 obj.k - 2, obj.nu);
+            obj.UUz = p.Results.UUz;  % TODO
             % algType is not saved as a class property
         end
 
@@ -89,10 +103,16 @@ classdef (Abstract) ValidateGPC
             addRequired(p, 'Nu', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfOutputs', v.validScalarIntGreaterThan0Num);
             addRequired(p, 'numberOfInputs', v.validScalarIntGreaterThan0Num);
-            addRequired(p, 'A', v.validCell)
-            addRequired(p, 'B', v.validCell)
+            addRequired(p, 'A', v.validCell);
+            addRequired(p, 'B', v.validCell);
 
             % Optional parameters
+            addParameter(p, 'nz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'Az', v.c.defaultCell, v.validCell);
+            addParameter(p, 'Bz', v.c.defaultCell, v.validCell);
+            addParameter(p, 'IODelayZ', v.c.defaultIODelay, v.validNum);
+
             addParameter(p, 'N1', v.c.defaultN1,...
                 v.validScalarIntGreaterThan0Num);
             addParameter(p, 'IODelay', v.c.defaultIODelay, v.validNum);
@@ -113,7 +133,9 @@ classdef (Abstract) ValidateGPC
 
             addParameter(p, 'k', v.c.defaultK, v.validScalarIntGreaterThan0Num);
             addParameter(p, 'YY', v.c.defaultEmptyMatrix, v.validNum);
+            addParameter(p, 'YYz', v.c.defaultEmptyMatrix, v.validNum);
             addParameter(p, 'UU', v.c.defaultEmptyMatrix, v.validNum);
+            addParameter(p, 'UUz', v.c.defaultEmptyMatrix, v.validNum);
 
             addParameter(p, 'algType', v.c.analyticalAlgType, v.validAlgType);
 
@@ -121,6 +143,10 @@ classdef (Abstract) ValidateGPC
             parse(p, N, Nu, ny, nu, A, B, varargin_{:});
 
             % Assign required parameters
+            obj.nz = p.Results.nz;
+            obj.Az = p.Results.Az; % TODO
+            obj.Bz = p.Results.Bz; % TODO
+            obj.IODelayZ = p.Results.IODelayZ; % TODO
             obj.N = p.Results.N;
             obj.Nu = p.Results.Nu;
             obj.ny = p.Results.numberOfOutputs;
@@ -147,8 +173,10 @@ classdef (Abstract) ValidateGPC
             % Y(k-2),Y(k-3)... need to be already initialised
             obj.YY = v.validateInitialisationMatrix(p.Results.YY, 'YY',...
                 obj.k - 2, obj.ny);
+            obj.YYz = p.Results.YYz;  % TODO
             obj.UU = v.validateInitialisationMatrix(p.Results.UU, 'UU',...
                 obj.k - 2, obj.nu);
+            obj.UUz = p.Results.UUz;  % TODO
             % algType is not saved as a class property
         end
     end

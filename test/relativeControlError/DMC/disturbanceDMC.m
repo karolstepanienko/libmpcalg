@@ -14,9 +14,7 @@ function err = disturbanceDMC(varargin)
     [UUz, kkz] = getU1DisturbanceControl();
 
     %% Object
-    % [YYzad, kk, ypp, upp, xpp] = getY1Trajectory();
     [YYzad, kk, ypp, upp, xpp] = getY1DisturbanceTrajectory();
-    YYzad = zeros(kk, 1);
 
     load(Utilities.getObjBinFilePath('1x1.mat'));
     stepResponses = getStepResponsesEq(ny, nu, IODelay, A, B, D + 1);

@@ -56,7 +56,7 @@ classdef Constants
         defaultnz  % (1,1) int8
         defaultDz  % (1,1) int8
         defaultN1  % (1,1) int8
-        defaultStepResponsesZ  % (0,0) cell
+        defaultCell  % (0,0) cell
         defaultMi  % (1,1) double
         defaultLambda  % (1,1) double
         defaultuMin  % (1,1) double
@@ -319,8 +319,8 @@ classdef Constants
             defaultN1 = 1;
         end
 
-        function defaultStepResponsesZ= get.defaultStepResponsesZ(obj)
-            defaultStepResponsesZ = {};
+        function defaultCell= get.defaultCell(obj)
+            defaultCell = {};
         end
 
         function defaultMi = get.defaultMi(obj)
