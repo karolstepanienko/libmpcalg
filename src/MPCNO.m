@@ -26,7 +26,7 @@ classdef MPCNO < handle
         data  % Custom not validated parameter passed to getOutput function
     end
 
-    properties (GetAccess = public, SetAccess = protected)
+    properties (GetAccess = public, SetAccess = private)
         c  % Constants object
         uMinVec  % Used by fmincon
         uMaxVec  % Used by fmincon
@@ -130,7 +130,7 @@ classdef MPCNO < handle
         end
     end
 
-    methods (Access = protected)
+    methods (Access = private)
         function e = targetFunc(obj, x, YYzad_k)
             du = obj.getDU(x);
 
