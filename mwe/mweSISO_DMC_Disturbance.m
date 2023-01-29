@@ -1,4 +1,4 @@
-function [Yzad, Yz_DMC, Uz_DMC] = mweSISO_DMC_Disturbance()
+function [YYzad, Y, U] = mweSISO_DMC_Disturbance()
 % Adjust this to point to libmpcalg library src folder
 addpath('../libmpcalg/src');
 init();  % Adding necessary paths
@@ -91,13 +91,14 @@ for k=1:kk
 
     % Without disturbance compensation
     U_DMC(k) = reg.calculateControl(Y_DMC_k_1, Yzad(k));
-    Y_DMC(k) = getObjectOutputEq(A, B, Y_DMC, ypp, U_DMC, upp, ny, nu,...
-        IODelay, k);
+    Y_DMC(k) = getObjectOutputEq(A, B, Y_DMC, ypp,...
+        U_DMC, upp, ny, nu, IODelay, k);
     Y_DMC(k) = Y_DMC(k) + Yz(k);
     Y_DMC_k_1 = Y_DMC(k);
 
     % With disturbance compensation
-    Uz_DMC(k) = regZ.calculateControl(Yz_DMC_k_1, Yzad(k), Uz(k, :));
+    Uz_DMC(k) = regZ.calculateControl(Yz_DMC_k_1,...
+        Yzad(k), Uz(k, :));
     Yz_DMC(k) = getObjectOutputEq(A, B, Yz_DMC, ypp,...
         Uz_DMC, upp, ny, nu, IODelay, k);
     Yz_DMC(k) = Yz_DMC(k) + Yz(k);
@@ -115,4 +116,9 @@ legend({'Y without disturbance compensation',...
 % Control error
 err = Utilities.calculateError(Y_DMC, Yzad)
 err = Utilities.calculateError(Yz_DMC, Yzad)
+
+% Join matrices for octave tests
+Y = [Y_DMC, Yz_DMC];
+U = [U_DMC, Uz_DMC];
+YYzad = [Yzad, Yzad];
 end
