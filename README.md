@@ -19,6 +19,7 @@ list below.
 
 ## Minimal working examples
 - [SISO DMC](mwe/mweSISO_DMC.m)
+- [SISO DMC with disturbance compensation](mwe/mweSISO_DMC_Disturbance.m)
 - [SISO GPC](mwe/mweSISO_GPC.m)
 - [SISO MPCS](mwe/mweSISO_MPCS.m)
 - [MIMO DMC](mwe/mweMIMO_DMC.m)
