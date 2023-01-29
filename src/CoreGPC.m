@@ -21,6 +21,7 @@ classdef (Abstract) CoreGPC < MPC & handle
         UU  % Control values
         UUz  % Disturbance values
         k  % Control loop iterator
+        YYm_k_1  % Past output value calculated from model
     end
 
     properties (GetAccess = public, SetAccess = protected)
@@ -44,6 +45,7 @@ classdef (Abstract) CoreGPC < MPC & handle
             obj.Lambda = obj.getLambda();
             obj.K = obj.getK(obj.M, obj.Xi, obj.Lambda);
             obj.UU_k = obj.upp * ones(1, obj.nu);
+            obj.YYm_k_1 = obj.ypp * ones(1, obj.ny);
         end
     end
 
@@ -64,6 +66,7 @@ classdef (Abstract) CoreGPC < MPC & handle
                 YY_tmp(obj.k + i, :) = YY_0_tmp(i + 1, :);
             end
             % Prediction from YY_0(k+1) to remove the need for M matrix shift
+            obj.YYm_k_1 = YY_0_tmp(1,:);
             YY_0_tmp = YY_0_tmp(obj.N1 + 1:end, :);
             YY_0 = zeros(obj.ny * (obj.N - obj.N1 + 1), 1);
             for p=1:obj.N - obj.N1 + 1

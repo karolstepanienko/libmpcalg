@@ -34,7 +34,12 @@ classdef AnalyticalGPC < CoreGPC
             YYzad_k = obj.stackYzadVector(YYzad_k);
 
             if obj.nz < 0
-                YY_0 = obj.getYY_0();
+                d_k_1 = YY_k_1 - obj.YYm_k_1;
+                dd_k_1 = zeros((obj.N - obj.N1 + 1) * obj.ny, 1);
+                for i=1:obj.N - obj.N1 + 1
+                    dd_k_1((i - 1) * obj.ny + 1:i*obj.ny, 1) = d_k_1';
+                end
+                YY_0 = obj.getYY_0() + dd_k_1;
             else
                 % Disturbance compensation
                 obj.YYz(obj.k - 1, :) = YY_k_1;

@@ -38,10 +38,12 @@ classdef FastMPCS < CoreMPCS
             if obj.nz < 0
                 d_k_1 = YY_k_1 - (obj.dC * (obj.dA * obj.X_k_2'...
                     + obj.dB * obj.UU_k_2' + obj.V_k_2'))';
-
+                dd_k_1 = zeros((obj.N - obj.N1 + 1) * obj.ny, 1);
+                for i=1:obj.N - obj.N1 + 1
+                    dd_k_1((i - 1) * obj.ny + 1:i*obj.ny, 1) = d_k_1';
+                end
                 YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V...
-                    * (obj.dB * obj.UU_k_1' + V_k')...
-                    + ones(obj.ny * (obj.N - obj.N1 + 1), obj.ny) * d_k_1';
+                    * (obj.dB * obj.UU_k_1' + V_k') + dd_k_1;
             else
                 YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V...
                     * (obj.dB * obj.UU_k_1' + V_k');

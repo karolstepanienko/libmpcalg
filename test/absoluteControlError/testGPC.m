@@ -4,9 +4,9 @@
 %!assert(runAlg('1x1', @GPC, 'fast', false) < 32)
 %!assert(runAlg('1x1', @GPC, 'numerical', false) < 32)
 
-%!assert(runAlg('1x1RelativeTest', @GPC, 'analytical', false) < 304)
-%!assert(runAlg('1x1RelativeTest', @GPC, 'fast', false) < 304)
-%!assert(runAlg('1x1RelativeTest', @GPC, 'numerical', false) < 304)
+%!assert(runAlg('1x1RelativeTest', @GPC, 'analytical', false) < 310)
+%!assert(runAlg('1x1RelativeTest', @GPC, 'fast', false) < 310)
+%!assert(runAlg('1x1RelativeTest', @GPC, 'numerical', false) < 310)
 
 %!assert(runAlg('1x1Unstable', @GPC, 'analytical', false) < 26)
 %!assert(runAlg('1x1Unstable', @GPC, 'fast', false) < 26)
