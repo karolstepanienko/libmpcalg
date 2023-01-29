@@ -1,6 +1,10 @@
 # libmpcalg
 Biblioteka algorytmów regulacji predykcyjnej w środowisku MATLAB i GNU Octave.
 
+<p align="center">
+  <img src="./img/libmpcalg_logo.png"  alt="libmpcalg's logo"/>
+</p>
+
 ## Jak skorzystać z biblioteki?
 Aby skorzystać z zaimplementowanych algorytmów należy w wykorzystywanym
 skrypcie dodać ścieżkę do folderu src biblioteki i wywołać funkcję
