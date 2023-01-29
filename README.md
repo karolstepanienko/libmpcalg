@@ -1,6 +1,10 @@
 # libmpcalg
 Model predictive control algorithms library in MATLAB and GNU Octave.
 
+<p align="center">
+  <img src="./doc/img/libmpcalg_logo.png"  alt="libmpcalg's logo"/>
+</p>
+
 ## How to use the library?
 To use implemented algorithms in a script simply add the path to src directory
 of the library to your environment's search path and run the initialisation
