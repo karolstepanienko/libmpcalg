@@ -2,6 +2,7 @@ mweMIMO_DMC;
 mweMIMO_GPC;
 mweMIMO_MPCNO;
 mweMIMO_MPCS;
+mweSISO_DMC_Disturbance;
 mweSISO_DMC;
 mweSISO_GPC;
 mweSISO_MPCS;

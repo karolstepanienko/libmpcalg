@@ -19,7 +19,6 @@ function obj = get1x1Disturbance(st)
 
     Gs = tf(cNum, cDen);  % Continuous transmittance
     obj = MIMOObj(Gs, st);   % Object
-    step(obj.Gz)
 
     fileName = '1x1Disturbance';
     obj.save(fileName);
