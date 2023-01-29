@@ -57,7 +57,7 @@ function e = runSingleAlg(D, N, NNl, N1, Nu, NuNl, mi, lambda, uMin, uMax,...
     for k=1:kk/osf
         % MPCS
         if strcmp(func2str(alg), func2str(@MPCS))
-            U_k = reg.calculateControl(XX(k*osf + osf - 1, :), Yzad(k*osf, :));
+            U_k = reg.calculateControl(XX(k*osf + osf - 1, :), YY_k_1, Yzad(k*osf, :));
             % Assign control values (row will not be stretched over multiple
             % rows)
             for cu = 1:nu
@@ -68,6 +68,7 @@ function e = runSingleAlg(D, N, NNl, N1, Nu, NuNl, mi, lambda, uMin, uMax,...
                     getObjectOutputState(dA, dB, dC, dD, XX, xpp, nx,...
                     UU, upp, nu, ny, InputDelay, OutputDelay, k*osf + k_obj);
             end
+            YY_k_1 = YY(k*osf + osf - 1, :);
         % DMC, GPC and MPCNO
         elseif (strcmp(func2str(alg), func2str(@DMC))...
             || strcmp(func2str(alg), func2str(@GPC))...

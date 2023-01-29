@@ -27,6 +27,15 @@ classdef (Abstract) ValidateMPCS
             addRequired(p, 'dD', v.validMatrix);
 
             % Optional parameters
+            addParameter(p, 'nz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'nxz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'dAz', v.c.defaultEmptyMatrix, v.validSquareMatrix);
+            addParameter(p, 'dBz', v.c.defaultEmptyMatrix, v.validMatrix);
+            addParameter(p, 'dCz', v.c.defaultEmptyMatrix, v.validMatrix);
+            addParameter(p, 'dDz', v.c.defaultEmptyMatrix, v.validMatrix);
+
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
@@ -57,6 +66,12 @@ classdef (Abstract) ValidateMPCS
                 obj.nu);
 
             % Assign optional parameters
+            obj.nz = p.Results.nz;
+            obj.nxz = p.Results.nxz;
+            obj.dAz = p.Results.dAz;
+            obj.dBz = p.Results.dBz;
+            obj.dCz = p.Results.dCz;
+            obj.dDz = p.Results.dDz;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.uMin = v.validateArray('uMin', p.Results.uMin, obj.nu);
@@ -91,6 +106,15 @@ classdef (Abstract) ValidateMPCS
             addRequired(p, 'dD', v.validMatrix);
 
             % Optional parameters
+            addParameter(p, 'nz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'nxz', v.c.defaultnz,...
+                v.validScalarIntGreaterThan0Num);
+            addParameter(p, 'dAz', v.c.defaultEmptyMatrix, v.validSquareMatrix);
+            addParameter(p, 'dBz', v.c.defaultEmptyMatrix, v.validMatrix);
+            addParameter(p, 'dCz', v.c.defaultEmptyMatrix, v.validMatrix);
+            addParameter(p, 'dDz', v.c.defaultEmptyMatrix, v.validMatrix);
+
             addParameter(p, 'mi', v.c.defaultMi, v.validNum);
             addParameter(p, 'lambda', v.c.defaultLambda, v.validNum);
 
@@ -124,6 +148,12 @@ classdef (Abstract) ValidateMPCS
                 obj.nu);
 
             % Assign optional parameters
+            obj.nz = p.Results.nz;
+            obj.nxz = p.Results.nxz;
+            obj.dAz = p.Results.dAz;
+            obj.dBz = p.Results.dBz;
+            obj.dCz = p.Results.dCz;
+            obj.dDz = p.Results.dDz;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda,...
                 obj.nu);

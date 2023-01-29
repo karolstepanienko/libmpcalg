@@ -7,7 +7,7 @@ function err = disturbanceGPC(varargin)
 
     load(Utilities.getObjBinFilePath('1x1Disturbance.mat'));
     %% Disturbance
-    Dz = D; Az = A; Bz = B; IODelayZ = IODelay;
+    Az = A; Bz = B; IODelayZ = IODelay;
     [UUz, kkz] = getU1DisturbanceControl();
 
     %% Object

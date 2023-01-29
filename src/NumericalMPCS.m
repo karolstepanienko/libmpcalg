@@ -35,17 +35,37 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
         % Should be run in a loop
         % @param XX_k        horizontal vector of current state values
         % @param YYzad_k     horizontal vector of target trajectory values
-        function UU_k = calculateControl(obj, XX_k, YYzad_k)
+        function UU_k = calculateControl(obj, XX_k, YY_k_1, YYzad_k, varargin)
             YYzad_k = obj.stackYzadVector(YYzad_k);
-            V_k = XX_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k')';
+            V_k = XX_k - (obj.dA * obj.X_k_1' + obj.dB * obj.UU_k_1')';
 
-            YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V...
-                * (obj.dB * obj.UU_k' + V_k');
+            if obj.nz < 0
+                d_k_1 = YY_k_1 - (obj.dC * (obj.dA * obj.X_k_2'...
+                    + obj.dB * obj.UU_k_2' + obj.V_k_2'))';
+
+                YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V...
+                    * (obj.dB * obj.UU_k_1' + V_k')...
+                    + ones(obj.ny * (obj.N - obj.N1 + 1), obj.ny) * d_k_1';
+            else
+                YY_0 = obj.CC * obj.AA * XX_k' + obj.CC * obj.V...
+                    * (obj.dB * obj.UU_k_1' + V_k');
+
+                XXz_kp1 = varargin{1}; UUz_k = varargin{2};
+                Vz_k = XXz_kp1 - (obj.dAz * obj.XXz_k'...
+                    + obj.dBz * obj.UUz_k_1')';
+
+                YYz_0 = obj.CCz * obj.AAz * XXz_kp1' + obj.CCz * obj.Vz...
+                    * (obj.dBz * UUz_k' + Vz_k');
+
+                YY_0 = YY_0 + YYz_0;
+                obj.XXz_k = XXz_kp1;
+                obj.UUz_k_1 = UUz_k;
+            end
 
             f = -2 * obj.M' * obj.Xi * (YYzad_k - YY_0);
 
             % UU_k_1 = obj.UU_k
-            UU_k_1 = Utilities.stackVector(obj.UU_k', obj.Nu);
+            UU_k_1 = Utilities.stackVector(obj.UU_k_1', obj.Nu);
 
             % Quadprog optimisation problem equations
             Aeq = [];
@@ -70,10 +90,14 @@ classdef NumericalMPCS < CoreMPCS & NumericalUtilities
                 i = i + 1;
             end
 
-            UU_k = obj.UU_k + obj.dUU_k(1:obj.nu, 1)';
-            obj.UU_k = UU_k;
+            UU_k = obj.UU_k_1 + obj.dUU_k(1:obj.nu, 1)';
+            obj.UU_k_2 = obj.UU_k_1;
+            obj.UU_k_1 = UU_k;
 
+            obj.X_k_2 = obj.X_k_1;
             obj.X_k_1 = XX_k;
+            obj.V_k_2 = obj.V_k_1;
+            obj.V_k_1 = V_k;
         end
     end
 end

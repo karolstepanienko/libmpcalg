@@ -43,12 +43,14 @@ ypp = 0; upp = 0; xpp = 0;
 X = ones(kk, nx) * xpp;
 Y = ones(kk, ny) * ypp;
 U = ones(kk, nu) * upp;
+Y_k_1 = ones(1, ny) * ypp;
 
 % Control loop
 for k=1:kk
-    U(k, :) = reg.calculateControl(X(k, :), Yzad(k, :));
+    U(k, :) = reg.calculateControl(X(k, :), Y_k_1, Yzad(k, :));
     [X(k + 1, :), Y(k, :)] = getObjectOutputState(dA, dB, dC, dD, X, xpp, nx,...
         U, upp, nu, ny, InputDelay, OutputDelay, k);
+    Y_k_1 = Y(k, :);
 end
 
 % Plotting

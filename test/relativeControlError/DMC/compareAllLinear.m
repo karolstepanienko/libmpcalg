@@ -43,6 +43,7 @@ function [err_YY_DMC_GPC, err_YY_DMC_MPCS, err_YY_GPC_MPCS,...
     XX = ones(kk, nx) * xpp;
     YY_MPCS = ones(kk, ny) * ypp;
     UU_MPCS = ones(kk, nu) * upp;
+    YY_MPCS_k_1 = ones(1, ny) * ypp;
 
     for k=1:kk
         UU_DMC(k, :) = regDMC.calculateControl(YY_DMC_k_1, YYzad(k, :));
@@ -55,9 +56,11 @@ function [err_YY_DMC_GPC, err_YY_DMC_MPCS, err_YY_GPC_MPCS,...
             ny, nu, IODelay, k);
         YY_GPC_k_1 = YY_GPC(k, :);
 
-        UU_MPCS(k, :) = regMPCS.calculateControl(XX(k, :), YYzad(k, :));
+        UU_MPCS(k, :) = regMPCS.calculateControl(XX(k, :), YY_MPCS_k_1,...
+            YYzad(k, :));
         [XX(k + 1, :), YY_MPCS(k, :)] = getObjectOutputState(dA, dB, dC,...
             dD, XX, xpp, nx, UU_MPCS, upp, nu, ny, InputDelay, OutputDelay, k);
+        YY_MPCS_k_1 = YY_MPCS(k, :);
     end
 
     err_YY_DMC_GPC = Utilities.calMatrixError(YY_DMC, YY_GPC);

@@ -23,13 +23,16 @@ function [errorYY_MPCS_JMatlab, errorUU_MPCS_JMatlab] =...
     XX_MPCS = ones(kk, obj.nx) * xpp;
     YY_MPCS = ones(kk, obj.ny) * ypp;
     UU_MPCS = ones(kk, obj.nu) * upp;
+    YY_MPCS_k_1 = ones(1, obj.ny) * ypp;
 
     % MPCS control loop
     for k=1:kk
-        UU_MPCS(k, :) = regMPCS.calculateControl(XX_MPCS(k, :), YYzad(k, :));
+        UU_MPCS(k, :) = regMPCS.calculateControl(XX_MPCS(k, :), YY_MPCS_k_1,...
+            YYzad(k, :));
         [XX_MPCS(k + 1, :), YY_MPCS(k, :)] = getObjectOutputState(...
             obj.dA, obj.dB, obj.dC, obj.dD, XX_MPCS, xpp, obj.nx, UU_MPCS,...
             upp, obj.nu, obj.ny, obj.InputDelay, obj.OutputDelay, k);
+        YY_MPCS_k_1 = YY_MPCS(k, :);
     end
 
     % According to this test both implementations are the same
