@@ -11,7 +11,7 @@ function obj = get1x1Disturbance(st)
     % -------- = ---------
     %  Ts + 1     s + 1
 
-    K = 0.1;  % Gain
+    K = 1;  % Gain
     T = 1;  % Time constant
 
     cNum = [K];

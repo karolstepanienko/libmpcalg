@@ -2,9 +2,11 @@ classdef (Abstract) NumericalUtilities < handle
     properties
         yMin  % Minimal output value
         yMax  % Maximal output value
+        dUU_k  % (nu * Nu, 1) vector of control value changes calculated by
+               % quadprog
     end
 
-    properties (Access = protected)
+    properties (GetAccess = public, SetAccess = protected)
         H  % Matrix used by quadprog function
         J  % Matrix used to impose control value limits
         AMatrix  % Matrix describing linear inequality constraints
@@ -14,11 +16,9 @@ classdef (Abstract) NumericalUtilities < handle
         duuMax  % (nu * Nu, 1) vector of duMax values
         YYmin  % (ny * N, 1) vector of yMin values
         YYmax  % (ny * N, 1) vector of yMax values
-        dUU_k  % (nu * Nu, 1) vector of control value changes calculated by
-               % quadprog
     end
 
-    methods (Access = protected)
+    methods
         function obj = initNumerical(obj, M, Xi, Lambda)
             obj.H = obj.getH(M, Xi, Lambda);
             obj.J = obj.getJ();
