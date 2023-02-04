@@ -65,5 +65,11 @@ classdef Exceptions
             error('optim:OptimisationCouldNotContinue',...
                 'Optimisation could not continue even after removing limits.');
         end
+
+        %-------------------------- disturbance --------------------------------
+        function throwDMCDisturbanceParametersUnassigned()
+            error('dist:DMCDisturbanceParametersUnassigned',...
+                "Some required parameters ('nz', 'Dz', 'stepResponsesZ') for DMC disturbance mechanism were left unassigned");
+        end
     end
 end

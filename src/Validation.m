@@ -239,6 +239,16 @@ classdef Validation
         function validFunctionHandle = get.validFunctionHandle(obj)
             validFunctionHandle = @(x) isa(x, 'function_handle');
         end
+
+        %-------------------------- disturbance --------------------------------
+        function validateAllDisturbanceParametersAssignedDMC(obj, nz, Dz,...
+            stepResponsesZ)
+            if (nz > 0 && (Dz < 0 || isempty(stepResponsesZ)))...
+                || (Dz > 0 && (nz < 0 || isempty(stepResponsesZ)))...
+                || (~isempty(stepResponsesZ) && (nz < 0 || Dz < 0))...
+                Exceptions.throwDMCDisturbanceParametersUnassigned();
+            end
+        end
     end
 
     methods (Static)

@@ -85,6 +85,63 @@
 %!warning <Step response for combination of input \(2\) and output \(2\) is shorter \(1\) than dynamic horizon D=300. Assumed constant step response equal to last known element.> testDMCParameters('stepResponses', {[1 1]; [1 1]})
 
 
+%-------------------------------------- nz -------------------------------------
+% isnumeric
+%!error <DMC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('nz', '2');
+
+% isscalar (is not a matrix)
+%!error <DMC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('nz', [1, 1]);
+
+% isInteger (x == round(x) && mod(x, 1) == 0)
+%!error <DMC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('nz', 1.1);
+
+% isPositive (x > 0)
+%!error <DMC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('nz', -1);
+
+
+%----------------------------------- nz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'Dz', 'stepResponsesZ'\) for DMC disturbance mechanism were left unassigned> testDMCParameters('nz_assign', 1)
+
+
+%------------------------------------- Dz ---------------------------------------
+% isnumeric
+%!error <DMC: failed validation of DZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('Dz', '2');
+
+% isscalar (is not a matrix)
+%!error <DMC: failed validation of DZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('Dz', [1, 1]);
+
+% isInteger (x == round(x) && mod(x, 1) == 0)
+%!error <DMC: failed validation of DZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('Dz', 1.1);
+
+% isPositive (x > 0)
+%!error <DMC: failed validation of DZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testDMCParameters('Dz', -1);
+
+
+%----------------------------------- Dz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'Dz', 'stepResponsesZ'\) for DMC disturbance mechanism were left unassigned> testDMCParameters('Dz_assign', 1)
+
+
+%------------------------------- stepResponsesZ ---------------------------------
+% isCell
+%!error <DMC: failed validation of STEPRESPONSESZ with @\(x\) iscell \(x\) && !isempty \(x\)> testDMCParameters('stepResponsesZ', 1)
+
+% is not empty
+%!error <DMC: failed validation of STEPRESPONSESZ with @\(x\) iscell \(x\) && !isempty \(x\)> testDMCParameters('stepResponsesZ', cell())
+
+% invalid number of inputs
+%!error <Malformed step responses cell. Number of inputs \(2\) doesn't match the number of inputs \(1\) in provided step responses cell> testDMCParameters('stepResponsesZ', { 1, 1 })
+
+% invalid number of outputs
+%!error <Malformed step responses cell. Number of outputs \(2\) doesn't match the number of outputs \(1\) in provided step responses cell> testDMCParameters('stepResponsesZ', { 1; 1 })
+
+% Warn about stepResponses shorter than dynamic horizon D
+%!warning <Step response for combination of input \(2\) and output \(2\) is shorter \(1\) than dynamic horizon D=300. Assumed constant step response equal to last known element.> testDMCParameters('stepResponsesZ', {[1 1]; [1 1]})
+
+
+%----------------------------- stepResponsesZ_assign ---------------------------
+%!error <Some required parameters \('nz', 'Dz', 'stepResponsesZ'\) for DMC disturbance mechanism were left unassigned> testDMCParameters('stepResponsesZ_assign', {1, 1})
+
+
 %-------------------------------------- mi -------------------------------------
 % isnumeric
 %!error <DMC: failed validation of MI with isnumeric> testDMCParameters('mi', '2');
@@ -276,6 +333,7 @@ function testDMCParameters(valueName, testValue)
 
     % Get D number of elements of object step response
     stepResponses = getStepResponsesEq(ny, nu, IODelay, A, B, D);
+    nz = nu; Dz = D; stepResponsesZ = stepResponses;
 
     % Assign test values
     if strcmp(valueName, 'D')
@@ -290,6 +348,12 @@ function testDMCParameters(valueName, testValue)
         nu = testValue;
     elseif strcmp(valueName, 'stepResponses')
         stepResponses = testValue;
+    elseif strcmp(valueName, 'nz')
+        nz = testValue;
+    elseif strcmp(valueName, 'Dz')
+        Dz = testValue;
+    elseif strcmp(valueName, 'stepResponsesZ')
+        stepResponsesZ = testValue;
     elseif strcmp(valueName, 'mi')
         mi = testValue;
     elseif strcmp(valueName, 'lambda')
@@ -310,11 +374,42 @@ function testDMCParameters(valueName, testValue)
         algType = testValue;
     end
 
-    % Regulator
-    reg = DMC(D, N, Nu, ny, nu, stepResponses,...
-        'mi', mi, 'lambda', lambda,...
-        'uMin', uMin, 'uMax', uMax,...
-        'duMin', duMin, 'duMax', duMax,...
-        'yMin', yMin, 'yMax', yMax,...
-        'algType', algType);
+    % Disturbance parameters assignment tests
+    if strcmp(valueName, 'nz_assign')
+        nz = testValue;
+        reg = DMC(D, N, Nu, ny, nu, stepResponses,...
+            'nz', nz,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'algType', algType);
+    elseif strcmp(valueName, 'Dz_assign')
+        Dz = testValue;
+        reg = DMC(D, N, Nu, ny, nu, stepResponses,...
+            'Dz', Dz,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'algType', algType);
+    elseif strcmp(valueName, 'stepResponsesZ_assign')
+        stepResponsesZ = testValue;
+        reg = DMC(D, N, Nu, ny, nu, stepResponses,...
+            'stepResponsesZ', stepResponsesZ,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'algType', algType);
+    else
+        % Regulator with disturbance parameters
+        reg = DMC(D, N, Nu, ny, nu, stepResponses,...
+            'nz', nz, 'Dz', Dz, 'stepResponsesZ', stepResponsesZ,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'algType', algType);
+    end
 end

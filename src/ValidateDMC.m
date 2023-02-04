@@ -57,9 +57,16 @@ classdef (Abstract) ValidateDMC
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
+            v.validateAllDisturbanceParametersAssignedDMC(p.Results.nz,...
+                p.Results.Dz, p.Results.stepResponsesZ);
             obj.nz = p.Results.nz;
             obj.Dz = p.Results.Dz;
-            obj.stepResponsesZ = p.Results.stepResponsesZ;  % TODO validation with Dz
+            if obj.nz > 0
+                obj.stepResponsesZ = v.validateStepResponses(...
+                    p.Results.stepResponsesZ, obj.ny, obj.nz, obj.Dz);
+            else
+                obj.stepResponsesZ = p.Results.stepResponsesZ;
+            end
             obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
@@ -128,9 +135,16 @@ classdef (Abstract) ValidateDMC
                 p.Results.stepResponses, obj.ny, obj.nu, obj.D);
 
             % Assign optional parameters
+            v.validateAllDisturbanceParametersAssignedDMC(p.Results.nz,...
+                p.Results.Dz, p.Results.stepResponsesZ);
             obj.nz = p.Results.nz;
             obj.Dz = p.Results.Dz;
-            obj.stepResponsesZ = p.Results.stepResponsesZ;  % TODO validation with Dz
+            if obj.nz > 0
+                obj.stepResponsesZ = v.validateStepResponses(...
+                    p.Results.stepResponsesZ, obj.ny, obj.nz, obj.Dz);
+            else
+                obj.stepResponsesZ = p.Results.stepResponsesZ;
+            end
             obj.N1 = p.Results.N1;
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
