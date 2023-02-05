@@ -23,8 +23,8 @@ classdef (Abstract) CoreMPCS < MPC & handle
         UUz_k_1  % (1, nz) past disturbance control values
         V_k_1  % (1, ny) past state value disturbance
         V_k_2  % (1, ny) past state value disturbance
-        UU_k_1  % (1, nu) past disturbance control value
-        UU_k_2  % (1, nu) past disturbance control value
+        UU_k_1  % (1, nu) past control value
+        UU_k_2  % (1, nu) past control value
     end
 
     properties (GetAccess = public, SetAccess = protected)

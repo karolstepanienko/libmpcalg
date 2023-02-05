@@ -24,7 +24,7 @@ classdef (Abstract) ValidateGPC
                 v.validScalarIntGreaterThan0Num);
             addParameter(p, 'Az', v.c.defaultCell, v.validCell);
             addParameter(p, 'Bz', v.c.defaultCell, v.validCell);
-            addParameter(p, 'IODelayZ', v.c.defaultIODelay, v.validNum);
+            addParameter(p, 'IODelayZ', v.c.defaultIODelayZ, v.validNum);
 
             addParameter(p, 'N1', v.c.defaultN1,...
                 v.validScalarIntGreaterThan0Num);
@@ -57,14 +57,23 @@ classdef (Abstract) ValidateGPC
             obj.Nu = p.Results.Nu;
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
-            obj.A = v.validateA(p.Results.A, obj.ny);
-            obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
+            obj.A = v.validateCellSize('A', p.Results.A, obj.ny, obj.ny);
+            obj.B = v.validateCellSize('B', p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
+            v.validateAllDisturbanceParametersAssignedGPC(p.Results.nz,...
+                p.Results.Az, p.Results.Bz, p.Results.IODelayZ);
             obj.nz = p.Results.nz;
-            obj.Az = p.Results.Az; % TODO
-            obj.Bz = p.Results.Bz; % TODO
-            obj.IODelayZ = p.Results.IODelayZ; % TODO
+            if obj.nz > 0
+                obj.Az = v.validateCellSize('Az', p.Results.Az, obj.ny, obj.ny);
+                obj.Bz = v.validateCellSize('Bz', p.Results.Bz, obj.ny, obj.nz);
+                obj.IODelayZ = v.validateIODelay(p.Results.IODelayZ, 'IODelayZ',...
+                obj.ny, obj.nz);
+            else
+                obj.Az = p.Results.Az;
+                obj.Bz = p.Results.Bz;
+                obj.IODelayZ = p.Results.IODelayZ;
+            end
             obj.N1 = p.Results.N1;
             obj.IODelay = v.validateIODelay(p.Results.IODelay, 'IODelay',...
                 obj.ny, obj.nu);
@@ -81,10 +90,12 @@ classdef (Abstract) ValidateGPC
             % Y(k-2),Y(k-3)... need to be already initialised
             obj.YY = v.validateInitialisationMatrix(p.Results.YY, 'YY',...
                 obj.k - 2, obj.ny);
-            obj.YYz = p.Results.YYz;  % TODO
+            obj.YYz = v.validateInitialisationMatrix(p.Results.YYz, 'YYz',...
+                obj.k - 2, obj.ny);
             obj.UU = v.validateInitialisationMatrix(p.Results.UU, 'UU',...
                 obj.k - 2, obj.nu);
-            obj.UUz = p.Results.UUz;  % TODO
+            obj.UUz = v.validateInitialisationMatrix(p.Results.UUz, 'UUz',...
+                obj.k - 2, obj.nz);
             % algType is not saved as a class property
         end
 
@@ -111,7 +122,7 @@ classdef (Abstract) ValidateGPC
                 v.validScalarIntGreaterThan0Num);
             addParameter(p, 'Az', v.c.defaultCell, v.validCell);
             addParameter(p, 'Bz', v.c.defaultCell, v.validCell);
-            addParameter(p, 'IODelayZ', v.c.defaultIODelay, v.validNum);
+            addParameter(p, 'IODelayZ', v.c.defaultIODelayZ, v.validNum);
 
             addParameter(p, 'N1', v.c.defaultN1,...
                 v.validScalarIntGreaterThan0Num);
@@ -143,18 +154,27 @@ classdef (Abstract) ValidateGPC
             parse(p, N, Nu, ny, nu, A, B, varargin_{:});
 
             % Assign required parameters
-            obj.nz = p.Results.nz;
-            obj.Az = p.Results.Az; % TODO
-            obj.Bz = p.Results.Bz; % TODO
-            obj.IODelayZ = p.Results.IODelayZ; % TODO
             obj.N = p.Results.N;
             obj.Nu = p.Results.Nu;
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
-            obj.A = v.validateA(p.Results.A, obj.ny);
-            obj.B = v.validateB(p.Results.B, obj.ny, obj.nu);
+            obj.A = v.validateCellSize('A', p.Results.A, obj.ny, obj.ny);
+            obj.B = v.validateCellSize('B', p.Results.B, obj.ny, obj.nu);
 
             % Assign optional parameters
+            v.validateAllDisturbanceParametersAssignedGPC(p.Results.nz,...
+                p.Results.Az, p.Results.Bz, p.Results.IODelayZ);
+            obj.nz = p.Results.nz;
+            if obj.nz > 0
+                obj.Az = v.validateCellSize('Az', p.Results.Az, obj.ny, obj.ny);
+                obj.Bz = v.validateCellSize('Bz', p.Results.Bz, obj.ny, obj.nz);
+                obj.IODelayZ = v.validateIODelay(p.Results.IODelayZ, 'IODelayZ',...
+                obj.ny, obj.nz);
+            else
+                obj.Az = p.Results.Az;
+                obj.Bz = p.Results.Bz;
+                obj.IODelayZ = p.Results.IODelayZ;
+            end
             obj.N1 = p.Results.N1;
             obj.IODelay = v.validateIODelay(p.Results.IODelay, 'IODelay',...
                 obj.ny, obj.nu);
@@ -173,10 +193,12 @@ classdef (Abstract) ValidateGPC
             % Y(k-2),Y(k-3)... need to be already initialised
             obj.YY = v.validateInitialisationMatrix(p.Results.YY, 'YY',...
                 obj.k - 2, obj.ny);
-            obj.YYz = p.Results.YYz;  % TODO
+            obj.YYz = v.validateInitialisationMatrix(p.Results.YYz, 'YYz',...
+                obj.k - 2, obj.ny);
             obj.UU = v.validateInitialisationMatrix(p.Results.UU, 'UU',...
                 obj.k - 2, obj.nu);
-            obj.UUz = p.Results.UUz;  % TODO
+            obj.UUz = v.validateInitialisationMatrix(p.Results.UUz, 'UUz',...
+                obj.k - 2, obj.nz);
             % algType is not saved as a class property
         end
     end

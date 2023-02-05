@@ -53,6 +53,7 @@ classdef Constants
         algMPCNO  % (1, 5) char array
         % Constraints and default values
         defaultIODelay  % (1,1) int8
+        defaultIODelayZ  % (1,1) int8
         defaultnz  % (1,1) int8
         defaultDz  % (1,1) int8
         defaultN1  % (1,1) int8
@@ -305,6 +306,10 @@ classdef Constants
 
         function defaultIODelay= get.defaultIODelay(obj)
             defaultIODelay = 0;
+        end
+
+        function defaultIODelayZ = get.defaultIODelayZ(obj)
+            defaultIODelayZ = -1;
         end
 
         function defaultnz= get.defaultnz(obj)

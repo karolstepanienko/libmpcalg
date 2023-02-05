@@ -71,5 +71,10 @@ classdef Exceptions
             error('dist:DMCDisturbanceParametersUnassigned',...
                 "Some required parameters ('nz', 'Dz', 'stepResponsesZ') for DMC disturbance mechanism were left unassigned");
         end
+
+        function throwGPCDisturbanceParametersUnassigned()
+            error('dist:GPCDisturbanceParametersUnassigned',...
+                "Some required parameters ('nz', 'Az', 'Bz', 'IODelayZ') for GPC disturbance mechanism were left unassigned");
+        end
     end
 end

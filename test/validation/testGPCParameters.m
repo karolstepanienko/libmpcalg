@@ -93,6 +93,75 @@
 %!error <Matrix IODelay should have 2 rows and 2 columns> testGPCParameters('IODelay', [1, 1, 1])
 
 
+%-------------------------------------- nz -------------------------------------
+% isnumeric
+%!error <GPC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testGPCParameters('nz', '2');
+
+% isscalar (is not a matrix)
+%!error <GPC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testGPCParameters('nz', [1, 1]);
+
+% isInteger (x == round(x) && mod(x, 1) == 0)
+%!error <GPC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testGPCParameters('nz', 1.1);
+
+% isPositive (x > 0)
+%!error <GPC: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testGPCParameters('nz', -1);
+
+
+%----------------------------------- nz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'Az', 'Bz', 'IODelayZ'\) for GPC disturbance mechanism were left unassigned> testGPCParameters('nz_assign', 1)
+
+
+%------------------------------------- Az --------------------------------------
+% iscell
+%!error <GPC: failed validation of AZ with @\(x\) iscell \(x\) && !isempty \(x\)> testGPCParameters('Az', '2');
+
+% isempty
+%!error <GPC: failed validation of AZ with @\(x\) iscell \(x\) && !isempty \(x\)> testGPCParameters('Az', cell(0));
+
+% nRows == ny
+%!error <Cell Az should have 2 rows and 2 columns> testGPCParameters('Az', cell(1, 2));
+
+% nColumns == ny
+%!error <Cell Az should have 2 rows and 2 columns> testGPCParameters('Az', cell(2, 1));
+
+
+%----------------------------------- Az_assign ---------------------------------
+%!error <Some required parameters \('nz', 'Az', 'Bz', 'IODelayZ'\) for GPC disturbance mechanism were left unassigned> testGPCParameters('Az_assign', 1)
+
+
+%------------------------------------- Bz --------------------------------------
+% iscell
+%!error <GPC: failed validation of BZ with @\(x\) iscell \(x\) && !isempty \(x\)> testGPCParameters('Bz', '2');
+
+% isempty
+%!error <GPC: failed validation of BZ with @\(x\) iscell \(x\) && !isempty \(x\)> testGPCParameters('Bz', cell(0));
+
+% nRows == ny
+%!error <Cell Bz should have 2 rows and 2 columns> testGPCParameters('Bz', cell(1, 2));
+
+% nColumns == nu
+%!error <Cell Bz should have 2 rows and 2 columns> testGPCParameters('Bz', cell(2, 1));
+
+
+%----------------------------------- Bz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'Az', 'Bz', 'IODelayZ'\) for GPC disturbance mechanism were left unassigned> testGPCParameters('Bz_assign', 1)
+
+
+%----------------------------------- IODelayZ ----------------------------------
+% isnumeric
+%!error <GPC: failed validation of IODELAYZ with isnumeric> testGPCParameters('IODelayZ', '2');
+
+% stretch single element
+%!warning <Assumed \(2 x 2\) IODelayZ matrix consists entirely of elements with a value of 1> testGPCParameters('IODelayZ', 1)
+
+% has nu Elements
+%!error <Matrix IODelayZ should have 2 rows and 2 columns> testGPCParameters('IODelayZ', [1, 1, 1])
+
+
+%-------------------------------- IODelayZ_assign ------------------------------
+%!error <Some required parameters \('nz', 'Az', 'Bz', 'IODelayZ'\) for GPC disturbance mechanism were left unassigned> testGPCParameters('IODelayZ_assign', 1)
+
+
 %-------------------------------------- mi -------------------------------------
 % isnumeric
 %!error <GPC: failed validation of MI with isnumeric> testGPCParameters('mi', '2');
@@ -333,6 +402,34 @@
 %!error <Matrix UU should have 3 rows or more and 2 columns> testGPCParameters('UU', zeros(3, 3));
 
 
+%-------------------------------------- YYz -------------------------------------
+% isnumeric
+%!error <GPC: failed validation of YYZ with isnumeric> testGPCParameters('YYz', '2');
+
+% Allow empty
+%!test testGPCParameters('YYz', []);
+
+% nRows
+%!error <Matrix YYz should have 3 rows or more and 2 columns> testGPCParameters('YYz', zeros(2, 2));
+
+% nColumns
+%!error <Matrix YYz should have 3 rows or more and 2 columns> testGPCParameters('YYz', zeros(3, 3));
+
+
+%-------------------------------------- UUz -------------------------------------
+% isnumeric
+%!error <GPC: failed validation of UUZ with isnumeric> testGPCParameters('UUz', '2');
+
+% Allow empty
+%!test testGPCParameters('UUz', []);
+
+% nRows
+%!error <Matrix UUz should have 3 rows or more and 2 columns> testGPCParameters('UUz', zeros(2, 2));
+
+% nColumns
+%!error <Matrix UUz should have 3 rows or more and 2 columns> testGPCParameters('UUz', zeros(3, 3));
+
+
 %------------------------------------ algType ----------------------------------
 % algType can be analytical, fast or numerical
 %!error <validatestring: 'something' does not match any of\nanalytical, fast, numerical> testGPCParameters('algType', 'something');
@@ -345,11 +442,15 @@ function testGPCParameters(valueName, testValue)
 
     c = Constants();
 
+    nz = nu;
     ypp = c.testYInitVal;
     upp = c.testUInitVal;
     k = 5;
+    nz = nu; Az = A; Bz = B; IODelayZ = IODelay;
     YY = ypp * ones(k - 2, ny);
+    YYz = ypp * ones(k - 2, ny);
     UU = upp * ones(k - 2, nu);
+    UUz = upp * ones(k - 2, nz);
     algType = c.numericalAlgType;
 
     % Assign test values
@@ -361,12 +462,20 @@ function testGPCParameters(valueName, testValue)
         ny = testValue;
     elseif strcmp(valueName, 'nu')
         nu = testValue;
+    elseif strcmp(valueName, 'nz')
+        nz = testValue;
     elseif strcmp(valueName, 'A')
         A = testValue;
+    elseif strcmp(valueName, 'Az')
+        Az = testValue;
     elseif strcmp(valueName, 'B')
         B = testValue;
+    elseif strcmp(valueName, 'Bz')
+        Bz = testValue;
     elseif strcmp(valueName, 'IODelay')
         IODelay = testValue;
+    elseif strcmp(valueName, 'IODelayZ')
+        IODelayZ = testValue;
     elseif strcmp(valueName, 'mi')
         mi = testValue;
     elseif strcmp(valueName, 'lambda')
@@ -391,20 +500,69 @@ function testGPCParameters(valueName, testValue)
         k = testValue;
     elseif strcmp(valueName, 'YY')
         YY = testValue;
+    elseif strcmp(valueName, 'YYz')
+        YYz = testValue;
     elseif strcmp(valueName, 'UU')
         UU = testValue;
+    elseif strcmp(valueName, 'UUz')
+        UUz = testValue;
     elseif strcmp(valueName, 'algType')
         algType = testValue;
     end
 
-    % Regulator
-    reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
-        'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
-        'uMin', uMin, 'uMax', uMax,...
-        'duMin', duMin, 'duMax', duMax,...
-        'yMin', yMin, 'yMax', yMax,...
-        'k', k, 'YY', YY, 'UU', UU,...
-        'algType', algType);
+    % Disturbance parameters assignment tests
+    if strcmp(valueName, 'nz_assign')
+        reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
+            'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'k', k, 'YY', YY, 'UU', UU,...
+            'nz', nz,...
+            'YYz', YYz, 'UUz', UUz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'Az_assign')
+        reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
+            'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'k', k, 'YY', YY, 'UU', UU,...
+            'Az', Az,...
+            'YYz', YYz, 'UUz', UUz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'Bz_assign')
+        reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
+            'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'k', k, 'YY', YY, 'UU', UU,...
+            'Bz', Bz,...
+            'YYz', YYz, 'UUz', UUz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'IODelayZ_assign')
+        reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
+            'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'k', k, 'YY', YY, 'UU', UU,...
+            'IODelayZ', IODelayZ,...
+            'YYz', YYz, 'UUz', UUz,...
+            'algType', algType);
+    else
+        % Regulator with disturbance parameters
+        reg = GPC(N, Nu, ny, nu, A, B, 'IODelay', IODelay,...
+            'mi', mi, 'lambda', lambda, 'ypp', ypp, 'upp', upp,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'k', k, 'YY', YY, 'UU', UU,...
+            'nz', nz, 'Az', Az, 'Bz', Bz, 'IODelayZ', IODelayZ,...
+            'YYz', YYz, 'UUz', UUz,...
+            'algType', algType);
+    end
 end
 
 

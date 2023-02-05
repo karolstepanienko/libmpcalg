@@ -148,7 +148,7 @@ classdef Validation
             matrixName, nRows, nColumns)
             % Matrix has more or equal rows than nRows and nColumns or matrix is
             % empty
-            if isempty(matrix)
+            if isempty(matrix) || nColumns < 0
                 value = matrix;
             elseif ~(size(matrix, 1) >= nRows && size(matrix, 2) == nColumns)
                 Exceptions.throwInvalidInitialisationMatrix(matrixName,...
@@ -209,19 +209,9 @@ classdef Validation
             end
         end
 
-        function A = validateA(obj, A, ny)
-            if size(A, 1) == ny && size(A, 2) == ny
-                A = A;
-            else
-                Exceptions.throwCellInvalidSize('A', ny, ny);
-            end
-        end
-
-        function B = validateB(obj, B, ny, nu)
-            if size(B, 1) == ny && size(B, 2) == nu
-                B = B;
-            else
-                Exceptions.throwCellInvalidSize('B', ny, nu);
+        function value = validateCellSize(obj, cellName, value, nRows, nColumns)
+            if size(value, 1) ~= nRows || size(value, 2) ~= nColumns
+                Exceptions.throwCellInvalidSize(cellName, nRows, nColumns);
             end
         end
 
@@ -247,6 +237,16 @@ classdef Validation
                 || (Dz > 0 && (nz < 0 || isempty(stepResponsesZ)))...
                 || (~isempty(stepResponsesZ) && (nz < 0 || Dz < 0))...
                 Exceptions.throwDMCDisturbanceParametersUnassigned();
+            end
+        end
+
+        function validateAllDisturbanceParametersAssignedGPC(obj, nz, Az, Bz,...
+            IODelayZ)
+            if (nz > 0 && (isempty(Az) || isempty(Bz) || all(IODelayZ < 0)))...
+                || (~isempty(Az) && (nz < 0 || isempty(Bz) || all(IODelayZ < 0)))...
+                || (~isempty(Bz) && (nz < 0 || isempty(Az) || all(IODelayZ < 0)))...
+                || (~all(IODelayZ < 0) && (nz < 0 || isempty(Az) || isempty(Bz)))
+                Exceptions.throwGPCDisturbanceParametersUnassigned();
             end
         end
     end
