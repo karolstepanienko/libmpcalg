@@ -76,5 +76,10 @@ classdef Exceptions
             error('dist:GPCDisturbanceParametersUnassigned',...
                 "Some required parameters ('nz', 'Az', 'Bz', 'IODelayZ') for GPC disturbance mechanism were left unassigned");
         end
+
+        function throwMPCSDisturbanceParametersUnassigned()
+            error('dist:MPCSDisturbanceParametersUnassigned',...
+                "Some required parameters ('nz', 'nxz', 'dAz', 'dBz', 'dCz', 'dDz') for MPCS disturbance mechanism were left unassigned");
+        end
     end
 end

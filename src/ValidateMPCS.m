@@ -57,7 +57,7 @@ classdef (Abstract) ValidateMPCS
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
             obj.nx = p.Results.numberOfStateVariables;
-            obj.dA = v.validateAStateMatrix(p.Results.dA, obj.nx);
+            obj.dA = v.validateSquareMatrix(p.Results.dA, 'dA', obj.nx);
             obj.dB = v.validateMatrixSize(p.Results.dB, 'dB', obj.nx,...
                 obj.nu);
             obj.dC = v.validateMatrixSize(p.Results.dC, 'dC', obj.ny,...
@@ -66,12 +66,25 @@ classdef (Abstract) ValidateMPCS
                 obj.nu);
 
             % Assign optional parameters
+            v.validateAllDisturbanceParametersAssignedMPCS(p.Results.nz,...
+                p.Results.nxz, p.Results.dAz, p.Results.dBz, p.Results.dCz,...
+                p.Results.dDz);
             obj.nz = p.Results.nz;
             obj.nxz = p.Results.nxz;
-            obj.dAz = p.Results.dAz;
-            obj.dBz = p.Results.dBz;
-            obj.dCz = p.Results.dCz;
-            obj.dDz = p.Results.dDz;
+            if obj.nz > 0
+                obj.dAz = v.validateSquareMatrix(p.Results.dAz, 'dAz', obj.nxz);
+                obj.dBz = v.validateMatrixSize(p.Results.dBz, 'dBz', obj.nxz,...
+                    obj.nz);
+                obj.dCz = v.validateMatrixSize(p.Results.dCz, 'dCz', obj.ny,...
+                    obj.nxz);
+                obj.dDz = v.validateMatrixSize(p.Results.dDz, 'dDz', obj.ny,...
+                    obj.nz);
+            else
+                obj.dAz = p.Results.dAz;
+                obj.dBz = p.Results.dBz;
+                obj.dCz = p.Results.dCz;
+                obj.dDz = p.Results.dDz;
+            end
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda, obj.nu);
             obj.uMin = v.validateArray('uMin', p.Results.uMin, obj.nu);
@@ -139,7 +152,7 @@ classdef (Abstract) ValidateMPCS
             obj.ny = p.Results.numberOfOutputs;
             obj.nu = p.Results.numberOfInputs;
             obj.nx = p.Results.numberOfStateVariables;
-            obj.dA = v.validateAStateMatrix(p.Results.dA, obj.nx);
+            obj.dA = v.validateSquareMatrix(p.Results.dA, 'dA', obj.nx);
             obj.dB = v.validateMatrixSize(p.Results.dB, 'dB', obj.nx,...
                 obj.nu);
             obj.dC = v.validateMatrixSize(p.Results.dC, 'dC', obj.ny,...
@@ -148,12 +161,25 @@ classdef (Abstract) ValidateMPCS
                 obj.nu);
 
             % Assign optional parameters
+            v.validateAllDisturbanceParametersAssignedMPCS(p.Results.nz,...
+                p.Results.nxz, p.Results.dAz, p.Results.dBz, p.Results.dCz,...
+                p.Results.dDz);
             obj.nz = p.Results.nz;
             obj.nxz = p.Results.nxz;
-            obj.dAz = p.Results.dAz;
-            obj.dBz = p.Results.dBz;
-            obj.dCz = p.Results.dCz;
-            obj.dDz = p.Results.dDz;
+            if obj.nz > 0
+                obj.dAz = v.validateSquareMatrix(p.Results.dAz, 'dAz', obj.nxz);
+                obj.dBz = v.validateMatrixSize(p.Results.dBz, 'dBz', obj.nxz,...
+                    obj.nz);
+                obj.dCz = v.validateMatrixSize(p.Results.dCz, 'dCz', obj.ny,...
+                    obj.nxz);
+                obj.dDz = v.validateMatrixSize(p.Results.dDz, 'dDz', obj.ny,...
+                    obj.nz);
+            else
+                obj.dAz = p.Results.dAz;
+                obj.dBz = p.Results.dBz;
+                obj.dCz = p.Results.dCz;
+                obj.dDz = p.Results.dDz;
+            end
             obj.mi = v.validateArray('mi', p.Results.mi, obj.ny);
             obj.lambda = v.validateLambda('lambda', p.Results.lambda,...
                 obj.nu);

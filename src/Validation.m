@@ -120,18 +120,11 @@ classdef Validation
             validMatrix = @(x) isnumeric(x) && isa(x, 'double') && ismatrix(x);
         end
 
-        function isValid = validateSquareMatrix(obj, matrix, matrixName, n)
-            isValid = false;
+        function value = validateSquareMatrix(obj, matrix, matrixName, n)
             if size(matrix, 1) ~= n || size(matrix, 2) ~= n
                 Exceptions.throwMatrixNotSquare(matrixName);
             else
-                isValid = true;
-            end
-        end
-
-        function value = validateAStateMatrix(obj, dA, nx)
-            if obj.validateSquareMatrix(dA, 'dA', nx)
-                value = dA;
+                value = matrix;
             end
         end
 
@@ -247,6 +240,18 @@ classdef Validation
                 || (~isempty(Bz) && (nz < 0 || isempty(Az) || all(IODelayZ < 0)))...
                 || (~all(IODelayZ < 0) && (nz < 0 || isempty(Az) || isempty(Bz)))
                 Exceptions.throwGPCDisturbanceParametersUnassigned();
+            end
+        end
+
+        function validateAllDisturbanceParametersAssignedMPCS(obj, nz, nxz,...
+            dAz, dBz, dCz, dDz)
+            if (nz > 0 && ( nxz < 0 || isempty(dAz) || isempty(dBz) || isempty(dCz) || isempty(dDz)))...
+                || (nxz > 0 && (nz < 0 || isempty(dAz) || isempty(dBz) || isempty(dCz) || isempty(dDz)))...
+                || (~isempty(dAz) && (nz < 0 || nxz < 0 || isempty(dBz) || isempty(dCz) || isempty(dDz)))...
+                || (~isempty(dBz) && (nz < 0 || nxz < 0 || isempty(dAz) || isempty(dCz) || isempty(dDz)))...
+                || (~isempty(dCz) && (nz < 0 || nxz < 0 || isempty(dAz) || isempty(dBz) || isempty(dDz)))...
+                || (~isempty(dDz) && (nz < 0 || nxz < 0 || isempty(dAz) || isempty(dBz) || isempty(dCz)))...
+                Exceptions.throwMPCSDisturbanceParametersUnassigned();
             end
         end
     end

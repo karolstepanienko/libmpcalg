@@ -126,6 +126,117 @@
 %!error <Matrix dD should have 2 rows and 2 columns> testMPCSParameters('dD', zeros(1, 2));
 
 
+%-------------------------------------- nz -------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nz', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCS: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nz', [1, 1]);
+
+% isInteger (x == round(x) && mod(x, 1) == 0)
+%!error <MPCS: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nz', 1.1);
+
+% isPositive (x > 0)
+%!error <MPCS: failed validation of NZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nz', -1);
+
+
+%----------------------------------- nz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'nxz', 'dAz', 'dBz', 'dCz', 'dDz'\) for MPCS disturbance mechanism were left unassigned> testMPCSParameters('nz_assign', 1)
+
+
+%------------------------------------ nxz --------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of NXZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nxz', '2');
+
+% isscalar (is not a matrix)
+%!error <MPCS: failed validation of NXZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nxz', [1, 1]);
+
+% isInteger (x == round(x) && mod(x, 1) == 0)
+%!error <MPCS: failed validation of NXZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nxz', 1.1);
+
+% isPositive (x > 0)
+%!error <MPCS: failed validation of NXZ with @\(x\) isnumeric \(x\) && isscalar \(x\) && x == round \(x\) && mod \(x, 1\) == 0 && obj.isPositive \(x\)> testMPCSParameters('nxz', -1);
+
+
+%----------------------------------- nxz_assign --------------------------------
+%!error <Some required parameters \('nz', 'nxz', 'dAz', 'dBz', 'dCz', 'dDz'\) for MPCS disturbance mechanism were left unassigned> testMPCSParameters('nxz_assign', 1)
+
+
+%------------------------------------- dAz -------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of DAZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\) && size \(x, 1\) == size \(x, 2\)> testMPCSParameters('dAz', '2');
+
+% Value has a type of 'double'
+%!error <MPCS: failed validation of DAZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\) && size \(x, 1\) == size \(x, 2\)> testMPCSParameters('dAz', int8(1));
+
+% ismatrix (3D array is not a matrix)
+%!error <MPCS: failed validation of DAZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\) && size \(x, 1\) == size \(x, 2\)> testMPCSParameters('dAz', zeros(1, 1, 2));
+
+% isSquare
+%!error <MPCS: failed validation of DAZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\) && size \(x, 1\) == size \(x, 2\)> testMPCSParameters('dAz', zeros(1, 2));
+
+% isSquare (nx, nx)
+%!error <dAz should be a square matrix> testMPCSParameters('dAz', zeros(3, 3));
+
+
+%----------------------------------- dAz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'nxz', 'dAz', 'dBz', 'dCz', 'dDz'\) for MPCS disturbance mechanism were left unassigned> testMPCSParameters('dAz_assign', [1, 1; 1, 1])
+
+
+%------------------------------------- dBz -------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of DBZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dBz', '2');
+
+% Value has a type of 'double'
+%!error <MPCS: failed validation of DBZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dBz', int8(1));
+
+% ismatrix (3D array is not a matrix)
+%!error <MPCS: failed validation of DBZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dBz', zeros(1, 1, 2));
+
+% MatrixInvalidSize
+%!error <Matrix dBz should have 4 rows and 2 columns> testMPCSParameters('dBz', zeros(1, 2));
+
+
+%----------------------------------- dBz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'nxz', 'dAz', 'dBz', 'dCz', 'dDz'\) for MPCS disturbance mechanism were left unassigned> testMPCSParameters('dBz_assign', [1, 1; 1, 1])
+
+
+%------------------------------------- dCz -------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of DCZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dCz', '2');
+
+% Value has a type of 'double'
+%!error <MPCS: failed validation of DCZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dCz', int8(1));
+
+% ismatrix (3D array is not a matrix)
+%!error <MPCS: failed validation of DCZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dCz', zeros(1, 1, 2));
+
+% MatrixInvalidSize
+%!error <Matrix dCz should have 2 rows and 4 columns> testMPCSParameters('dCz', zeros(1, 2));
+
+
+%----------------------------------- dCz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'nxz', 'dAz', 'dBz', 'dCz', 'dDz'\) for MPCS disturbance mechanism were left unassigned> testMPCSParameters('dCz_assign', [1, 1; 1, 1])
+
+
+%------------------------------------- dDz -------------------------------------
+% isnumeric
+%!error <MPCS: failed validation of DDZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dDz', '2');
+
+% Value has a type of 'double'
+%!error <MPCS: failed validation of DDZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dDz', int8(1));
+
+% ismatrix (3D array is not a matrix)
+%!error <MPCS: failed validation of DDZ with @\(x\) isnumeric \(x\) && isa \(x, 'double'\) && ismatrix \(x\)> testMPCSParameters('dDz', zeros(1, 1, 2));
+
+% MatrixInvalidSize
+%!error <Matrix dDz should have 2 rows and 2 columns> testMPCSParameters('dDz', zeros(1, 2));
+
+
+%----------------------------------- dDz_assign ---------------------------------
+%!error <Some required parameters \('nz', 'nxz', 'dAz', 'dBz', 'dCz', 'dDz'\) for MPCS disturbance mechanism were left unassigned> testMPCSParameters('dDz_assign', [1, 1; 1, 1])
+
+
 %-------------------------------------- mi -------------------------------------
 % isnumeric
 %!error <MPCS: failed validation of MI with isnumeric> testMPCSParameters('mi', '2');
@@ -301,7 +412,6 @@
 %!error <Value yMax should be a horizontal or vertical array with 2 elements> (testMPCSParameters('yMax', [1, 1; 1, 1]))
 
 
-
 %------------------------------------ algType ----------------------------------
 % algType can be analytical, fast or numerical
 %!error <validatestring: 'something' does not match any of\nanalytical, fast, numerical> testMPCSParameters('algType', 'something');
@@ -315,6 +425,7 @@ function testMPCSParameters(valueName, testValue)
     c = Constants();
 
     algType = c.numericalAlgType;
+    nz = nu; nxz = nx; dAz = dA; dBz = dB; dCz = dC; dDz = dD;
 
     % Assign test values
     if strcmp(valueName, 'N')
@@ -325,16 +436,28 @@ function testMPCSParameters(valueName, testValue)
         ny = testValue;
     elseif strcmp(valueName, 'nu')
         nu = testValue;
+    elseif strcmp(valueName, 'nz')
+        nz = testValue;
     elseif strcmp(valueName, 'nx')
         nx = testValue;
+    elseif strcmp(valueName, 'nxz')
+        nxz = testValue;
     elseif strcmp(valueName, 'dA')
         dA = testValue;
+    elseif strcmp(valueName, 'dAz')
+        dAz = testValue;
     elseif strcmp(valueName, 'dB')
         dB = testValue;
+    elseif strcmp(valueName, 'dBz')
+        dBz = testValue;
     elseif strcmp(valueName, 'dC')
         dC = testValue;
+    elseif strcmp(valueName, 'dCz')
+        dCz = testValue;
     elseif strcmp(valueName, 'dD')
         dD = testValue;
+    elseif strcmp(valueName, 'dDz')
+        dDz = testValue;
     elseif strcmp(valueName, 'mi')
         mi = testValue;
     elseif strcmp(valueName, 'lambda')
@@ -355,11 +478,64 @@ function testMPCSParameters(valueName, testValue)
         algType = testValue;
     end
 
-    % Regulator
-    reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
-        'mi', mi, 'lambda', lambda,...
-        'uMin', uMin, 'uMax', uMax,...
-        'duMin', duMin, 'duMax', duMax,...
-        'yMin', yMin, 'yMax', yMax,...
-        'algType', algType);
+    % Disturbance parameters assignment tests
+    if strcmp(valueName, 'nz_assign')
+        reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'nz', nz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'nxz_assign')
+        reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'nxz', nxz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'dAz_assign')
+        reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'dAz', dAz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'dBz_assign')
+        reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'dBz', dBz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'dCz_assign')
+        reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'dCz', dCz,...
+            'algType', algType);
+    elseif strcmp(valueName, 'dDz_assign')
+        reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'dDz', dDz,...
+            'algType', algType);
+    else
+        % Regulator with disturbance parameters
+        reg = MPCS(N, Nu, ny, nu, nx, dA, dB, dC, dD,...
+            'mi', mi, 'lambda', lambda,...
+            'uMin', uMin, 'uMax', uMax,...
+            'duMin', duMin, 'duMax', duMax,...
+            'yMin', yMin, 'yMax', yMax,...
+            'nz', nz, 'nxz', nxz, 'dAz', dAz, 'dBz', dBz, 'dCz', dCz,...
+            'dDz', dDz,...
+            'algType', algType);
+    end
 end
